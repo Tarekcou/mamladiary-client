@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const Footer = () => {
   return (
-    <div className='mx-auto text-center'>Developed by ICT Section, Divisional Commissioner Office, Chattogram</div>
-  )
-}
+    <div className="mx-auto py-4 text-xs text-center">
+      Developed by ICT Section, Divisional Commissioner Office, Chattogram
+    </div>
+  );
+};
 
-export default Footer
+export default Footer;

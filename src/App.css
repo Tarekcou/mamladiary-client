@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+/* index.css or global.css */
+.nav-link {
+  @apply text-gray-700 hover:text-blue-600;
+}
+
+.nav-link-active {
+  @apply border-b-2 border-blue-600 font-semibold text-blue-600;
+}
