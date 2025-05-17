@@ -1,10 +1,83 @@
 import axiosPublic from "../axios/axiosPublic";
-
+const districts = [
+  "চট্টগ্রাম",
+  "কক্সবাজার",
+  "কুমিল্লা",
+  "ব্রাহ্মণবাড়িয়া",
+  "চাঁদপুর",
+  "ফেনী",
+  "লক্ষ্মীপুর",
+  "নোয়াখালী",
+  "খাগড়াছড়ি",
+  "রাঙ্গামাটি",
+  "বান্দরবান",
+];
+const mamlaNames = [
+  "সার্টিফিকেট আপিল",
+  "নামজারি আপিল",
+  "নামজারি রিভিশন",
+  "পিটিশন",
+  "বিবিধ সংশোধনী রিভিশন",
+  "মিচ আপিল",
+  "উচ্ছেদ আপিল",
+  "মিচ রিভিশন",
+  "নামজারি জমাভাগ আপিল",
+  "নামজারি জমাখারিজ আপিল",
+  "নামজারি রিভিউ আপিল",
+  "নামজারি জমাভাগ রিভিশন",
+  "হোল্ডিং আপিল",
+  "বিবিধ আপিল",
+  "সার্টিফিকেট রিভিশন",
+  "ভিপি আপিল",
+  "নামজরি রিভিশন",
+  "নামজারি মিচ আপিল",
+  "বন্দোবস্তি রিভিশন",
+  "রিভিশন মিচ আপিল",
+  "নামজারি জমাখারিজ রিভিশন",
+  "মিচ এল আপিল",
+  "নামজারি বিবিধ আপিল",
+  "অবমূল্যায়ন আপিল",
+  "বিবিধ রিভিশন",
+  "নামজারি জমাঃ আপিল",
+  "বিবিধ রেকড সংশোধনী আপিল",
+  "বন্দোবস্তি আপিল",
+  "নামজারি রিভিউ",
+  "জমাভাগ রিভিশন",
+  "নামজারি মিচ রিভিশন",
+  "বিবিধ নামজারি আপিল",
+  "ভি.পি আপিল",
+  "বাজার ফান্ড মিচ আপিল",
+  "এল এ মিচ আপিল",
+  "বাজার ফান্ড বন্দোবস্ত আপিল",
+  "জোত: পূনবহাল রিভিশন",
+  "মিউটেশন রিভিশন",
+  "মিউটেশন আপিল",
+  "জমাখারিজ রিভিশন",
+  "বন্দোবস্তি মামলা",
+  "জলমহাল আপিল",
+  "বন্দোবস্ত রিভিশন",
+  "চান্দিনা পেরিফেরি মিচ রিভিশন",
+  "সায়রাত আপিল",
+  "এস.এ. মিচ রিভিশন",
+  "নামজারি ও জমাখারিজ আপিল",
+  "জমাখারিজ আপিল",
+  "নামজারি আপিল রিভিশন",
+  "আপিল",
+  "নামজারি জমাভাগ মিচ রিভিশন",
+  "নামজারি ও জমাভাগ রিভিশন",
+  "বিবিধ মিচ আপিল",
+  "সাটির্ফিকেট রিভিশন",
+  "নামজারি রিভিউ মিচ মামলা",
+  "সিভিল আপিল",
+  "রিভিউ পিটিশন",
+  "রিভিউ মিচ মামলা",
+  "রিভিশন",
+];
 export default function mamlaSearchForm({ handleSubmit }) {
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex-1 bg-white shadow-sm px-4 pt-2 pb-2">
-        <div className="bg-blue-200 mb-4 py-2 font-bold text-lg text-center">
+        <div className="bg-green-200 mb-4 py-2 font-bold text-lg text-center">
           Case Search
         </div>
         <div className="space-y-4 text-sm">
@@ -15,68 +88,27 @@ export default function mamlaSearchForm({ handleSubmit }) {
               <select
                 name="district"
                 required
-                className="w-full select-bordered select"
+                className="mt-1 w-full select-bordered select"
               >
                 <option value="">Select District</option>
-                <option value="Chattogram">Chattogram</option>
-                <option value="Cox's Bazar">Cox's Bazar</option>
-                <option value="Cumilla">Cumilla</option>
-                <option value="Brahmanbaria">Brahmanbaria</option>
-                <option value="Chandpur">Chandpur</option>
-                <option value="Feni">Feni</option>
-                <option value="Lakshmipur">Lakshmipur</option>
-                <option value="Noakhali">Noakhali</option>
-                <option value="Khagrachhari">Khagrachhari</option>
-                <option value="Rangamati">Rangamati</option>
-                <option value="Bandarban">Bandarban</option>
+                {districts.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
               </select>
             </label>
 
-            {/* mamla Name */}
+            {/* Mamla Name */}
             <label>
-              Case Name:
+              Mamla Name:
               <select
                 name="mamlaName"
                 required
-                className="w-full select-bordered select"
+                className="mt-1 w-full select-bordered select"
               >
-                <option value="">Select mamla Name</option>
-                {[
-                  "নামজারি মামলা",
-                  "নামজারি আপিল",
-                  "নামজারি রিভিশন",
-                  "যৌথ নামজারি আবেদন",
-                  "উত্তরাধিকার সূত্রে নামজারি",
-                  "ক্রয়সূত্রে নামজারি",
-                  "হুকুম দখলের ভিত্তিতে নামজারি",
-                  "সার্টিফিকেট আপিল",
-                  "সার্টিফিকেট রিভিশন",
-                  "দাখিলকৃত খাজনা সংশোধন আবেদন",
-                  "দাগ নম্বর সংশোধন",
-                  "জমির পরিমাণ সংশোধন",
-                  "নামের বানান সংশোধন",
-                  "মৌজা বা JL নাম সংশোধন",
-                  "বিবিধ সংশোধনী রিভিশন",
-                  "হুকুম দখল মামলা",
-                  "জমি দখল বিরোধ সংক্রান্ত মামলা",
-                  "ভূমি জরিপ বিরোধ নিষ্পত্তি মামলা",
-                  "রেকর্ড সংশোধন মামলা",
-                  "খাসজমির পুনঃবিবেচনা মামলা",
-                  "কৃষি খাস জমি সংক্রান্ত মামলা",
-                  "চর জমি বন্দোবস্ত মামলা",
-                  "অর্পিত সম্পত্তির মামলা",
-                  "এসএ/আরএস রেকর্ড ভুল সংশোধন মামলা",
-                  "ভূমি জরিপ সংক্রান্ত আপিল",
-                  "মৌজা সংক্রান্ত আপিল",
-                  "সীমানা বিরোধ মামলার রিভিশন",
-                  "ভূমি উন্নয়ন কর হ্রাসের আবেদন",
-                  "অস্থায়ী নিষেধাজ্ঞা মামলা",
-                  "তথ্য অধিকার আইনে আবেদন (ভূমি সংক্রান্ত)",
-                  "পুণঃশুনানির আবেদন",
-                  "রুলিং ও নির্দেশনা চাওয়া মামলা",
-                  "দালিলিক/রেকর্ড যাচাইয়ের আবেদন",
-                  "ভূমি আপিল বোর্ডে আবেদন (চূড়ান্ত আপিল)",
-                ].map((name) => (
+                <option value="">Select Mamla Name</option>
+                {mamlaNames.map((name) => (
                   <option key={name} value={name}>
                     {name}
                   </option>
@@ -85,7 +117,7 @@ export default function mamlaSearchForm({ handleSubmit }) {
             </label>
 
             {/* mamla Type */}
-            <label>
+            {/* <label>
               Case Type:
               <select
                 name="mamlaType"
@@ -98,7 +130,7 @@ export default function mamlaSearchForm({ handleSubmit }) {
                 <option value="সংশোধন">সংশোধন</option>
                 <option value="বিবিধ">বিবিধ</option>
               </select>
-            </label>
+            </label> */}
 
             {/* mamla Number */}
             <label>
@@ -114,7 +146,7 @@ export default function mamlaSearchForm({ handleSubmit }) {
             <label>
               Year:
               <select
-                name="mamlaYear"
+                name="year"
                 required
                 className="w-full select-bordered select"
               >
@@ -133,7 +165,10 @@ export default function mamlaSearchForm({ handleSubmit }) {
 
           {/* Submit Button */}
           <div className="flex items-center">
-            <button type="submit" className="mx-auto mt-2 btn btn-neutral">
+            <button
+              type="submit"
+              className="bg-green-600 mx-auto mt-2 border-none btn btn-neutral"
+            >
               Search
             </button>
           </div>

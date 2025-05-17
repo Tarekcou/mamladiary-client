@@ -32,7 +32,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
             >
               <td className="px-4 py-2">{mamla.mamlaName || "-"}</td>
               <td className="px-4 py-2">{mamla.mamlaNo || "-"}</td>
-              <td className="px-4 py-2">{mamla.mamlaYear || "-"}</td>
+              <td className="px-4 py-2">{mamla.year || "-"}</td>
               <td className="px-4 py-2">{mamla.district || "-"}</td>
               <td className="px-4 py-2">{mamla.completedMamla || "-"}</td>
               <td className="px-4 py-2">{mamla.completionDate || "-"}</td>
