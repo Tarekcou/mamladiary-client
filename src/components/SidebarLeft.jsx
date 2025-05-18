@@ -1,6 +1,6 @@
 export default function SidebarLeft() {
   return (
-    <div className="space-y-4 bg-white p-2 text-sm">
+    <div className="space-y-4 px-2 bg-white  text-sm">
       <div>
         <h2 className="bg-green-600 px-2 py-1 font-bold text-white">
           The Court

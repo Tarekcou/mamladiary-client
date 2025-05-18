@@ -3,10 +3,10 @@ import { NavLink } from "react-router";
 
 const DashboardSidebar = () => {
   return (
-    <div>
-      <div>
+    <div className="">
+      <div className="w-full  space-y-4">
         {/* <h2 className="bg-green-600 px-2 py-1 font-bold text-white">Admin</h2> */}
-        <ul className="flex flex-col space-y-1 p-4 list-disc list-inside">
+        <ul className="flex flex-col  space-y-1 list-disc list-inside">
           <h2 className="bg-green-600 px-2 py-1 font-bold text-white">
             Addl Com Mamla
           </h2>
@@ -34,7 +34,7 @@ const DashboardSidebar = () => {
         </ul>
 
         {/* ADC Mamla */}
-        <ul className="flex flex-col space-y-1 p-4 list-disc list-inside">
+        <ul className="flex flex-col space-y-1  list-disc list-inside">
           <h2 className="bg-green-600 px-2 py-1 font-bold text-white">
             ADC Mamla
           </h2>

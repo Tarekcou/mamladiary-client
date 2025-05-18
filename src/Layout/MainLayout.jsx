@@ -8,43 +8,61 @@ import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
 const MainLayout = () => {
   const [isSticky, setIsSticky] = useState(false);
   const location = useLocation();
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
   const path = location.pathname;
-  useEffect(() => {
+   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 150) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
+      setIsSticky(window.scrollY > 150);
     };
+
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
+   const layoutWidth = screenWidth * (10 / 12);       // 10/12 of screen
+  const sidebarWidth = layoutWidth * (2 / 12);        // 2/12 of layout (i.e., 2/12 of 10/12 of screen)
+  const mainWidth = layoutWidth * (10 / 12);          // 10/12 of layout
+  console.log(sidebarWidth)
+  
+
   return (
-    <div className="relative mx-auto w-11/12 md:w-10/12">
+    <div className=" mx-auto w-11/12 md:w-10/12">
       <Header />
 
-      <div className="flex mt-4 min-h-screen">
-        {/* SidebarLeft: scrolls initially, then becomes fixed */}
-        <div
-          className={`hidden lg:block ${
-            path.includes("dashboard") ? "w-44" : "w-44"
-          }  ${
-            isSticky
-              ? "fixed top-16 z-40 bg-white shadow-md h-[calc(100vh-2rem)] overflow-y-auto"
-              : "relative shadow-md"
-          }`}
-        >
-          {/* Only show SidebarLeft on specific routes */}
-          {path.includes("dashboard") ? <DashboardSidebar /> : <SidebarLeft />}
-        </div>
+      <div className="flex gap-4 mt-4 min-h-screen relative">
+  {/* SidebarLeft */}
+  <div
+  className={`hidden lg:block ${
+    isSticky
+      ? "fixed top-24 z-40 shadow-md h-full"
+      : "lg:w-2/12 mt-2 relative shadow-md"
+  }`}
+  style={isSticky ? { width: `${sidebarWidth}px` } : {}}
+>
 
-        {/* Main Content */}
-        <main className={`flex-1 lg:pl-4 ${isSticky ? "lg:ml-44" : ""}`}>
-          <Outlet />
-        </main>
-      </div>
+    {path.includes("dashboard") ? <DashboardSidebar /> : <SidebarLeft />}
+  </div>
+
+
+ {isSticky && <div style={isSticky ? { width: `${sidebarWidth}px` } : {}}/>}
+  {/* Main Content */}
+  <main
+    className={` w-full lg:w-10/12  ${isSticky?"":""}`}
+  >
+    <Outlet />
+  </main>
+</div>
+
       <div className="">
         <Footer />
       </div>
