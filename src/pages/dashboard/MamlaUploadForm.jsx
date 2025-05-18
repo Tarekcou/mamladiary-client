@@ -119,7 +119,6 @@ export default function MamlaUploadForm() {
           Mamla Name:
           <select
             name="mamlaName"
-            required
             className="mt-1 w-full select-bordered select"
           >
             <option value="">Select Mamla Name</option>
@@ -137,7 +136,6 @@ export default function MamlaUploadForm() {
           <input
             type="text"
             name="mamlaNo"
-            required
             className="mt-1 input-bordered w-full input"
           />
         </label>
@@ -145,11 +143,7 @@ export default function MamlaUploadForm() {
         {/* Year */}
         <label>
           Year:
-          <select
-            name="year"
-            required
-            className="mt-1 w-full select-bordered select"
-          >
+          <select name="year" className="mt-1 w-full select-bordered select">
             <option value="">Select Year</option>
             {Array.from({ length: 50 }, (_, i) => {
               const year = 2000 + i;
@@ -167,7 +161,6 @@ export default function MamlaUploadForm() {
           District:
           <select
             name="district"
-            required
             className="mt-1 w-full select-bordered select"
           >
             <option value="">Select District</option>
@@ -195,7 +188,6 @@ export default function MamlaUploadForm() {
           <input
             type="text"
             name="completedMamla"
-            required
             className="mt-1 input-bordered w-full input"
           />
         </label>

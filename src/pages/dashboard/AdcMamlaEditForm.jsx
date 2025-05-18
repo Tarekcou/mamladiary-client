@@ -1,6 +1,5 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
-
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -76,27 +75,52 @@ const districts = [
   "রাঙ্গামাটি",
   "বান্দরবান",
 ];
+const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
+  const [formData, setFormData] = useState({
+    mamlaName: "",
+    mamlaNo: "",
+    year: "",
+    district: "",
+    nextDate: "",
+    completedMamla: "",
+    completionDate: "",
+  });
 
-export default function AdcMamlaUploadForm() {
   const [loading, setLoading] = useState(false);
 
+  // Populate form with existing mamla
+  useEffect(() => {
+    if (mamla) {
+      setFormData({
+        mamlaName: mamla.mamlaName || "",
+        mamlaNo: mamla.mamlaNo || "",
+        year: mamla.year || "",
+        district: mamla.district || "",
+        nextDate: mamla.nextDate || "",
+        completedMamla: mamla.completedMamla || "",
+        completionDate: mamla.completionDate || "",
+      });
+    }
+  }, [mamla]);
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target;
-
-    const mamlaData = {
-      adcMamlaName: form.mamlaName.value,
-      mamlaNo: form.mamlaNo.value,
-      year: form.year.value,
-      district: form.district.value,
-    };
 
     try {
       setLoading(true);
-      const res = await axiosPublic.post("/adcMamla", mamlaData);
-      console.log(res.data);
+      const res = await axiosPublic.patch(`/adcMamla/${mamla._id}`, formData);
       alert("Mamla uploaded successfully!");
-      form.reset();
+      console.log("Response data:", res.data);
     } catch (err) {
       console.error("Upload failed:", err);
       alert("Failed to upload mamla.");
@@ -106,80 +130,95 @@ export default function AdcMamlaUploadForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
-      <h2 className="bg-green-100 mb-4 py-2 font-bold text-xl text-center">
-        ADC Mamla Upload Form
-      </h2>
+    <div>
+      <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
+        <h2 className="bg-green-100 mb-4 py-2 font-bold text-xl text-center">
+          ADC Mamla Update Form
+        </h2>
 
-      <div className="gap-4 grid grid-cols-2 text-sm">
-        {/* Mamla Name */}
-        <label>
-          Mamla Name:
-          <select
-            name="mamlaName"
-            className="mt-1 w-full select-bordered select"
-          >
-            <option value="">Select Mamla Name</option>
-            {mamlaNames.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {/* Mamla No */}
-        <label>
-          Mamla Number:
-          <input
-            type="text"
-            name="mamlaNo"
-            className="mt-1 input-bordered w-full input"
-          />
-        </label>
-
-        {/* Year */}
-        <label>
-          Year:
-          <select name="year" className="mt-1 w-full select-bordered select">
-            <option value="">Select Year</option>
-            {Array.from({ length: 50 }, (_, i) => {
-              const year = 2000 + i;
-              return (
-                <option key={year} value={year}>
-                  {year}
+        <div className="gap-4 grid grid-cols-2 text-sm">
+          {/* Mamla Name */}
+          <label>
+            Mamla Name:
+            <select
+              name="mamlaName"
+              className="mt-1 w-full select-bordered select"
+              value={formData.mamlaName}
+              onChange={handleChange}
+            >
+              <option value="">Select Mamla Name</option>
+              {mamlaNames.map((name) => (
+                <option key={name} value={name}>
+                  {name}
                 </option>
-              );
-            })}
-          </select>
-        </label>
+              ))}
+            </select>
+          </label>
 
-        {/* District */}
-        <label>
-          District:
-          <select
-            name="district"
-            className="mt-1 w-full select-bordered select"
+          {/* Mamla Number */}
+          <label>
+            Mamla Number:
+            <input
+              type="text"
+              name="mamlaNo"
+              value={formData.mamlaNo}
+              onChange={handleChange}
+              className="mt-1 input-bordered w-full input"
+            />
+          </label>
+
+          {/* Year */}
+          <label>
+            Year:
+            <select
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              className="mt-1 w-full select-bordered select"
+            >
+              <option value="">Select Year</option>
+              {Array.from({ length: 50 }, (_, i) => {
+                const year = 2000 + i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+
+          {/* District */}
+          <label>
+            District:
+            <select
+              name="district"
+              value={formData.district}
+              onChange={handleChange}
+              className="mt-1 w-full select-bordered select"
+            >
+              <option value="">Select District</option>
+              {districts.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className="mt-6 text-center">
+          <button
+            type="submit"
+            className="px-6 btn btn-success"
+            disabled={loading}
           >
-            <option value="">Select District</option>
-            {districts.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <div className="mt-6 text-center">
-        <button
-          type="submit"
-          className="px-6 btn btn-success"
-          disabled={loading}
-        >
-          {loading ? "Uploading..." : "Upload Mamla"}
-        </button>
-      </div>
-    </form>
+            {loading ? "Uploading..." : "Update Mamla"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
-}
+};
+
+export default AdcMamlaEditForm;

@@ -1,23 +1,31 @@
 import React, { useState, useMemo, useEffect } from "react";
 import axiosPublic from "../../axios/axiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import MamlaEditForm from "./MamlaEditForm";
 
 const AllMamla = () => {
-  const [mamlaList, setMamlaList] = useState([]);
+  // const [mamlaList, setMamlaList] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const {
+    data: mamlaList,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["allMamla"], // good for caching different search results
+    queryFn: async () => {
       try {
         const response = await axiosPublic.get(`/allMamla`);
+        // console.log("Response data:", response.data);
         if (response.status === 200) {
-          setMamlaList(response.data);
+          return response.data;
         }
       } catch (error) {
         console.error("Error fetching mamla data:", error);
       }
-    };
-
-    fetchData();
-  }, []);
+    },
+  });
 
   const [search, setSearch] = useState({
     mamlaName: "",
@@ -30,12 +38,14 @@ const AllMamla = () => {
 
   // Filtered Data
   const filteredData = useMemo(() => {
-    return mamlaList.filter(
+    return (mamlaList ?? []).filter(
       (item) =>
-        item.mamlaName.toLowerCase().includes(search.mamlaName.toLowerCase()) &&
-        item.mamlaNo.toLowerCase().includes(search.mamlaNo.toLowerCase()) &&
-        item.district.toLowerCase().includes(search.district.toLowerCase()) &&
-        item.year.toLowerCase().includes(search.year.toLowerCase())
+        item?.mamlaName
+          .toLowerCase()
+          .includes(search.mamlaName.toLowerCase()) &&
+        item?.mamlaNo.toLowerCase().includes(search.mamlaNo.toLowerCase()) &&
+        item?.district.toLowerCase().includes(search.district.toLowerCase()) &&
+        item?.year.toLowerCase().includes(search.year.toLowerCase())
     );
   }, [mamlaList, search]);
 
@@ -49,6 +59,26 @@ const AllMamla = () => {
   const handleSearchChange = (e) => {
     setCurrentPage(1); // reset to first page
     setSearch({ ...search, [e.target.name]: e.target.value });
+  };
+
+  const [editedMamla, setEditedMamla] = useState(null);
+
+  const handleEdit = (mamla) => {
+    console.log(mamla);
+    setEditedMamla(mamla);
+  };
+  const handleDelete = async (id) => {
+    console.log(id);
+    try {
+      const response = await axiosPublic.delete(`/mamla/${id}`);
+      // console.log("Response data:", response.data);
+      if (response.status === 200) {
+        refetch();
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching mamla data:", error);
+    }
   };
 
   return (
@@ -126,8 +156,23 @@ const AllMamla = () => {
                     {item.completionDate || "-"}
                   </td>
                   <td className="px-4 py-2 border">
-                    <button className="btn">edit</button>
-                    <button className="btn">delete</button>
+                    <label
+                      htmlFor="my_modal_3"
+                      className="btn"
+                      onClick={() => {
+                        handleEdit(item);
+                        document.getElementById("my_modal_3").showModal();
+                      }}
+                    >
+                      edit
+                    </label>
+
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="btn"
+                    >
+                      delete
+                    </button>
                   </td>
                 </tr>
               ))
@@ -169,6 +214,24 @@ const AllMamla = () => {
           </button>
         </div>
       </div>
+      {/* The button to open modal */}
+      {/* <label htmlFor="my_modal_6" className="btn">
+        open modal
+      </label> */}
+
+      {/* Put this part before </body> tag */}
+
+      <dialog id="my_modal_3" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="top-2 right-2 absolute btn btn-sm btn-circle btn-ghost">
+              ✕
+            </button>
+          </form>
+          <MamlaEditForm editedMamla={editedMamla} />
+        </div>
+      </dialog>
     </div>
   );
 };

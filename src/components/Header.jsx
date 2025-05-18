@@ -13,11 +13,12 @@ export default function Header() {
   const [navHeight, setNavHeight] = useState(0);
   const navRef = useRef(null);
   const navigate = useNavigate();
-  const { signIn, resigter, isSignedIn, signOut } = useContext(AuthContext);
+  const { signIn, resigter, isSignedIn, signOut, isAdmin } =
+    useContext(AuthContext);
   const location = useLocation();
   const path = location.pathname;
   const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === "en" ? "bn" : "en");
+    i18n.changeLanguage(i18n.language === "bn" ? "en" : "bn");
   };
   const originalNavTop = useRef(0);
 
@@ -71,10 +72,10 @@ export default function Header() {
               : "text-gray-700 btn btn-sm"
           }
         >
-          Cause List
+          {t("cause list")}
         </NavLink>
 
-        {isSignedIn && (
+        {isSignedIn && isAdmin && (
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
@@ -105,7 +106,7 @@ export default function Header() {
           </Link>
         )}
         <button onClick={toggleLanguage} className="btn btn-sm">
-          {i18n.language === "en" ? "বাংলা" : "English"}
+          {i18n.language === "en" ? "English" : "বাংলা"}
         </button>
       </div>
     </>
@@ -170,7 +171,6 @@ export default function Header() {
                 tabIndex={0}
                 className="z-1 bg-base-100 shadow mt-3 p-2 rounded-box menu menu-sm dropdown-content"
               >
-                {navMenu}
                 {path.includes("dashboard") ? (
                   <DashboardSidebar />
                 ) : (
@@ -178,6 +178,8 @@ export default function Header() {
                 )}
               </ul>
             </div>
+
+            <div className="hidden lg:hidden md:block">{navMenu}</div>
             {/* <a className="text-xl btn btn-ghost">daisyUI</a> */}
           </div>
           <div className="hidden lg:flex navbar-center">

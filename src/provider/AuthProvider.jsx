@@ -8,7 +8,7 @@ const AuthProvider = ({ children }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setLoading] = useState(true);
-
+  const [isAdmin, setAdmin] = useState(false);
   // signin
   const signIn = async (formData) => {
     try {
@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
         console.log("Registration successful:", response.data);
         if (response.data.status === "success") {
           alert("Registration successful");
-          navigation("/dashboard");
+          navigation("/");
           setLoading(false);
         }
         if (response.data.message === "user already exist") {
@@ -60,12 +60,28 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // ✅ Load user from localStorage if exists
+
     const storedUser = localStorage.getItem("user");
+    console.log(storedUser);
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsSignedIn(true);
       setLoading(false);
+    } else {
+      setLoading(false);
+      navigation("/");
     }
+    const getUser = async () => {
+      const email = JSON.parse(storedUser)?.email;
+      const res = await axiosPublic.get(`/users/${email}`);
+      console.log(res.data);
+      if (res.data?.role === "Admin") {
+        setAdmin(true);
+      }
+      console.log(isAdmin);
+    };
+
+    getUser();
   }, []);
   const authData = {
     signIn,
@@ -77,6 +93,7 @@ const AuthProvider = ({ children }) => {
     user,
     isLoading,
     setLoading,
+    isAdmin,
   };
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>

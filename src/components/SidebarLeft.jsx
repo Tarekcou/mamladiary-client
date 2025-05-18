@@ -1,54 +1,48 @@
+import { useTranslation } from "react-i18next";
+
 export default function SidebarLeft() {
+  const { t } = useTranslation();
+
   return (
-    <div className="space-y-4 px-2 bg-white  text-sm">
+    <div className="space-y-4 bg-white px-2 text-sm">
       <div>
         <h2 className="bg-green-600 px-2 py-1 font-bold text-white">
-          The Court
+          {t("the court")}
         </h2>
-        <ul className="space-y-1 list-disc list-inside">
+        <ul className="space-y-2 mt-2 p-2 list-disc list-inside">
           <li>
             <a href="#" className="underline">
-              History
+              {t("history")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              বাংলায় অনুবাদিত রায়
+              {t("court calendar")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              Court Calendar
+              {t("court rules")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              Court Rules
+              {t("photo gallery")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              SCOB (Law Reports)
+              {t("contacts")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              Photo Gallery
+              {t("location map")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              Contacts
-            </a>
-          </li>
-          <li>
-            <a href="#" className="underline">
-              Location Map
-            </a>
-          </li>
-          <li>
-            <a href="#" className="underline">
-              Lodge your Complaint
+              {t("lodge your complaint")}
             </a>
           </li>
         </ul>
@@ -56,22 +50,22 @@ export default function SidebarLeft() {
 
       <div>
         <h2 className="bg-green-600 px-2 py-1 font-bold text-white">
-          Resources
+          {t("resources")}
         </h2>
-        <ul className="space-y-1 list-disc list-inside">
+        <ul className="space-y-2 mt-2 p-2 list-disc list-inside">
           <li>
             <a href="#" className="underline">
-              Speeches of the Chief Justice
+              {t("speeches of the chief justice")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              Annual Reports
+              {t("annual reports")}
             </a>
           </li>
           <li>
             <a href="#" className="underline">
-              e-book
+              {t("e-book")}
             </a>
           </li>
         </ul>

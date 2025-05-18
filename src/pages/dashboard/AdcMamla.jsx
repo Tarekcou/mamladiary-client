@@ -1,23 +1,30 @@
 import React, { useState, useMemo, useEffect } from "react";
 import axiosPublic from "../../axios/axiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import AdcMamlaEditForm from "./AdcMamlaEditForm";
 
 const AdcMamla = () => {
-  const [adcMamlaList, setAdcMamlaList] = useState([]);
+  // const [adcMamlaList, setAdcMamlaList] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const {
+    data: adcMamlaList,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["adcMamla"], // good for caching different search results
+    queryFn: async () => {
       try {
         const response = await axiosPublic.get(`/adcMamla`);
-        if (response.status === 200) {
-          setAdcMamlaList(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching ADC mamla data:", error);
-      }
-    };
+        console.log("Response data:", response.data);
 
-    fetchData();
-  }, []);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching mamla data:", error);
+      }
+    },
+  });
 
   const [search, setSearch] = useState({
     adcMamlaName: "",
@@ -30,14 +37,14 @@ const AdcMamla = () => {
 
   // Filtered Data
   const filteredData = useMemo(() => {
-    return adcMamlaList.filter(
+    return (adcMamlaList ?? []).filter(
       (item) =>
-        item.adcMamlaName
-          .toLowerCase()
-          .includes(search.adcMamlaName.toLowerCase()) &&
-        item.mamlaNo.toLowerCase().includes(search.mamlaNo.toLowerCase()) &&
-        item.district.toLowerCase().includes(search.district.toLowerCase()) &&
-        item.year.toLowerCase().includes(search.year.toLowerCase())
+        item?.adcMamlaName
+          ?.toLowerCase()
+          .includes(search?.adcMamlaName.toLowerCase()) &&
+        item?.mamlaNo.toLowerCase().includes(search?.mamlaNo.toLowerCase()) &&
+        item?.district.toLowerCase().includes(search?.district.toLowerCase()) &&
+        item?.year.toLowerCase().includes(search?.year.toLowerCase())
     );
   }, [adcMamlaList, search]);
 
@@ -53,9 +60,33 @@ const AdcMamla = () => {
     setSearch({ ...search, [e.target.name]: e.target.value });
   };
 
+  const [editedMamla, setEditedMamla] = useState(null);
+
+  const handleEdit = (mamla) => {
+    console.log(mamla);
+    refetch();
+    setEditedMamla(mamla);
+  };
+  const handleDelete = async (id) => {
+    console.log(id);
+    try {
+      const response = await axiosPublic.delete(`/adcMamla/${id}`);
+      refetch();
+      // console.log("Response data:", response.data);
+      if (response.status === 200) {
+        refetch();
+        return response.data;
+      }
+    } catch (error) {
+      console.error("Error fetching mamla data:", error);
+    }
+  };
+
   return (
     <div className="p-4">
-      <h2 className="mb-4 font-semibold text-xl">ADC Mamla Records</h2>
+      <h2 className="mb-4 font-semibold text-xl text-center">
+        ADC Mamla Records
+      </h2>
 
       {/* Search Fields */}
       <div className="gap-2 grid grid-cols-1 md:grid-cols-4 mb-4">
@@ -120,8 +151,22 @@ const AdcMamla = () => {
                   <td className="px-4 py-2 border">{item.district}</td>
 
                   <td className="px-4 py-2 border">
-                    <button className="btn">edit</button>
-                    <button className="btn">delete</button>
+                    <label
+                      htmlFor="my_modal_3"
+                      className="btn"
+                      onClick={() => {
+                        handleEdit(item);
+                        document.getElementById("my_modal_3").showModal();
+                      }}
+                    >
+                      edit
+                    </label>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="btn"
+                    >
+                      delete
+                    </button>
                   </td>
                 </tr>
               ))
@@ -163,6 +208,18 @@ const AdcMamla = () => {
           </button>
         </div>
       </div>
+
+      <dialog id="my_modal_3" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="top-2 right-2 absolute btn btn-sm btn-circle btn-ghost">
+              ✕
+            </button>
+          </form>
+          <AdcMamlaEditForm editedMamla={editedMamla} />
+        </div>
+      </dialog>
     </div>
   );
 };

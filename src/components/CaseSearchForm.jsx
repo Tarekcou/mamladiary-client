@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import axiosPublic from "../axios/axiosPublic";
+
 const districts = [
   "চট্টগ্রাম",
   "কক্সবাজার",
@@ -12,6 +14,7 @@ const districts = [
   "রাঙ্গামাটি",
   "বান্দরবান",
 ];
+
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -73,24 +76,27 @@ const mamlaNames = [
   "রিভিউ মিচ মামলা",
   "রিভিশন",
 ];
-export default function mamlaSearchForm({ handleSubmit }) {
+
+export default function MamlaSearchForm({ handleSubmit }) {
+  const { t } = useTranslation();
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex-1 bg-white shadow-sm px-4 pt-2 pb-2">
         <div className="bg-green-200 mb-4 py-2 font-bold text-lg text-center">
-          Case Search
+          {t("case search")}
         </div>
         <div className="space-y-4 text-sm">
           <div className="gap-4 grid grid-cols-2">
             {/* District */}
             <label>
-              District:
+              {t("district")}:
               <select
                 name="district"
                 required
                 className="mt-1 w-full select-bordered select"
               >
-                <option value="">Select District</option>
+                <option value="">{t("select district")}</option>
                 {districts.map((d) => (
                   <option key={d} value={d}>
                     {d}
@@ -101,13 +107,13 @@ export default function mamlaSearchForm({ handleSubmit }) {
 
             {/* Mamla Name */}
             <label>
-              Mamla Name:
+              {t("mamla name")}:
               <select
                 name="mamlaName"
                 required
                 className="mt-1 w-full select-bordered select"
               >
-                <option value="">Select Mamla Name</option>
+                <option value="">{t("select mamla name")}</option>
                 {mamlaNames.map((name) => (
                   <option key={name} value={name}>
                     {name}
@@ -116,25 +122,9 @@ export default function mamlaSearchForm({ handleSubmit }) {
               </select>
             </label>
 
-            {/* mamla Type */}
-            {/* <label>
-              Case Type:
-              <select
-                name="mamlaType"
-                className="w-full select-bordered select"
-              >
-                <option value="">Select mamla Type</option>
-                <option value="নামজারি">নামজারি</option>
-                <option value="আপিল">আপিল</option>
-                <option value="রিভিশন">রিভিশন</option>
-                <option value="সংশোধন">সংশোধন</option>
-                <option value="বিবিধ">বিবিধ</option>
-              </select>
-            </label> */}
-
-            {/* mamla Number */}
+            {/* Case Number */}
             <label>
-              Case Number:
+              {t("case number")}:
               <input
                 name="mamlaNo"
                 type="text"
@@ -144,13 +134,14 @@ export default function mamlaSearchForm({ handleSubmit }) {
 
             {/* Year */}
             <label>
-              Year:
+              {t("year")}:
               <select
                 name="year"
                 required
+                value={2025}
                 className="w-full select-bordered select"
               >
-                <option value="">Select Year</option>
+                <option value="">{t("Select Year")}</option>
                 {Array.from({ length: 50 }, (_, i) => {
                   const year = 2000 + i;
                   return (
@@ -169,7 +160,7 @@ export default function mamlaSearchForm({ handleSubmit }) {
               type="submit"
               className="bg-green-600 mx-auto mt-2 border-none btn btn-neutral"
             >
-              Search
+              {t("Search")}
             </button>
           </div>
         </div>

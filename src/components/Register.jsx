@@ -13,7 +13,7 @@ export default function Register() {
     dnothiId: "",
     password: "",
     section: "",
-    podobi: "",
+    designation: "",
   });
 
   const handleChange = (e) => {
@@ -83,9 +83,9 @@ export default function Register() {
 
           <input
             type="text"
-            name="podobi"
+            name="designation"
             placeholder="Podobi"
-            value={formData.podobi}
+            value={formData.designation}
             onChange={handleChange}
             required
             className="px-4 py-2 border rounded-lg w-full"

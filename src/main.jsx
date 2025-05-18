@@ -18,6 +18,7 @@ import MamlaUploadForm from "./pages/dashboard/MamlaUploadForm.jsx";
 import AllMamla from "./pages/dashboard/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/dashboard/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/dashboard/ADCMamla.jsx";
+import ManageUser from "./pages/dashboard/ManageUser.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
@@ -34,17 +35,54 @@ ReactDOM.createRoot(root).render(
             <Route path="/register" element={<Register />} />
 
             {/* dashboard */}
-            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRouter>
+                  <Dashboard />
+                </PrivateRouter>
+              }
+            ></Route>
             <Route
               path="/dashboard/mamlaUpload"
-              element={<MamlaUploadForm />}
+              element={
+                <PrivateRouter>
+                  <MamlaUploadForm />
+                </PrivateRouter>
+              }
             ></Route>
-            <Route path="/dashboard/allMamla" element={<AllMamla />}></Route>
+            <Route
+              path="/dashboard/allMamla"
+              element={
+                <PrivateRouter>
+                  <AllMamla />
+                </PrivateRouter>
+              }
+            ></Route>
 
-            <Route path="/dashboard/allAdcMamla" element={<AdcMamla />}></Route>
+            <Route
+              path="/dashboard/allAdcMamla"
+              element={
+                <PrivateRouter>
+                  <AdcMamla />
+                </PrivateRouter>
+              }
+            ></Route>
             <Route
               path="/dashboard/adcMamlaUpload"
-              element={<AdcMamlaUploadForm />}
+              element={
+                <PrivateRouter>
+                  <AdcMamlaUploadForm />
+                </PrivateRouter>
+              }
+            ></Route>
+            <Route
+              path="/dashboard/allUsers"
+              element={
+                <PrivateRouter>
+                  <ManageUser />
+                </PrivateRouter>
+              }
             ></Route>
           </Route>
         </Routes>
