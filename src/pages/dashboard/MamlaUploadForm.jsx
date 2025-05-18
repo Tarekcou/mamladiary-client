@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
 
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
@@ -97,11 +98,12 @@ export default function MamlaUploadForm() {
     try {
       setLoading(true);
       const res = await axiosPublic.post("/mamlas", mamlaData);
-      alert("Mamla uploaded successfully!");
+      toast.success("আপলোড সফল হয়েছে");
+
       form.reset();
     } catch (err) {
       console.error("Upload failed:", err);
-      alert("Failed to upload mamla.");
+      toast.warning("আপলোড ব্যর্থ হয়েছে");
     } finally {
       setLoading(false);
     }

@@ -14,18 +14,17 @@ const AuthProvider = ({ children }) => {
     try {
       const res = await axiosPublic.post("/login", formData);
       if (res.status === 200) {
-        alert("Login successful");
+        toast.success("লগ ইন  সফল হয়েছে!");
         setIsSignedIn(true);
         setUser(res.data.user);
         navigation("/dashboard");
         setLoading(false);
         // ✅ Save user in localStorage
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        alert("Login successful after alert");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Login failed");
+      toast.success("লগ ইন byarrth হয়েছে!");
     }
   };
 
@@ -43,12 +42,12 @@ const AuthProvider = ({ children }) => {
       .then((response) => {
         console.log("Registration successful:", response.data);
         if (response.data.status === "success") {
-          alert("Registration successful");
+          toast.success("রেজিস্ট্রেশন সফল হয়েছে!");
           navigation("/");
           setLoading(false);
         }
         if (response.data.message === "user already exist") {
-          alert("User already exists");
+          toast.warning("এই ইমেইল দিয়ে আগে থেকেই রেজিস্ট্রেশন করা আছে");
           navigation("/login");
           setLoading(false);
         }

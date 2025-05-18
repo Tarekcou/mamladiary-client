@@ -9,6 +9,7 @@ import "../app.css";
 import "../i18n";
 import CasesList from "../components/CaseList";
 import axiosPublic from "../axios/axiosPublic";
+import { toast } from "sonner";
 
 export default function Home() {
   const [searchParams, setSearchParams] = useState(null);
@@ -26,6 +27,9 @@ export default function Home() {
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
+      if (response.status == 200) {
+        toast.success("তথ্য পাওয়া গিয়েছে ");
+      }
       return response.data;
     },
     enabled: false, // only run when refetch is called

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
 
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
@@ -95,11 +96,11 @@ export default function AdcMamlaUploadForm() {
       setLoading(true);
       const res = await axiosPublic.post("/adcMamla", mamlaData);
       console.log(res.data);
-      alert("Mamla uploaded successfully!");
+      toast.warning("আপলোড সফল হয়েছে");
       form.reset();
     } catch (err) {
       console.error("Upload failed:", err);
-      alert("Failed to upload mamla.");
+      toast.warning("আপলোড ব্যর্থ হয়েছে");
     } finally {
       setLoading(false);
     }

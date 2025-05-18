@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
+import { Toaster, toast } from "sonner";
+
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -119,11 +121,11 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
     try {
       setLoading(true);
       const res = await axiosPublic.patch(`/adcMamla/${mamla._id}`, formData);
-      alert("Mamla uploaded successfully!");
-      console.log("Response data:", res.data);
+      toast.success("আপলোড সফল হয়েছে!");
+      // console.log("Response data:", res.data);
     } catch (err) {
       console.error("Upload failed:", err);
-      alert("Failed to upload mamla.");
+      toast.warning("আপলোড ব্যর্থ হয়েছে");
     } finally {
       setLoading(false);
     }
@@ -217,6 +219,7 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
           </button>
         </div>
       </form>
+      <Toaster />
     </div>
   );
 };

@@ -19,7 +19,7 @@ import AllMamla from "./pages/dashboard/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/dashboard/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/dashboard/ADCMamla.jsx";
 import ManageUser from "./pages/dashboard/ManageUser.jsx";
-
+import { Toaster, toast } from "sonner";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
@@ -88,5 +88,6 @@ ReactDOM.createRoot(root).render(
         </Routes>
       </AuthProvider>
     </BrowserRouter>
+    <Toaster richColors position="top-right" />
   </QueryClientProvider>
 );
