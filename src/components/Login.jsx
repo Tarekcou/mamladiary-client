@@ -1,6 +1,6 @@
 // pages/Login.jsx
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
 export default function Login() {
@@ -57,12 +57,12 @@ export default function Login() {
 
         <div className="mt-4 text-sm text-center">
           Don't have an account?
-          <a
-            href="/register"
+          <Link
+            to="/register"
             className="ml-2 text-blue-600 hover:underline btn"
           >
             Register
-          </a>
+          </Link>
         </div>
       </div>
     </div>

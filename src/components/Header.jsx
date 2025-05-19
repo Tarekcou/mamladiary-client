@@ -57,8 +57,8 @@ export default function Header() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "text-blue-600 underline btn btn-sm underline-offset-4 font-semibold"
-              : "text-gray-700 btn btn-sm"
+              ? "text-blue-600 underline btn btn-sm  underline-offset-4 font-semibold"
+              : "text-gray-700 btn btn-sm "
           }
         > 
           {t("home")}
