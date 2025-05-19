@@ -79,9 +79,9 @@ const ManageUser = () => {
     <div className="p-2 w-full">
       <h1 className="font-bold text-2xl">Manage All Users</h1>
 
-      <div className="w-full">
+      <div className="w-full overflow-x-auto">
         <h1 className="font-semibold">Total User: {users.length}</h1>
-        <table className="table w-full border-collapse table-fixed">
+        <table className=" min-w-full table w-full border-collapse table-fixed">
           {/* head */}
           <thead>
             <tr className="text-xl text-center">

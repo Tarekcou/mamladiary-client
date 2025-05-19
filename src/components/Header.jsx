@@ -60,8 +60,8 @@ export default function Header() {
               ? "text-blue-600 underline btn btn-sm underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm"
           }
-        >
-          {t("Home")}
+        > 
+          {t("home")}
         </NavLink>
 
         <NavLink
@@ -98,11 +98,11 @@ export default function Header() {
             onClick={handleLogout}
             className={"btn btn-sm bg-blue-600 text-white hover:bg-blue-700"}
           >
-            Sign Out
+            {t("sign out")}
           </button>
         ) : (
           <Link to={"/login"} onClick={handleSignIn} className="btn btn-sm">
-            Sign In
+            {t("sign in")}
           </Link>
         )}
         <button onClick={toggleLanguage} className="btn btn-sm">
@@ -169,8 +169,12 @@ export default function Header() {
               </div>
               <ul
                 tabIndex={0}
-                className="z-1 bg-base-100 shadow mt-3 p-2 rounded-box menu menu-sm dropdown-content"
+                className="z-1 w-84 bg-base-100 shadow mt-4 p-2 rounded-box menu menu-sm dropdown-content"
               >
+                <div className="py-5">
+                {navMenu}
+
+                </div>
                 {path.includes("dashboard") ? (
                   <DashboardSidebar />
                 ) : (

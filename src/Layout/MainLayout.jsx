@@ -44,7 +44,7 @@ const MainLayout = () => {
           className={`hidden lg:block ${
             isSticky
               ? "fixed top-24 z-40 shadow-md h-full"
-              : "lg:w-2/12 mt-2 relative shadow-md"
+              : "lg:w-2/12 w-full mt-2 relative shadow-md"
           }`}
           style={
             isSticky && window.innerWidth >= 1024
