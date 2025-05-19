@@ -103,7 +103,7 @@ export default function Header() {
             onClick={handleSignIn}
             className={({ isActive }) =>
               isActive
-                ? "text-white btn-info btn btn-sm  underline-offset-4 font-semibold"
+                ? "text-white btn-neutral btn btn-sm  underline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-sm"
             }
           >
