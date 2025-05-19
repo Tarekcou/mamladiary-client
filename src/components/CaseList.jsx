@@ -5,18 +5,35 @@ import { useTranslation } from "react-i18next";
 import Loading from "./Loading";
 import { MdError } from "react-icons/md";
 
-
 const CasesList = ({ mamla, isLoading, isError, error }) => {
   const { t } = useTranslation();
 
   if (isLoading) return <Loading />;
-  if (isError) return <p><MdError />
-{<h1 className="text-center p-10">{"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}</h1>}</p>;
-  if (!mamla || mamla.length === 0) return <div className="flex justify-center p-10 items-center"><MdError />
-{<h1 className="text-center p-2">{"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}</h1>}</div>;
+  if (isError)
+    return (
+      <p>
+        <MdError />
+        {
+          <h1 className="p-10 text-center">
+            {"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}
+          </h1>
+        }
+      </p>
+    );
+  if (!mamla || mamla.length === 0)
+    return (
+      <div className="flex justify-center items-center p-10">
+        <MdError />
+        {
+          <h1 className="p-2 text-center">
+            {"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}
+          </h1>
+        }
+      </div>
+    );
   return (
     <div className="mt-10">
-      <h1 className="bg-green-200 mb-4 py-2 font-semibold text-xl text-center">
+      <h1 className="bg-green-600 mb-4 py-2 font-semibold text-white text-xl text-center">
         📂 {t("case search result")}
       </h1>
       <div className="overflow-x-auto">

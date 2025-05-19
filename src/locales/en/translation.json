@@ -29,9 +29,10 @@
   "completion date": "Completion Date",
   "final task": "Final Task",
   "next date": "Next Date",
-  "sign in":"Sign In",
-  "sign out":"Sign Out",
-  "citizen charter":"Citizen Charter",
-  "opinion":"Opinion",
-  "dashboard":"Dashboard"
+  "sign in": "Sign In",
+  "sign out": "Sign Out",
+  "citizen charter": "Citizen Charter",
+  "opinion": "Opinion",
+  "dashboard": "Dashboard",
+  "search": "Search"
 }

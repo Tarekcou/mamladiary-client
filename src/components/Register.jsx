@@ -27,7 +27,7 @@ export default function Register() {
 
   return (
     <div className="flex justify-center items-center px-4">
-      <div className="bg-white px-16 py-4 rounded-2xl max-w-xl">
+      <div className="bg-white py-4 rounded-2xl w-10/12 md:w-6/12">
         <h2 className="mb-6 font-bold text-2xl text-center">Register</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,7 +91,7 @@ export default function Register() {
 
           <button
             type="submit"
-            className="bg-blue-600 btn hover:bg-blue-700 py-2 rounded-lg w-full font-semibold text-white transition"
+            className="bg-green-600 hover:bg-green-700 py-2 rounded-lg w-full font-semibold text-white transition btn"
           >
             Create Account
           </button>
@@ -99,7 +99,7 @@ export default function Register() {
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <Link  to="/login" className="ml-2 text-blue-600 hover:underline">
+          <Link to="/login" className="ml-2 text-blue-600 hover:underline btn">
             Sign In
           </Link>
         </div>

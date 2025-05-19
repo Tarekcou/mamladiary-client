@@ -57,10 +57,10 @@ export default function Header() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "  btn btn-sm btn-primary text-white underline-offset-4 font-semibold"
+              ? "  btn btn-sm btn-info text-white underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm "
           }
-        > 
+        >
           {t("home")}
         </NavLink>
 
@@ -68,7 +68,7 @@ export default function Header() {
           to="/causelist"
           className={({ isActive }) =>
             isActive
-              ? "text-white  btn btn-sm btn-primary underline-offset-4 font-semibold"
+              ? "text-white  btn btn-sm btn-info underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm"
           }
         >
@@ -80,7 +80,7 @@ export default function Header() {
             to="/dashboard"
             className={({ isActive }) =>
               isActive
-                ? "text-white btn-primary btn btn-sm underline underline-offset-4 font-semibold"
+                ? "text-white btn-info btn btn-sm  underline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-sm"
             }
           >
@@ -101,11 +101,15 @@ export default function Header() {
             {t("sign out")}
           </button>
         ) : (
-          <NavLink to={"/login"} onClick={handleSignIn} className={({ isActive }) =>
+          <NavLink
+            to={"/login"}
+            onClick={handleSignIn}
+            className={({ isActive }) =>
               isActive
-                ? "text-white btn-primary btn btn-sm  underline-offset-4 font-semibold"
+                ? "text-white btn-info btn btn-sm  underline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-sm"
-            }>
+            }
+          >
             {t("sign in")}
           </NavLink>
         )}
@@ -116,7 +120,7 @@ export default function Header() {
     </>
   );
   return (
-    <header className="z-50 relative shadow-md w-full">
+    <header className="z-50 relative shadow-sm w-full">
       {/* Banner */}
       <div
         className="bg-cover bg-center h-44"
@@ -146,7 +150,9 @@ export default function Header() {
         <nav
           // style={{ backgroundImage: `url(${banner})` }}
           ref={navRef}
-          className="flex justify-between items-center bg-base-100 shadow-sm md:px-6 py-3 transition-all duration-300 ease-in-out navbar"
+          className={`flex justify-between items-center bg-base-100 md:px-6 py-3 transition-all duration-300 ease-in-out navbar ${
+            isSticky ? "shadow-sm" : ""
+          }`}
         >
           <div className="navbar-start">
             <div className="dropdown">
@@ -173,12 +179,9 @@ export default function Header() {
               </div>
               <ul
                 tabIndex={0}
-                className="z-1 w-84 bg-base-100 shadow mt-4 p-2 rounded-box menu menu-sm dropdown-content"
+                className="z-1 bg-base-100 mt-4 p-2 rounded-box w-84 menu menu-sm dropdown-content"
               >
-                <div className="py-5">
-                {navMenu}
-
-                </div>
+                <div className="py-5">{navMenu}</div>
                 {path.includes("dashboard") ? (
                   <DashboardSidebar />
                 ) : (

@@ -23,14 +23,14 @@ export default function Login() {
 
   return (
     <div className="flex justify-center items-center px-4">
-      <div className="bg-white px-16 py-4 rounded-2xl max-w-xl">
+      <div className="bg-white py-4 rounded-2xl w-10/12 md:w-6/12">
         <h2 className="mb-6 font-bold text-2xl text-center">Sign In</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             name="dnothiId"
-            placeholder="Email or DNothi ID"
+            placeholder="ডি নথি আইডি"
             value={formData.dnothiId}
             onChange={handleChange}
             required
@@ -40,7 +40,7 @@ export default function Login() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="পাসওয়ার্ড"
             value={formData.password}
             onChange={handleChange}
             required
@@ -49,7 +49,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 py-2 rounded-lg w-full font-semibold text-white transition btn"
+            className="bg-green-600 hover:bg-green-700 py-2 rounded-lg w-full font-semibold text-white transition btn"
           >
             Sign In
           </button>

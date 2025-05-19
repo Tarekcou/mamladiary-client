@@ -80,6 +80,14 @@ const districts = [
 
 export default function MamlaUploadForm() {
   const [loading, setLoading] = useState(false);
+  const toBanglaNumber = (number) => {
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return number
+      .toString()
+      .split("")
+      .map((d) => banglaDigits[d])
+      .join("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -151,7 +159,7 @@ export default function MamlaUploadForm() {
               const year = 2000 + i;
               return (
                 <option key={year} value={year}>
-                  {year}
+                  {toBanglaNumber(year)}
                 </option>
               );
             })}

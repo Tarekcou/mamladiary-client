@@ -80,7 +80,15 @@ const mamlaNames = [
 
 export default function MamlaSearchForm({ handleSubmit }) {
   const { t } = useTranslation();
- const [selectedYear, setSelectedYear] = useState(2025);
+  const [selectedYear, setSelectedYear] = useState(2025);
+  const toBanglaNumber = (number) => {
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return number
+      .toString()
+      .split("")
+      .map((d) => banglaDigits[d])
+      .join("");
+  };
 
   const handleYearChange = (e) => {
     setSelectedYear(Number(e.target.value));
@@ -88,7 +96,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
-        <div className="bg-green-200 mb-4 py-2 font-bold text-lg text-center">
+        <div className="bg-green-600 mb-4 py-2 font-bold text-white text-lg text-center">
           {t("case search")}
         </div>
         <div className="space-y-4 text-sm">
@@ -144,18 +152,19 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 name="year"
                 required
                 value={selectedYear}
-        onChange={handleYearChange}
+                onChange={handleYearChange}
                 className="w-full select-bordered select"
               >
-                <option value="">{t("Select Year")}</option>
+                <option value="">{t("Select Year")}</option>"
                 {Array.from({ length: 50 }, (_, i) => {
                   const year = 2000 + i;
                   return (
                     <option key={year} value={year}>
-                      {year}
+                      {toBanglaNumber(year)}
                     </option>
                   );
                 })}
+                "
               </select>
             </label>
           </div>
@@ -164,9 +173,9 @@ export default function MamlaSearchForm({ handleSubmit }) {
           <div className="flex items-center">
             <button
               type="submit"
-              className="bg-green-600 mx-auto mt-2 border-none btn btn-neutral"
+              className="bg-green-600 mx-auto mt-2 border-none text-white btn btn-neutral"
             >
-              {t("Search")}
+              {t("search")}
             </button>
           </div>
         </div>
