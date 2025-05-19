@@ -1,6 +1,6 @@
 // pages/Register.jsx
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
 export default function Register() {
@@ -101,9 +101,9 @@ export default function Register() {
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <a href="/login" className="ml-2 text-blue-600 hover:underline">
+          <Link to="/login" className="ml-2 text-blue-600 hover:underline">
             Sign In
-          </a>
+          </Link>
         </div>
       </div>
     </div>

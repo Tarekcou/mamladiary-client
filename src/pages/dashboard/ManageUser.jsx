@@ -81,7 +81,7 @@ const ManageUser = () => {
 
       <div className="w-full overflow-x-auto">
         <h1 className="font-semibold">Total User: {users.length}</h1>
-        <table className=" min-w-full table w-full border-collapse table-fixed">
+        <table className=" min-w-full table w-full border-collapse ">
           {/* head */}
           <thead>
             <tr className="text-xl text-center">

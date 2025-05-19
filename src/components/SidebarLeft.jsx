@@ -25,11 +25,7 @@ export default function SidebarLeft() {
               {t("citizen charter")}
             </a>
           </li>
-          <li>
-            <a href="#" className="underline">
-              {t("opinion")}
-            </a>
-          </li>
+          
           <li>
             <a href="#" className="underline">
               {t("court rules")}
@@ -53,6 +49,11 @@ export default function SidebarLeft() {
           <li>
             <a href="#" className="underline">
               {t("lodge your complaint")}
+            </a>
+          </li>
+          <li>
+            <a href="#" className="underline">
+              {t("opinion")}
             </a>
           </li>
         </ul>

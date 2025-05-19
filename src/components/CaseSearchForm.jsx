@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import axiosPublic from "../axios/axiosPublic";
+import { useState } from "react";
 
 const districts = [
   "চট্টগ্রাম",
@@ -79,7 +80,11 @@ const mamlaNames = [
 
 export default function MamlaSearchForm({ handleSubmit }) {
   const { t } = useTranslation();
+ const [selectedYear, setSelectedYear] = useState(2025);
 
+  const handleYearChange = (e) => {
+    setSelectedYear(Number(e.target.value));
+  };
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
@@ -138,7 +143,8 @@ export default function MamlaSearchForm({ handleSubmit }) {
               <select
                 name="year"
                 required
-                value={2025}
+                value={selectedYear}
+        onChange={handleYearChange}
                 className="w-full select-bordered select"
               >
                 <option value="">{t("Select Year")}</option>

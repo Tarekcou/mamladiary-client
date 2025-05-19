@@ -57,7 +57,7 @@ export default function Header() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "text-blue-600 underline btn btn-sm  underline-offset-4 font-semibold"
+              ? "  btn btn-sm btn-primary text-white underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm "
           }
         > 
@@ -68,7 +68,7 @@ export default function Header() {
           to="/causelist"
           className={({ isActive }) =>
             isActive
-              ? "text-blue-600 underline btn btn-sm underline-offset-4 font-semibold"
+              ? "text-white  btn btn-sm btn-primary underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm"
           }
         >
@@ -80,7 +80,7 @@ export default function Header() {
             to="/dashboard"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm underline underline-offset-4 font-semibold"
+                ? "text-white btn-primary btn btn-sm underline underline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-sm"
             }
           >
@@ -96,14 +96,18 @@ export default function Header() {
         {isSignedIn ? (
           <button
             onClick={handleLogout}
-            className={"btn btn-sm bg-blue-600 text-white hover:bg-blue-700"}
+            className={"btn btn-sm bg-red-400 text-black hover:bg-blue-700"}
           >
             {t("sign out")}
           </button>
         ) : (
-          <Link to={"/login"} onClick={handleSignIn} className="btn btn-sm">
+          <NavLink to={"/login"} onClick={handleSignIn} className={({ isActive }) =>
+              isActive
+                ? "text-white btn-primary btn btn-sm  underline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-sm"
+            }>
             {t("sign in")}
-          </Link>
+          </NavLink>
         )}
         <button onClick={toggleLanguage} className="btn btn-sm">
           {i18n.language === "en" ? "English" : "বাংলা"}

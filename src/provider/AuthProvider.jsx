@@ -38,8 +38,9 @@ const AuthProvider = ({ children }) => {
     toast.info("সাইন আউট !");
   };
   // register
-  const resigter = async (formData) => {
-    const res = await axiosPublic.post("/register", formData);
+  const resigter =  (formData) => {
+    const res =  axiosPublic.post("/register", formData);
+    // console.log(res)
     res
       .then((response) => {
         console.log("Registration successful:", response.data);
@@ -75,7 +76,7 @@ const AuthProvider = ({ children }) => {
     const getUser = async () => {
       const email = JSON.parse(storedUser)?.email;
       const res = await axiosPublic.get(`/users/${email}`);
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data?.role === "Admin") {
         setAdmin(true);
       }

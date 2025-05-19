@@ -26,8 +26,9 @@ export default function Home() {
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
-      if (response.status == 200) {
-        toast.success("তথ্য পাওয়া গিয়েছে ");
+      console.log(response)
+      if (response.data!="") {
+        toast.success("অনুসন্ধান হচ্ছে ");
       }
       return response.data;
     },
