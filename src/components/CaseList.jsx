@@ -15,7 +15,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
         📂 {t("case search result")}
       </h1>
       <div className="overflow-x-auto">
-        <table className="bg-white shadow border border-gray-200 rounded-lg min-w-full">
+        <table className="shadow border border-gray-200 rounded-lg min-w-full">
           <thead className="bg-gray-100">
             <tr className="font-medium text-gray-700 text-sm text-left">
               <th className="px-4 py-2">{t("mamla name")}</th>

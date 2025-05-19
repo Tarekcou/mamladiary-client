@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axiosPublic from "../axios/axiosPublic";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -24,7 +25,7 @@ const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.success("লগ ইন byarrth হয়েছে!");
+      toast.warning("লগ ইন ব্যার্থ হয়েছে!");
     }
   };
 
@@ -34,6 +35,7 @@ const AuthProvider = ({ children }) => {
     setIsSignedIn(false);
     localStorage.removeItem("user");
     setLoading(false);
+    toast.info("সাইন আউট !");
   };
   // register
   const resigter = async (formData) => {

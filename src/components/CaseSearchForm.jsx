@@ -82,7 +82,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex-1 bg-white shadow-sm px-4 pt-2 pb-2">
+      <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
         <div className="bg-green-200 mb-4 py-2 font-bold text-lg text-center">
           {t("case search")}
         </div>

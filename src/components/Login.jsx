@@ -49,7 +49,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 py-2 rounded-lg w-full font-semibold text-white transition"
+            className="bg-blue-600 hover:bg-blue-700 py-2 rounded-lg w-full font-semibold text-white transition btn"
           >
             Sign In
           </button>
@@ -57,7 +57,10 @@ export default function Login() {
 
         <div className="mt-4 text-sm text-center">
           Don't have an account?
-          <a href="/register" className="ml-2 text-blue-600 hover:underline">
+          <a
+            href="/register"
+            className="ml-2 text-blue-600 hover:underline btn"
+          >
             Register
           </a>
         </div>

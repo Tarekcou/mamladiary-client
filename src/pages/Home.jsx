@@ -10,7 +10,7 @@ import "../i18n";
 import CasesList from "../components/CaseList";
 import axiosPublic from "../axios/axiosPublic";
 import { toast } from "sonner";
-
+import bgimage from "../assets/bg-image.jpg";
 export default function Home() {
   const [searchParams, setSearchParams] = useState(null);
   const [isShowCaseList, setShowCaseList] = useState(false);
@@ -51,8 +51,10 @@ export default function Home() {
   }, [searchParams, refetch]);
 
   return (
-    <div className="mx-auto">
+    <div className="relative mx-auto h-full">
       <CaseSearchForm handleSubmit={handleSubmit} />
+      {/* Background Image section (always visible) */}
+
       {isShowCaseList && (
         <CasesList
           isLoading={isLoading}
@@ -61,6 +63,12 @@ export default function Home() {
           error={error}
         />
       )}
+      <div className="flex justify-center items-center mt-[100px]">
+        <div
+          className="bottom-0 absolute bg-cover bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
+          style={{ backgroundImage: `url(${bgimage})` }}
+        ></div>
+      </div>
     </div>
   );
 }

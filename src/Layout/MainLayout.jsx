@@ -4,7 +4,7 @@ import SidebarLeft from "../components/SidebarLeft";
 import Footer from "../components/Footer";
 import { Outlet, useLocation } from "react-router";
 import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
-
+import bgimage from "../assets/bg-image.jpg";
 const MainLayout = () => {
   const [isSticky, setIsSticky] = useState(false);
   const location = useLocation();
@@ -32,7 +32,7 @@ const MainLayout = () => {
   const layoutWidth = screenWidth * (10 / 12); // 10/12 of screen
   const sidebarWidth = layoutWidth * (2 / 12); // 2/12 of layout (i.e., 2/12 of 10/12 of screen)
   const mainWidth = layoutWidth * (10 / 12); // 10/12 of layout
-  console.log(sidebarWidth);
+  // console.log(sidebarWidth);
 
   return (
     <div className="mx-auto w-11/12 lg:w-10/12">
@@ -65,7 +65,10 @@ const MainLayout = () => {
           />
         )}
         {/* Main Content */}
-        <main className={` w-full lg:w-10/12   ${isSticky ? "" : ""}`}>
+        <main
+          // style={{ backgroundImage: `url(${bgimage})` }}
+          className={` w-full lg:w-10/12   ${isSticky ? "" : ""}`}
+        >
           <Outlet />
         </main>
       </div>

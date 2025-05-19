@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { AuthContext } from "../provider/AuthProvider";
 import SidebarLeft from "./SidebarLeft";
 import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
-
+import bgimage from "../assets/bg-image.jpg";
 export default function Header() {
   const { t, i18n } = useTranslation();
   const [isSticky, setIsSticky] = useState(false);

@@ -96,7 +96,7 @@ export default function AdcMamlaUploadForm() {
       setLoading(true);
       const res = await axiosPublic.post("/adcMamla", mamlaData);
       console.log(res.data);
-      toast.warning("আপলোড সফল হয়েছে");
+      toast.success("আপলোড সফল হয়েছে");
       form.reset();
     } catch (err) {
       console.error("Upload failed:", err);
