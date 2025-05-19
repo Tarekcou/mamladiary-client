@@ -24,7 +24,7 @@ const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
 ReactDOM.createRoot(root).render(
-  <QueryClientProvider client={queryClient}>
+  <QueryClientProvider  client={queryClient}>
     <BrowserRouter>
       <AuthProvider>
         <Routes>

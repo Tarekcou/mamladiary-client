@@ -5,7 +5,6 @@ import SidebarLeft from "../components/SidebarLeft";
 import SidebarRight from "../components/SidebarRight";
 import CaseSearchForm from "../components/CaseSearchForm";
 import Footer from "../components/Footer";
-import "../app.css";
 import "../i18n";
 import CasesList from "../components/CaseList";
 import axiosPublic from "../axios/axiosPublic";
