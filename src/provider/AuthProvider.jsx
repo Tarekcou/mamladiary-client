@@ -40,11 +40,10 @@ const AuthProvider = ({ children }) => {
   // register
   const resigter =  (formData) => {
     const res =  axiosPublic.post("/register", formData);
-    // console.log(res)
+    setLoading(true)
     res
       .then((response) => {
-        console.log("Registration successful:", response.data);
-        if (response.data.status === "success") {
+        if (response.data.insertedId) {
           toast.success("রেজিস্ট্রেশন সফল হয়েছে!");
           navigation("/");
           setLoading(false);
