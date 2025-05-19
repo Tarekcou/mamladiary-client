@@ -3,7 +3,8 @@ import DashboardSidebar from "./DashboardSidebar";
 
 const Dashboard = () => {
   return <div className="">
-    <DashboardSidebar />
+    {/* <DashboardSidebar /> */}
+    <h1 className="text-2xl text-center p-10">Welcome to Dashboard</h1>
   </div>;
 };
 

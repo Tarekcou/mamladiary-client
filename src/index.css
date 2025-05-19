@@ -3,3 +3,8 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark;
 }
+@theme {
+  /* --font-script: Great Vibes, cursive; */
+    --font-primary: "Tiro Bangla", "serif";
+
+}

@@ -12,3 +12,8 @@
 .nav-link-active {
   @apply border-b-2 border-blue-600 font-semibold text-blue-600;
 }
+@theme {
+  /* --font-script: Great Vibes, cursive; */
+    --font-family: "Tiro Bangla", serif;
+
+}
