@@ -77,7 +77,6 @@ export default function Register() {
             placeholder="Section"
             value={formData.section}
             onChange={handleChange}
-            required
             className="px-4 py-2 border rounded-lg w-full"
           />
 
@@ -87,7 +86,6 @@ export default function Register() {
             placeholder="Podobi"
             value={formData.designation}
             onChange={handleChange}
-            required
             className="px-4 py-2 border rounded-lg w-full"
           />
 
@@ -101,7 +99,7 @@ export default function Register() {
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <Link to="/login" className="ml-2 text-blue-600 hover:underline">
+          <Link  to="/login" className="ml-2 text-blue-600 hover:underline">
             Sign In
           </Link>
         </div>

@@ -23,12 +23,12 @@ export default function Home() {
   } = useQuery({
     queryKey: ["mamla", searchParams], // good for caching different search results
     queryFn: async () => {
-              toast.success("অনুসন্ধান হচ্ছে ");
 
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
      
+
       return response.data;
     },
   });
@@ -37,7 +37,8 @@ export default function Home() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
-    console.log("Form data:", data);
+                toast.success("অনুসন্ধান হচ্ছে ");
+
     setSearchParams(data); // triggers queryKey change (optional but useful)
     setShowCaseList(true); // show the case list
     await refetch(); // trigger the fetch manually
