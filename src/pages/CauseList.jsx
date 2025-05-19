@@ -1,7 +1,7 @@
 import React from "react";
 
 const CauseList = () => {
-  return <div>Couse List</div>;
+  return <div>Cause List</div>;
 };
 
 export default CauseList;

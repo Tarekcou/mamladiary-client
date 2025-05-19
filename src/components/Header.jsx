@@ -84,7 +84,7 @@ export default function Header() {
                 : "text-gray-700 btn btn-sm"
             }
           >
-            Dashboard
+            {t("dashboard")}
           </NavLink>
         )}
       </div>
