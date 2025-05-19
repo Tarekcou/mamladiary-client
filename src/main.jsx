@@ -17,9 +17,9 @@ import Register from "./components/Register.jsx";
 import MamlaUploadForm from "./pages/dashboard/MamlaUploadForm.jsx";
 import AllMamla from "./pages/dashboard/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/dashboard/AdcMamlaUploadForm.jsx";
-import AdcMamla from "./pages/dashboard/ADCMamla.jsx";
 import ManageUser from "./pages/dashboard/ManageUser.jsx";
 import { Toaster, toast } from "sonner";
+import AdcMamla from "./pages/dashboard/AdcMamla.jsx";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
