@@ -23,16 +23,14 @@ export default function Home() {
   } = useQuery({
     queryKey: ["mamla", searchParams], // good for caching different search results
     queryFn: async () => {
+              toast.success("অনুসন্ধান হচ্ছে ");
+
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
-      console.log(response)
-      if (response.data!="") {
-        toast.success("অনুসন্ধান হচ্ছে ");
-      }
+     
       return response.data;
     },
-    enabled: false, // only run when refetch is called
   });
 
   const handleSubmit = async (e) => {
