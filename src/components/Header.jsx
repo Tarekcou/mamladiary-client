@@ -57,7 +57,7 @@ export default function Header() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "  btn btn-sm btn-info text-white underline-offset-4 font-semibold"
+              ? "  btn btn-sm btn-neutral text-white underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm "
           }
         >
@@ -68,7 +68,7 @@ export default function Header() {
           to="/causelist"
           className={({ isActive }) =>
             isActive
-              ? "text-white  btn btn-sm btn-info underline-offset-4 font-semibold"
+              ? "text-white  btn btn-sm btn-neutral underline-offset-4 font-semibold"
               : "text-gray-700 btn btn-sm"
           }
         >
@@ -80,7 +80,7 @@ export default function Header() {
             to="/dashboard"
             className={({ isActive }) =>
               isActive
-                ? "text-white btn-info btn btn-sm  underline-offset-4 font-semibold"
+                ? "text-white btn-neutral btn btn-sm  underline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-sm"
             }
           >
@@ -94,10 +94,7 @@ export default function Header() {
     <>
       <div className="space-x-2">
         {isSignedIn ? (
-          <button
-            onClick={handleLogout}
-            className={"btn btn-sm bg-red-400 text-black hover:bg-blue-700"}
-          >
+          <button onClick={handleLogout} className={"btn btn-sm btn-error"}>
             {t("sign out")}
           </button>
         ) : (
@@ -148,7 +145,7 @@ export default function Header() {
         }`}
       >
         <nav
-          // style={{ backgroundImage: `url(${banner})` }}
+          // style={{ backgroundImage: `url(${menuImage})` }}
           ref={navRef}
           className={`flex justify-between items-center bg-base-100 md:px-6 py-3 transition-all duration-300 ease-in-out navbar ${
             isSticky ? "shadow-sm" : ""

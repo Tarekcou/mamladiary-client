@@ -4,7 +4,7 @@ export default function SidebarLeft() {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 w-full  bg-white px-2 text-sm">
+    <div className="space-y-4 bg-white px-2 pb-10 w-full h-full text-sm">
       <div>
         <h2 className="bg-green-600 px-2 py-1 font-bold text-white">
           {t("the court")}
@@ -25,7 +25,7 @@ export default function SidebarLeft() {
               {t("citizen charter")}
             </a>
           </li>
-          
+
           <li>
             <a href="#" className="underline">
               {t("court rules")}

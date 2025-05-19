@@ -41,9 +41,9 @@ const MainLayout = () => {
       <div className="relative flex gap-4 mt-4 min-h-screen">
         {/* SidebarLeft */}
         <div
-          className={`hidden lg:block ${
+          className={`hidden   lg:block ${
             isSticky
-              ? "fixed top-24 z-40 shadow-md h-full"
+              ? "fixed  top-24 scroll-py-10 z-40 shadow-md h-full"
               : "lg:w-2/12 w-full mt-2 relative shadow-md"
           }`}
           style={
