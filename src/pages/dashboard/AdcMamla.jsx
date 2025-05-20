@@ -146,8 +146,12 @@ const AdcMamla = () => {
                     {(currentPage - 1) * itemsPerPage + idx + 1}
                   </td>
                   <td className="px-4 py-2 border">{item.adcMamlaName}</td>
-                  <td className="px-4 py-2 border">{item.mamlaNo}</td>
-                  <td className="px-4 py-2 border">{item.year}</td>
+                  <td className="px-4 py-2 border">
+                    {item.mamlaNo.replace(/\D/g, "")}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    {item.year.replace(/\D/g, "")}
+                  </td>
                   <td className="px-4 py-2 border">{item.district}</td>
 
                   <td className="px-4 py-2 border">

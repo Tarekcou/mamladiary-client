@@ -56,8 +56,12 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
               className="hover:bg-gray-50 border-gray-200 border-t text-sm"
             >
               <td className="px-4 py-2">{mamla.mamlaName || "-"}</td>
-              <td className="px-4 py-2">{mamla.mamlaNo || "-"}</td>
-              <td className="px-4 py-2">{mamla.year || "-"}</td>
+              <td className="px-4 py-2">
+                {mamla.mamlaNo.replace(/\D/g, "") || "-"}
+              </td>
+              <td className="px-4 py-2">
+                {mamla.year.replace(/\D/g, "") || "-"}
+              </td>
               <td className="px-4 py-2">{mamla.district || "-"}</td>
               <td className="px-4 py-2">{mamla.nextDate || "-"}</td>
 
