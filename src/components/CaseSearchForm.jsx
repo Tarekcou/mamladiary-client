@@ -161,6 +161,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                   return (
                     <option key={year} value={year}>
                       {toBanglaNumber(year)}
+                      {/* {year} */}
                     </option>
                   );
                 })}

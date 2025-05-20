@@ -2,8 +2,8 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosPublic from "../axios/axiosPublic";
 import { useTranslation } from "react-i18next";
-import Loading from "./Loading";
 import { MdError } from "react-icons/md";
+import Loading from "./common/Loading";
 
 const CasesList = ({ mamla, isLoading, isError, error }) => {
   const { t } = useTranslation();
@@ -46,8 +46,11 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
               <th className="px-4 py-2">{t("district")}</th>
               <th className="px-4 py-2">{t("next date")}</th>
 
+              <th className="px-4 py-2">{t("completion stage")}</th>
+              {/* <th className="px-4 py-2">{t("গৃহীত কার্যক্রম")}</th> */}
+
               <th className="px-4 py-2">{t("completion date")}</th>
-              <th className="px-4 py-2">{t("final task")}</th>
+              <th className="px-4 py-2">{t("comments")}</th>
             </tr>
           </thead>
           <tbody>
@@ -62,11 +65,12 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
               <td className="px-4 py-2">
                 {mamla.year.replace(/\D/g, "") || "-"}
               </td>
-              <td className="px-4 py-2">{mamla.district || "-"}</td>
-              <td className="px-4 py-2">{mamla.nextDate || "-"}</td>
+              <td className="px-4 py-2">{mamla?.district || "-"}</td>
+              <td className="px-4 py-2">{mamla?.nextDate || "-"}</td>
 
-              <td className="px-4 py-2">{mamla.completionDate || "-"}</td>
-              <td className="px-4 py-2">{mamla.finalTask || "-"}</td>
+              <td className="px-4 py-2">{mamla?.compltedMamla || "-"}</td>
+              <td className="px-4 py-2">{mamla?.completionDate || "-"}</td>
+              <td className="px-4 py-2">{mamla?.comments || "-"}</td>
             </tr>
           </tbody>
         </table>

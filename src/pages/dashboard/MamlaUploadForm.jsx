@@ -80,6 +80,8 @@ const districts = [
 
 export default function MamlaUploadForm() {
   const [loading, setLoading] = useState(false);
+    const [selectedYear, setSelectedYear] = useState(2025);
+
   const toBanglaNumber = (number) => {
     const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
     return number
@@ -101,6 +103,7 @@ export default function MamlaUploadForm() {
       nextDate: form.nextDate.value,
       completedMamla: form.completedMamla.value,
       completionDate: form.completionDate.value,
+      comments: form.comments.value,
     };
 
     try {
@@ -153,7 +156,8 @@ export default function MamlaUploadForm() {
         {/* Year */}
         <label>
           Year:
-          <select name="year" className="mt-1 w-full select-bordered select">
+          <select                 value={selectedYear}
+ name="year" className="mt-1 w-full select-bordered select">
             <option value="">Select Year</option>
             {Array.from({ length: 50 }, (_, i) => {
               const year = 2000 + i;
@@ -208,6 +212,15 @@ export default function MamlaUploadForm() {
           <input
             type="date"
             name="completionDate"
+            className="mt-1 input-bordered w-full input"
+          />
+        </label>
+        {/* Completion Date */}
+        <label>
+          Comments
+          <input
+            type="text"
+            name="comments"
             className="mt-1 input-bordered w-full input"
           />
         </label>

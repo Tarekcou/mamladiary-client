@@ -1,10 +1,10 @@
 // pages/Register.jsx
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../provider/AuthProvider";
+import { AuthContext } from "../../provider/AuthProvider";
 
 export default function Register() {
-  const { resigter } = useContext(AuthContext);
+  const { resigter,isLoading } = useContext(AuthContext);
   const navigation = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export default function Register() {
 
   return (
     <div className="flex justify-center items-center px-4">
-      <div className="bg-white py-4 rounded-2xl w-10/12 md:w-6/12">
+      <div className="bg-white px-16 py-4 rounded-2xl max-w-xl">
         <h2 className="mb-6 font-bold text-2xl text-center">Register</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -89,17 +89,15 @@ export default function Register() {
             className="px-4 py-2 border rounded-lg w-full"
           />
 
-          <button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 py-2 rounded-lg w-full font-semibold text-white transition btn"
-          >
-            Create Account
+         <button type="submit" className="btn btn-primary rounded-lg text-white  w-full btn-square">
+       {isLoading? <span className="loading loading-spinner"></span>:""}
+        Create Account
           </button>
         </form>
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <Link to="/login" className="ml-2 text-blue-600 hover:underline btn">
+          <Link  to="/login" className="ml-2 text-blue-600 hover:underline">
             Sign In
           </Link>
         </div>

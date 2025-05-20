@@ -10,8 +10,12 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [isAdmin, setAdmin] = useState(false);
+    const [isButtonSpin,setButtonSpin]=useState(false)
+
   // signin
   const signIn = async (formData) => {
+    setButtonSpin(true)
+    setLoading(true)
     try {
       const res = await axiosPublic.post("/login", formData);
       if (res.status === 200) {
@@ -20,12 +24,16 @@ const AuthProvider = ({ children }) => {
         setUser(res.data.user);
         navigation("/dashboard");
         setLoading(false);
+        setButtonSpin(false)
         // ✅ Save user in localStorage
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
     } catch (error) {
       console.error("Login error:", error);
       toast.warning("লগ ইন ব্যার্থ হয়েছে!");
+              setButtonSpin(false)
+              setLoading(false)
+
     }
   };
 
@@ -41,20 +49,27 @@ const AuthProvider = ({ children }) => {
   const resigter =  (formData) => {
     const res =  axiosPublic.post("/register", formData);
     setLoading(true)
+    setButtonSpin(true)
     res
       .then((response) => {
         if (response.data.insertedId) {
           toast.success("রেজিস্ট্রেশন সফল হয়েছে!");
           navigation("/");
           setLoading(false);
+          setButtonSpin(false)
         }
         if (response.data.message === "user already exist") {
-          toast.warning("এই ইমেইল দিয়ে আগে থেকেই রেজিস্ট্রেশন করা আছে");
+          toast.warning("এই আইডি দিয়ে আগে থেকেই রেজিস্টার্ড, লগইন করুন");
           navigation("/login");
           setLoading(false);
+          setButtonSpin(false)
         }
       })
       .catch((error) => {
+        toast.warning("রেজিস্ট্রেশন ব্যার্থ হয়েছে!");
+              setButtonSpin(false)
+                        setLoading(false);
+
         console.error("Error during registration:", error);
       });
   };
@@ -95,6 +110,8 @@ const AuthProvider = ({ children }) => {
     isLoading,
     setLoading,
     isAdmin,
+    isButtonSpin,
+    setButtonSpin
   };
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>

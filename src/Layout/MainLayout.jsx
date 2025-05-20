@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Header from "../components/Header";
-import SidebarLeft from "../components/SidebarLeft";
-import Footer from "../components/Footer";
+import Header from "../components/common/Header";
+import SidebarLeft from "../components/sidebar/SidebarLeft";
+import Footer from "../components/common/Footer";
 import { Outlet, useLocation } from "react-router";
 import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
 import bgimage from "../assets/bg-image.jpg";

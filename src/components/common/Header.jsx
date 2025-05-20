@@ -1,12 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import banner from "../assets/banner.jpg";
-import menuImage from "../assets/menuImage.jpg";
+import banner from "../../assets/banner.jpg";
+import menuImage from "../../assets/menuImage.jpg";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "../provider/AuthProvider";
-import SidebarLeft from "./SidebarLeft";
-import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
-import bgimage from "../assets/bg-image.jpg";
+import { AuthContext } from "../../provider/AuthProvider";
+import SidebarLeft from "../sidebar/SidebarLeft";
+import DashboardSidebar from "../../pages/dashboard/DashboardSidebar";
+import bgimage from "../../assets/bg-image.jpg";
+import { FaHome } from "react-icons/fa";
+
 export default function Header() {
   const { t, i18n } = useTranslation();
   const [isSticky, setIsSticky] = useState(false);
@@ -57,19 +59,22 @@ export default function Header() {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "  btn btn-sm btn-neutral text-white underline-offset-4 font-semibold"
-              : "text-gray-700 btn btn-sm "
+              ? "  btn btn-sm btn-neutral  font-semibold"
+              : " btn btn-sm "
           }
         >
-          {t("home")}
+          <div className="flex items-center justify-center gap-2"><FaHome  />
+          <p>{t("home")}</p></div>
+          
+
         </NavLink>
 
         <NavLink
           to="/causelist"
           className={({ isActive }) =>
             isActive
-              ? "text-white  btn btn-sm btn-neutral underline-offset-4 font-semibold"
-              : "text-gray-700 btn btn-sm"
+              ? "btn btn-sm btn-neutral underline-offset-4 font-semibold"
+              : " btn btn-sm"
           }
         >
           {t("cause list")}
@@ -80,8 +85,8 @@ export default function Header() {
             to="/dashboard"
             className={({ isActive }) =>
               isActive
-                ? "text-white btn-neutral btn btn-sm  underline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                ? "btn-neutral btn btn-sm  underline-offset-4 font-semibold"
+                : " btn btn-sm"
             }
           >
             {t("dashboard")}
@@ -104,7 +109,7 @@ export default function Header() {
             className={({ isActive }) =>
               isActive
                 ? "text-white btn-neutral btn btn-sm  underline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "btn btn-sm"
             }
           >
             {t("sign in")}

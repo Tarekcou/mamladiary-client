@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Header from "../components/Header";
-import SidebarLeft from "../components/SidebarLeft";
-import SidebarRight from "../components/SidebarRight";
+import Header from "../components/common/Header";
+import SidebarLeft from "../components/sidebar/SidebarLeft";
+import SidebarRight from "../components/sidebar/SidebarRight";
 import CaseSearchForm from "../components/CaseSearchForm";
-import Footer from "../components/Footer";
+import Footer from "../components/common/Footer";
 import "../i18n";
 import CasesList from "../components/CaseList";
 import axiosPublic from "../axios/axiosPublic";
@@ -27,6 +27,8 @@ export default function Home() {
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
+
+      console.log(response.data)
      
 
       return response.data;
