@@ -152,7 +152,7 @@ export default function Header() {
         <nav
           // style={{ backgroundImage: `url(${menuImage})` }}
           ref={navRef}
-          className={`flex justify-between items-center bg-base-100 md:px-6 py-3 transition-all duration-300 ease-in-out navbar ${
+          className={`flex justify-between items-center bg-blue-800 md:px-6  transition-all duration-300 ease-in-out navbar ${
             isSticky ? "shadow-sm" : ""
           }`}
         >
