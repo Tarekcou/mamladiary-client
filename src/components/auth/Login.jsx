@@ -21,8 +21,8 @@ export default function Login() {
 
   return (
     <div className="flex justify-center items-center px-4">
-      <div className="bg-white px-16 py-4 rounded-2xl max-w-xl">
-        <h2 className="mb-6 font-bold text-2xl text-center">Sign In</h2>
+      <div className="bg-white py-4 rounded-2xl w-10/12 md:w-8/12 lg:w-6/12">
+        <h2 className="mb-6 font-bold text-2xl text-center">সাইন ইন </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -48,12 +48,11 @@ export default function Login() {
           <button
             type="submit"
             className="bg-[#004080] rounded-lg w-full text-white btn btn-primary btn-square"
-            disabled={isLoading}
           >
             {isLoading ? (
               <span className="loading loading-spinner"></span>
             ) : (
-              "Sign In"
+              "সাইন ইন করুন"
             )}
           </button>
         </form>

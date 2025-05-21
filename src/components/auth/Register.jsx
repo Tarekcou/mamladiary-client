@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 export default function Register() {
-  const { resigter,isLoading } = useContext(AuthContext);
+  const { resigter, isLoading } = useContext(AuthContext);
   const navigation = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -27,8 +27,8 @@ export default function Register() {
 
   return (
     <div className="flex justify-center items-center px-4">
-      <div className="bg-white px-16 py-4 rounded-2xl max-w-xl">
-        <h2 className="mb-6 font-bold text-2xl text-center">Register</h2>
+      <div className="bg-white py-4 rounded-2xl w-10/12 md:w-8/12 lg:w-6/12">
+        <h2 className="mb-6 font-bold text-2xl text-center">রেজিস্টার </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -89,15 +89,18 @@ export default function Register() {
             className="px-4 py-2 border rounded-lg w-full"
           />
 
-         <button type="submit" className="btn btn-primary bg-[#004080] rounded-lg text-white  w-full btn-square">
-       {isLoading? <span className="loading loading-spinner"></span>:""}
-        Create Account
+          <button
+            type="submit"
+            className="bg-[#004080] rounded-lg w-full text-white btn btn-primary btn-square"
+          >
+            {isLoading ? <span className="loading loading-spinner"></span> : ""}
+            নতুন একাউন্ট তৈরি করুন
           </button>
         </form>
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <Link  to="/login" className="ml-2 text -[#004080] hover:underline">
+          <Link to="/login" className="ml-2 hover:underline text -[#004080]">
             Sign In
           </Link>
         </div>
