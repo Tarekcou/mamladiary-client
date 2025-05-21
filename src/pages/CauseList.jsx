@@ -36,7 +36,7 @@ const CauseList = () => {
       {loading ? (
         <div className="text-center">লোড হচ্ছে...</div>
       ) : cases.length === 0 ? (
-        <div className="text-red-500 text-center">
+        <div className="mt-16 h-full text-red-500 text-center">
           আজকের জন্য কোন মামলা পাওয়া যায়নি।
         </div>
       ) : (

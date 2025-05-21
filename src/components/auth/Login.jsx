@@ -1,11 +1,9 @@
-// pages/Login.jsx
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 export default function Login() {
-  const { signIn,isButtonSpin,isLoading } = useContext(AuthContext);
-  const navigation = useNavigate();
+  const { signIn, isLoading } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     dnothiId: "",
@@ -16,9 +14,9 @@ export default function Login() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await signIn(formData);
+    signIn(formData);
   };
 
   return (
@@ -30,7 +28,7 @@ export default function Login() {
           <input
             type="text"
             name="dnothiId"
-            placeholder="Email or DNothi ID"
+            placeholder=" ডি নথি আইডি"
             value={formData.dnothiId}
             onChange={handleChange}
             required
@@ -40,24 +38,31 @@ export default function Login() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="পাসওয়ার্ড"
             value={formData.password}
             onChange={handleChange}
             required
             className="px-4 py-2 border rounded-lg w-full"
           />
-        <button type="submit" className="btn btn-primary bg-[#004080] rounded-lg text-white  w-full btn-square">
-       {isLoading? <span className="loading loading-spinner"></span>:""}
-        Sign In
+
+          <button
+            type="submit"
+            className="bg-[#004080] rounded-lg w-full text-white btn btn-primary btn-square"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="loading loading-spinner"></span>
+            ) : (
+              "Sign In"
+            )}
           </button>
-         
         </form>
 
         <div className="mt-4 text-sm text-center">
           Don't have an account?
           <Link
             to="/register"
-            className="ml-2  text-[#004080] hover:underline btn"
+            className="ml-2 text-[#004080] hover:underline btn"
           >
             Register
           </Link>

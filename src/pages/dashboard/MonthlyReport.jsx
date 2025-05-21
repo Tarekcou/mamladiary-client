@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import axiosPublic from "../../axios/axiosPublic";
-import { FiDownload } from "react-icons/fi";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import BanglaPDF from "./BanglaPdf";
 
 const MonthlyReport = () => {
   const localDate = new Date();
@@ -38,78 +37,36 @@ const MonthlyReport = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.text(`Monthly Report - ${month}/${year}`, 14, 15);
-
-    const tableData = mamlaList.map((item, index) => [
-      index + 1,
-      item.mamlaName || "",
-      item.mamlaNo?.replace(/\D/g, "") || "",
-      item.year?.replace(/\D/g, "") || "",
-      item.district || "",
-      item.previousDate || "-",
-      item.nextDate || "-",
-      item.completedMamla || "-",
-      item.completionDate || "-",
-    ]);
-
-    autoTable(doc, {
-      startY: 25,
-      head: [
-        [
-          "#",
-          "Mamla Name",
-          "Mamla No",
-          "Year",
-          "District",
-          "Previous Date",
-          "Next Date",
-          "Last Status",
-          "Completion Date",
-        ],
-      ],
-      body: tableData,
-      styles: { fontSize: 8 },
-      theme: "grid",
-    });
-
-    doc.save(`monthly_report_${month}_${year}.pdf`);
-  };
-
-  if (isLoading) return <p className="text-center">Loading...</p>;
-  if (isError)
-    return <p className="text-red-500 text-center">{error.message}</p>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold text-xl">মাসিক রিপোর্ট</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={handleDownloadPDF}
-            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white transition"
-          >
-            <FiDownload /> Download PDF
-          </button>
-        </div>
+
+        <PDFDownloadLink
+          document={<BanglaPDF data={mamlaList} />}
+          fileName="মাসিক_প্রতিবেদন.pdf"
+          className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white"
+        >
+          {({ loading }) => (loading ? "Generating..." : "📥 Download PDF")}
+        </PDFDownloadLink>
       </div>
 
       <div className="overflow-x-auto">
         <table className="bg-white border min-w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-4 py-2 border">#</th>
-              <th className="px-4 py-2 border">Mamla Name</th>
-              <th className="px-4 py-2 border">Mamla No</th>
-              <th className="px-4 py-2 border">Year</th>
-              <th className="px-4 py-2 border">District</th>
-              <th className="px-4 py-2 border">Previous Date</th>
-              <th className="px-4 py-2 border">Next Date</th>
-              <th className="px-4 py-2 border">Last Status</th>
-              <th className="px-4 py-2 border">Completion Date</th>
+              <th className="px-4 py-2 border">ক্রম</th>
+              <th className="px-4 py-2 border">মামলার নাম</th>
+              <th className="px-4 py-2 border">মামলা নম্বর</th>
+              <th className="px-4 py-2 border">সাল</th>
+              <th className="px-4 py-2 border">জেলা</th>
+              <th className="px-4 py-2 border">পূর্বের তারিখ</th>
+              <th className="px-4 py-2 border">পরবর্তী তারিখ</th>
+              <th className="px-4 py-2 border">সর্বশেষ অবস্থা</th>
+              <th className="px-4 py-2 border">সম্পন্নের তারিখ</th>
             </tr>
           </thead>
           <tbody>
