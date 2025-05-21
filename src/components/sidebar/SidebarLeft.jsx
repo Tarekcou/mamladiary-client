@@ -5,10 +5,10 @@ export default function SidebarLeft() {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 bg-white px-2 pb-10 w-full h-full text-sm">
+    <div className="space-y-4   px-2 pb-10 w-full h-full text-sm">
       <div>
         
-<h2 className="btn  w-full py-6  text-white font-bold bg-blue-800">
+<h2 className="btn  w-full py-6  text-white font-bold bg-[#004080]">
           {t("the court")}
         </h2>
    
@@ -55,7 +55,7 @@ export default function SidebarLeft() {
       </div>
 
       <div>
-        <h2 className="btn w-full   py-6 text-white font-bold bg-blue-800">
+        <h2 className="btn w-full   py-6 text-white font-bold bg-[#004080]">
           {t("resources")}
         </h2>
         <ul className="space-y-2 mt-2 p-2 w-full">

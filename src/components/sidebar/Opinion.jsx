@@ -114,7 +114,7 @@ const Opinion = () => {
 
         <button
           type="submit"
-          className="rounded-lg w-full text-white btn btn-primary btn-square"
+          className="rounded-lg w-full text-white btn bg-[#004080] btn-square"
         >
           {isLoading ? <span className="loading loading-spinner"></span> : ""}
           মন্তব্য দাখিল করুন

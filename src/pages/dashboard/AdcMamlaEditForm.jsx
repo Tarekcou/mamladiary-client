@@ -134,8 +134,8 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
-        <h2 className="bg-green-100 mb-4 py-2 font-bold text-xl text-center">
-          ADC Mamla Update Form
+        <h2 className="bg-[#004080]/30 mb-4 py-2 font-bold text-xl text-center">
+          এডিসি মামলা আপডেট ফর্ম 
         </h2>
 
         <div className="gap-4 grid grid-cols-2 text-sm">
@@ -212,10 +212,10 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
         <div className="mt-6 text-center">
           <button
             type="submit"
-            className="px-6 btn btn-success"
+            className="px-6 btn bg-[#004080] text-white"
             disabled={loading}
           >
-            {loading ? "Uploading..." : "Update Mamla"}
+            {loading ? "আপডেট হচ্ছে..." : "আপডেট করুন"}
           </button>
         </div>
       </form>

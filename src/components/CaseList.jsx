@@ -33,7 +33,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
     );
   return (
     <div className="mt-10">
-      <h1 className="bg-green-600 mb-4 py-2 font-semibold text-white text-xl text-center">
+      <h1 className="bg-[#004080] mb-4 py-2 font-semibold text-white text-xl text-center">
         📂 {t("case search result")}
       </h1>
       <div className="overflow-x-auto">

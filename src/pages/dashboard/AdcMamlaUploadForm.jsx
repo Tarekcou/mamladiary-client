@@ -116,8 +116,8 @@ export default function AdcMamlaUploadForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
-      <h2 className="bg-green-100 mb-4 py-2 font-bold text-xl text-center">
-        ADC Mamla Upload Form
+      <h2 className="bg-[#004080] text-white mb-4 py-2 font-bold text-xl text-center">
+        এডিসি মামলা আপলোড ফর্ম
       </h2>
 
       <div className="gap-4 grid grid-cols-2 text-sm">
@@ -183,10 +183,10 @@ export default function AdcMamlaUploadForm() {
       <div className="mt-6 text-center">
         <button
           type="submit"
-          className="px-6 btn btn-success"
+          className="px-6 btn bg-[#004080] text-white"
           disabled={loading}
         >
-          {loading ? "Uploading..." : "Upload Mamla"}
+          {loading ? "আপলোডিং..." : "আপলোড মামলা"}
         </button>
       </div>
     </form>

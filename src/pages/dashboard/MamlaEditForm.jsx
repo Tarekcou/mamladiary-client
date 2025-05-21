@@ -152,7 +152,7 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
-        <h2 className="bg-green-100 mb-4 py-2 font-bold text-xl text-center">
+        <h2 className="bg-[#004080]/30  mb-4 py-2 font-bold text-xl text-center">
           অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতের মামলার তথ্য আপডেট করুন
         </h2>
 
@@ -277,7 +277,7 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
         <div className="mt-6 text-center">
           <button
             type="submit"
-            className="px-6 text-white btn btn-success"
+            className="px-6 text-white btn btn-success bg-[#004080]"
             disabled={loading}
           >
             {isLoading ? "আপডেট হচ্ছে ..." : "আপডেট করুন"}

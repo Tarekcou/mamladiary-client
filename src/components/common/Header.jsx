@@ -99,7 +99,7 @@ export default function Header() {
     <>
       <div className="space-x-2">
         {isSignedIn ? (
-          <button onClick={handleLogout} className={"btn btn-sm btn-error"}>
+          <button onClick={handleLogout} className={"btn btn-sm text-red-600"}>
             {t("sign out")}
           </button>
         ) : (
@@ -152,7 +152,7 @@ export default function Header() {
         <nav
           // style={{ backgroundImage: `url(${menuImage})` }}
           ref={navRef}
-          className={`flex justify-between items-center bg-blue-800 md:px-6  transition-all duration-300 ease-in-out navbar ${
+          className={`flex justify-between items-center bg-base-100 md:px-6  transition-all duration-300 ease-in-out navbar ${
             isSticky ? "shadow-sm" : ""
           }`}
         >

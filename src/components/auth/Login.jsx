@@ -46,7 +46,7 @@ export default function Login() {
             required
             className="px-4 py-2 border rounded-lg w-full"
           />
-        <button type="submit" className="btn btn-primary rounded-lg text-white  w-full btn-square">
+        <button type="submit" className="btn btn-primary bg-[#004080] rounded-lg text-white  w-full btn-square">
        {isLoading? <span className="loading loading-spinner"></span>:""}
         Sign In
           </button>
@@ -57,7 +57,7 @@ export default function Login() {
           Don't have an account?
           <Link
             to="/register"
-            className="ml-2 text-blue-600 hover:underline btn"
+            className="ml-2  text-[#004080] hover:underline btn"
           >
             Register
           </Link>

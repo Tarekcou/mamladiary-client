@@ -98,8 +98,8 @@ const AdcMamla = () => {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 font-semibold text-xl text-center">
-        ADC Mamla Records
+      <h2 className="mb-4   font-semibold text-xl text-center">
+        এডিসি মামলার রেকর্ড 
       </h2>
 
       {/* Search Fields */}

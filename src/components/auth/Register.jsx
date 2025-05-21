@@ -89,7 +89,7 @@ export default function Register() {
             className="px-4 py-2 border rounded-lg w-full"
           />
 
-         <button type="submit" className="btn btn-primary rounded-lg text-white  w-full btn-square">
+         <button type="submit" className="btn btn-primary bg-[#004080] rounded-lg text-white  w-full btn-square">
        {isLoading? <span className="loading loading-spinner"></span>:""}
         Create Account
           </button>
@@ -97,7 +97,7 @@ export default function Register() {
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <Link  to="/login" className="ml-2 text-blue-600 hover:underline">
+          <Link  to="/login" className="ml-2 text -[#004080] hover:underline">
             Sign In
           </Link>
         </div>

@@ -96,7 +96,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
-        <div className="bg-blue-800 mb-4 py-2 font-bold text-white text-lg text-center">
+        <div className="bg-[#004080] mb-4 py-2 font-bold text-white text-lg text-center">
           {t("case search")}
         </div>
         <div className="space-y-4 text-sm">
@@ -174,7 +174,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
           <div className="flex items-center">
             <button
               type="submit"
-              className="bg-blue-800 mx-auto mt-2 border-none text-white btn btn-neutral"
+              className="bg-[#004080] mx-auto mt-2 border-none text-white btn btn-neutral"
             >
               {t("search")}
             </button>

@@ -98,7 +98,7 @@ const AllMamla = () => {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 font-semibold text-xl">Mamla Records</h2>
+      <h2 className="mb-4 font-semibold text-xl">সকল মামলা </h2>
 
       {/* Search Fields */}
       <div className="gap-2 grid grid-cols-1 md:grid-cols-4 mb-4">
