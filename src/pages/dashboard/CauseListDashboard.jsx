@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import axiosPublic from "../axios/axiosPublic";
+import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
 
-const CauseList = () => {
+const CauseListDashboard = () => {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +16,8 @@ const CauseList = () => {
   useEffect(() => {
     const fetchTodayCases = async () => {
       try {
-        const res = await axiosPublic.get(`/allMamla/${today}`); // Replace with your actual
+        const res = await axiosPublic.get(`/allMamla/${today}`);
+        // Filter cases where case.date matches today's date
         setCases(res.data); // update your state with the fetched data
       } catch (error) {
         console.error("Error fetching cases:", error);
@@ -27,11 +29,43 @@ const CauseList = () => {
     fetchTodayCases();
   }, [today]);
 
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const handleDateChange = async () => {
+    if (!selectedDate) return toast.info("তারিখ নির্বাচন করুন");
+
+    try {
+      const res = await axiosPublic.get(`/allMamla/${selectedDate}`);
+      setCases(res.data); // update your state with the fetched data
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
   return (
     <div className="p-6">
-      <h1 className="mb-4 font-bold text-2xl">
-        আজকের মামলা কার্যতালিকা - {today}
-      </h1>
+      <div className="flex justify-between items-center mb-10">
+        <h1 className="font-bold text-2xl">
+          আজকের মামলা কার্যতালিকা - {today}
+        </h1>
+        <div className="flex items-center gap-2">
+          <label>
+            <input
+              type="date"
+              name="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="mt-1 px-5 input-bordered w-full input"
+            />
+          </label>
+          <button
+            onClick={handleDateChange}
+            className="text-white btn btn-success"
+          >
+            Search
+          </button>
+        </div>
+      </div>
 
       {loading ? (
         <div className="text-center">লোড হচ্ছে...</div>
@@ -71,4 +105,4 @@ const CauseList = () => {
   );
 };
 
-export default CauseList;
+export default CauseListDashboard;

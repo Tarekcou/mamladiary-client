@@ -2,6 +2,9 @@ import React, { useState, useMemo, useEffect } from "react";
 import axiosPublic from "../../axios/axiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import MamlaEditForm from "./MamlaEditForm";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const AllMamla = () => {
   // const [mamlaList, setMamlaList] = useState([]);
@@ -67,18 +70,30 @@ const AllMamla = () => {
     console.log(mamla);
     setEditedMamla(mamla);
   };
-  const handleDelete = async (id) => {
-    console.log(id);
-    try {
-      const response = await axiosPublic.delete(`/mamla/${id}`);
-      // console.log("Response data:", response.data);
-      if (response.status === 200) {
-        refetch();
-        return response.data;
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/mamla/${id}`).then((res) => {
+          // console.log(res);
+          if (res.data.deletedCount > 0) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+            refetch();
+          }
+        });
       }
-    } catch (error) {
-      console.error("Error fetching mamla data:", error);
-    }
+    });
   };
 
   return (
@@ -131,10 +146,11 @@ const AllMamla = () => {
               <th className="px-4 py-2 border">Mamla No</th>
               <th className="px-4 py-2 border">Year</th>
               <th className="px-4 py-2 border">District</th>
+              <th className="px-4 py-2 border">Previous Date</th>
               <th className="px-4 py-2 border">Next Date</th>
-              <th className="px-4 py-2 border">Completed?</th>
+              <th className="px-4 py-2 border">Last Status</th>
               <th className="px-4 py-2 border">Completion Date</th>
-              <th className="px-4 py-2 border">#</th>
+              <th className="px-4 py-2 border">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -144,17 +160,20 @@ const AllMamla = () => {
                   <td className="px-4 py-2 border">
                     {(currentPage - 1) * itemsPerPage + idx + 1}
                   </td>
-                  <td className="px-4 py-2 border">{item.mamlaName}</td>
+                  <td className="px-4 py-2 border">{item?.mamlaName}</td>
                   <td className="px-4 py-2 border">
-                    {item.mamlaNo.replace(/\D/g, "")}
+                    {item?.mamlaNo.replace(/\D/g, "")}
                   </td>
                   <td className="px-4 py-2 border">
-                    {item.year.replace(/\D/g, "")}
+                    {item?.year.replace(/\D/g, "")}
                   </td>
-                  <td className="px-4 py-2 border">{item.district}</td>
-                  <td className="px-4 py-2 border">{item.nextDate || "-"}</td>
+                  <td className="px-4 py-2 border">{item?.district}</td>
                   <td className="px-4 py-2 border">
-                    {item.completedMamla || "-"}
+                    {item?.previousDate || "-"}
+                  </td>
+                  <td className="px-4 py-2 border">{item?.nextDate || "-"}</td>
+                  <td className="px-4 py-2 border">
+                    {item?.completedMamla || "-"}
                   </td>
                   <td className="px-4 py-2 border">
                     {item.completionDate || "-"}
@@ -168,14 +187,14 @@ const AllMamla = () => {
                         document.getElementById("my_modal_3").showModal();
                       }}
                     >
-                      edit
+                      <FaEdit />
                     </label>
 
                     <button
                       onClick={() => handleDelete(item._id)}
                       className="btn"
                     >
-                      delete
+                      <MdDeleteForever className="text-xl" />
                     </button>
                   </td>
                 </tr>

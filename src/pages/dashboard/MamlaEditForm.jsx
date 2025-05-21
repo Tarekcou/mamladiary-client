@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
 import { toast } from "sonner";
+import { AuthContext } from "../../provider/AuthProvider";
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -82,12 +83,14 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
     mamlaNo: "",
     year: "",
     district: "",
+    previousDate: "",
     nextDate: "",
     completedMamla: "",
     completionDate: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const { isLoading } = useContext(AuthContext);
 
   // Populate form with existing mamla
   useEffect(() => {
@@ -97,6 +100,7 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
         mamlaNo: mamla.mamlaNo || "",
         year: mamla.year || "",
         district: mamla.district || "",
+        previousDate: mamla.nextDate || "",
         nextDate: mamla.nextDate || "",
         completedMamla: mamla.completedMamla || "",
         completionDate: mamla.completionDate || "",
@@ -113,14 +117,29 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
     }));
   };
 
+  const localDate = new Date();
+  const today = `${localDate.getFullYear()}-${String(
+    localDate.getMonth() + 1
+  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // console.log(formData);
+    const newFormData = { ...formData, createdAt: today };
     try {
       setLoading(true);
-      const res = await axiosPublic.patch(`/mamla/${mamla._id}`, formData);
-      toast.success("আপলোড সফল হয়েছে");
+      const res = await axiosPublic.patch(`/mamla/${mamla._id}`, newFormData);
+      toast.success("আপডেট সফল হয়েছে");
+      setFormData({
+        mamlaName: "",
+        mamlaNo: "",
+        year: "",
+        district: "",
+        previousDate: "",
+        nextDate: "",
+        completedMamla: "",
+        completionDate: "",
+      });
       console.log("Response data:", res.data);
     } catch (err) {
       console.error("Upload failed:", err);
@@ -134,7 +153,7 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
     <div>
       <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
         <h2 className="bg-green-100 mb-4 py-2 font-bold text-xl text-center">
-          ADC Mamla Upload Form
+          অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতের মামলার তথ্য আপডেট করুন
         </h2>
 
         <div className="gap-4 grid grid-cols-2 text-sm">
@@ -209,6 +228,17 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
 
           {/* Optional: nextDate */}
           <label>
+            Previous Date:
+            <input
+              type="date"
+              name="previousDate"
+              value={formData.previousDate}
+              readOnly
+              className="mt-1 input-bordered w-full input"
+            />
+          </label>
+          {/* Optional: nextDate */}
+          <label>
             Next Date:
             <input
               type="date"
@@ -247,10 +277,10 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
         <div className="mt-6 text-center">
           <button
             type="submit"
-            className="px-6 btn btn-success"
+            className="px-6 text-white btn btn-success"
             disabled={loading}
           >
-            {loading ? "Uploading..." : "Upload Mamla"}
+            {isLoading ? "আপডেট হচ্ছে ..." : "আপডেট করুন"}
           </button>
         </div>
       </form>

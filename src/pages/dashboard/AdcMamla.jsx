@@ -2,6 +2,9 @@ import React, { useState, useMemo, useEffect } from "react";
 import axiosPublic from "../../axios/axiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import AdcMamlaEditForm from "./AdcMamlaEditForm";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import Swal from "sweetalert2";
 
 const AdcMamla = () => {
   // const [adcMamlaList, setAdcMamlaList] = useState([]);
@@ -17,7 +20,7 @@ const AdcMamla = () => {
     queryFn: async () => {
       try {
         const response = await axiosPublic.get(`/adcMamla`);
-        console.log("Response data:", response.data);
+        // console.log("Response data:", response.data);
 
         return response.data;
       } catch (error) {
@@ -63,23 +66,34 @@ const AdcMamla = () => {
   const [editedMamla, setEditedMamla] = useState(null);
 
   const handleEdit = (mamla) => {
-    console.log(mamla);
+    // console.log(mamla);
     refetch();
     setEditedMamla(mamla);
   };
-  const handleDelete = async (id) => {
-    console.log(id);
-    try {
-      const response = await axiosPublic.delete(`/adcMamla/${id}`);
-      refetch();
-      // console.log("Response data:", response.data);
-      if (response.status === 200) {
-        refetch();
-        return response.data;
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/adcMamla/${id}`).then((res) => {
+          // console.log(res);
+          if (res.data.deletedCount > 0) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+            refetch();
+          }
+        });
       }
-    } catch (error) {
-      console.error("Error fetching mamla data:", error);
-    }
+    });
   };
 
   return (
@@ -163,13 +177,13 @@ const AdcMamla = () => {
                         document.getElementById("my_modal_3").showModal();
                       }}
                     >
-                      edit
+                      <FaEdit />
                     </label>
                     <button
                       onClick={() => handleDelete(item._id)}
                       className="btn"
                     >
-                      delete
+                      <MdDeleteForever />
                     </button>
                   </td>
                 </tr>

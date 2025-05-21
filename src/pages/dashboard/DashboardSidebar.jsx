@@ -77,6 +77,52 @@ const DashboardSidebar = () => {
             All Users
           </NavLink>
         </ul>
+        {/* Others Management */}
+        <ul className="flex flex-col space-y-1 list-disc list-inside">
+          <h2 className="bg-green-600 px-2 py-1 font-bold text-white text-center">
+            Others
+          </h2>
+          <NavLink
+            to="/dashboard/causeList"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 btn underline underline-offset-4 font-semibold"
+                : "text-gray-700 btn"
+            }
+          >
+            Cause List
+          </NavLink>
+          <NavLink
+            to="/dashboard/complain"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 btn underline underline-offset-4 font-semibold"
+                : "text-gray-700 btn"
+            }
+          >
+            Complain
+          </NavLink>
+          <NavLink
+            to="/dashboard/feedback"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 btn underline underline-offset-4 font-semibold"
+                : "text-gray-700 btn"
+            }
+          >
+            Feedback
+          </NavLink>
+          <NavLink
+            to="/dashboard/monthlyReport"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 btn underline underline-offset-4 font-semibold"
+                : "text-gray-700 btn"
+            }
+          >
+            Monthy Report
+          </NavLink>
+        </ul>
       </div>{" "}
     </div>
   );

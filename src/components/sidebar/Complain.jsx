@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../../provider/AuthProvider';
-import { useContext } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { AuthContext } from "../../provider/AuthProvider";
+import { useContext } from "react";
+import axiosPublic from "../../axios/axiosPublic";
 
 const Complain = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    location: '',
-    mamlaNo: '',
-    mamlaName: '',
-    description: ''
+    name: "",
+    phone: "",
+    location: "",
+    mamlaNo: "",
+    mamlaName: "",
+    description: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { signIn,isButtonSpin,isLoading } = useContext(AuthContext);
+  const { signIn, isButtonSpin, isLoading, setLoading } =
+    useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,11 +28,12 @@ const Complain = () => {
     setLoading(true);
     try {
       // Replace this URL with your actual backend endpoint
-      await axios.post('https://your-backend-api.com/api/complains', formData);
+      await axiosPublic.post("/complains", formData);
       setSubmitted(true);
+      setLoading(false);
     } catch (error) {
-      console.error('Submission failed:', error);
-      alert('Failed to submit. Please try again.');
+      console.error("Submission failed:", error);
+      alert("Failed to submit. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -39,22 +41,27 @@ const Complain = () => {
 
   const handleReset = () => {
     setFormData({
-      name: '',
-      phone: '',
-      location: '',
-      mamlaNo: '',
-      mamlaName: '',
-      description: ''
+      name: "",
+      phone: "",
+      location: "",
+      mamlaNo: "",
+      mamlaName: "",
+      description: "",
     });
     setSubmitted(false);
   };
 
   if (submitted) {
     return (
-      <div className="p-6 bg-green-100 rounded-lg text-center shadow-md max-w-xl mx-auto mt-10">
-        <h2 className="text-xl font-semibold text-green-700">Your complain has been submitted successfully!</h2>
+      <div className="bg-green-100 shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl text-center">
+        <h2 className="font-semibold text-green-700 text-xl">
+          Your complain has been submitted successfully!
+        </h2>
         <p className="mt-2 text-gray-700">Please wait for a response.</p>
-        <button onClick={handleReset} className="mt-4 btn btn-outline btn-primary">
+        <button
+          onClick={handleReset}
+          className="mt-4 btn-outline btn btn-primary"
+        >
           Add another complain
         </button>
       </div>
@@ -62,25 +69,75 @@ const Complain = () => {
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-xl mx-auto mt-10">
-      <h2 className="text-2xl font-bold mb-4 text-center">Submit Your Complain</h2>
+    <div className="bg-white shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl">
+      <h2 className="mb-4 font-bold text-2xl text-center">অভিযোগ দাখিল করুন</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="name" placeholder="Name" className="input input-bordered w-full" value={formData.name} onChange={handleChange} required />
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          className="input-bordered w-full input"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
 
-        <input type="tel" name="phone" placeholder="Phone" className="input input-bordered w-full" value={formData.phone} onChange={handleChange} required />
+        <input
+          type="tel"
+          name="phone"
+          placeholder="Phone"
+          className="input-bordered w-full input"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+        />
 
-        <input type="text" name="location" placeholder="Location" className="input input-bordered w-full" value={formData.location} onChange={handleChange} required />
+        <input
+          type="text"
+          name="location"
+          placeholder="Location"
+          className="input-bordered w-full input"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        />
 
-        <input type="text" name="mamlaNo" placeholder="Mamla No" className="input input-bordered w-full" value={formData.mamlaNo} onChange={handleChange} required />
+        <input
+          type="text"
+          name="mamlaNo"
+          placeholder="Mamla No"
+          className="input-bordered w-full input"
+          value={formData.mamlaNo}
+          onChange={handleChange}
+          required
+        />
 
-        <input type="text" name="mamlaName" placeholder="Mamla Name" className="input input-bordered w-full" value={formData.mamlaName} onChange={handleChange} required />
+        <input
+          type="text"
+          name="mamlaName"
+          placeholder="Mamla Name"
+          className="input-bordered w-full input"
+          value={formData.mamlaName}
+          onChange={handleChange}
+          required
+        />
 
-        <textarea name="description" placeholder="Description" className="textarea textarea-bordered w-full" value={formData.description} onChange={handleChange} required />
+        <textarea
+          name="description"
+          placeholder="Description"
+          className="textarea-bordered w-full textarea"
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
 
-        <button type="submit" className="btn btn-primary rounded-lg text-white  w-full btn-square">
-       {isLoading? <span className="loading loading-spinner"></span>:""}
-        Sign In
-          </button>
+        <button
+          type="submit"
+          className="rounded-lg w-full text-white btn btn-primary btn-square"
+        >
+          {isLoading ? <span className="loading loading-spinner"></span> : ""}
+          দাখিল করুন
+        </button>
       </form>
     </div>
   );

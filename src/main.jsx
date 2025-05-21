@@ -23,11 +23,21 @@ import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
 import Complain from "./components/sidebar/Complain.jsx";
 import Opinion from "./components/sidebar/Opinion.jsx";
+import ComplainDetails from "./pages/dashboard/ComplainDetails.jsx";
+import FeedbackDetails from "./pages/dashboard/FeedbackDetails.jsx";
+import CitizenCharter from "./components/sidebar/CitizenCharter.jsx";
+import Calendar from "./components/sidebar/Calendar.jsx";
+import History from "./components/sidebar/History.jsx";
+import Rules from "./components/sidebar/Rules.jsx";
+import Gallery from "./components/sidebar/Gallery.jsx";
+import Contact from "./components/sidebar/Contact.jsx";
+import CauseListDashboard from "./pages/dashboard/CauseListDashboard.jsx";
+import MonthlyReport from "./pages/dashboard/MonthlyReport.jsx";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
 ReactDOM.createRoot(root).render(
-  <QueryClientProvider  client={queryClient}>
+  <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <AuthProvider>
         <Routes>
@@ -36,18 +46,7 @@ ReactDOM.createRoot(root).render(
             <Route path="/causelist" element={<CauseList />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route
-              path="/complain"
-              element={
-                <Complain />
-              }
-            ></Route>
-            <Route
-              path="/opinion"
-              element={
-                <Opinion />
-              }
-            ></Route>
+
             {/* dashboard */}
             <Route
               path="/dashboard"
@@ -98,12 +97,49 @@ ReactDOM.createRoot(root).render(
                 </PrivateRouter>
               }
             ></Route>
-
+            <Route
+              path="/dashboard/causeList"
+              element={
+                <PrivateRouter>
+                  <CauseListDashboard />
+                </PrivateRouter>
+              }
+            ></Route>
+            <Route
+              path="/dashboard/complain"
+              element={
+                <PrivateRouter>
+                  <ComplainDetails />
+                </PrivateRouter>
+              }
+            ></Route>
+            <Route
+              path="/dashboard/feedback"
+              element={
+                <PrivateRouter>
+                  <FeedbackDetails />
+                </PrivateRouter>
+              }
+            ></Route>
+            <Route
+              path="/dashboard/monthlyReport"
+              element={
+                <PrivateRouter>
+                  <MonthlyReport />
+                </PrivateRouter>
+              }
+            ></Route>
 
             {/* SIdebar  */}
 
-
-            
+            <Route path="/history" element={<History />}></Route>
+            <Route path="/calendar" element={<Calendar />}></Route>
+            <Route path="/citizenCharter" element={<CitizenCharter />}></Route>
+            <Route path="/rules" element={<Rules />}></Route>
+            <Route path="/complain" element={<Complain />}></Route>
+            <Route path="/opinion" element={<Opinion />}></Route>
+            <Route path="/gallery" element={<Gallery />}></Route>
+            <Route path="/contacts" element={<Contact />}></Route>
           </Route>
         </Routes>
       </AuthProvider>
