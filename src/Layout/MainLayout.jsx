@@ -48,7 +48,7 @@ const MainLayout = () => {
           }`}
           style={
             isSticky && window.innerWidth >= 1024
-              ? { width: `${sidebarWidth}px` }
+              ? { width: `${sidebarWidth - 500}px` }
               : {}
           }
         >
