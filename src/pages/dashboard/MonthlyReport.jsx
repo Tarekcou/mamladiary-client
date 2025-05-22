@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import axiosPublic from "../../axios/axiosPublic";
+import BanglaPDF from "./BanglaPdf";
 
 const MonthlyReport = () => {
   const localDate = new Date();

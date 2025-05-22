@@ -8,4 +8,6 @@ export default defineConfig({
   daisyui: {
     themes: ["light"], // ✅ force light mode
   },
+  // vite.config.js
+  assetsInclude: ["**/*.ttf"],
 });

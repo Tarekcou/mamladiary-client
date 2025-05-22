@@ -1,4 +1,6 @@
 // components/BanglaPDF.jsx
+import NikoshFont from "../../fonts/Nikosh.ttf"; // ✅ path must be correct
+
 import {
   Document,
   Page,
@@ -11,7 +13,8 @@ import {
 // ✅ Register Unicode Bangla Font
 Font.register({
   family: "Nikosh",
-  src: "/fonts/Nikosh.ttf",
+  src: NikoshFont,
+  format: "truetype", // ✅ Add format to avoid "Unknown font format" error
 });
 
 const styles = StyleSheet.create({
