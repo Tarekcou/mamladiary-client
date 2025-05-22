@@ -1,8 +1,12 @@
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
 export default function Login() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
+
   const { signIn, isLoading } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
@@ -17,6 +21,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     signIn(formData);
+    navigate(from, { replace: true });
   };
 
   return (

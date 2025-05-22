@@ -84,11 +84,15 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
+
     // ✅ Load user from localStorage if exists
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsSignedIn(true);
+
+      // ✅ Check if user is admin
       checkAdmin();
       setLoading(false);
     } else {
@@ -106,9 +110,10 @@ const AuthProvider = ({ children }) => {
     // console.log(storedUser);
     const email = JSON.parse(storedUser)?.email;
     const res = await axiosPublic.get(`/users/${email}`);
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data?.role === "Admin") {
       setAdmin(true);
+      localStorage.setItem("isAdmin", true);
     }
   };
 
