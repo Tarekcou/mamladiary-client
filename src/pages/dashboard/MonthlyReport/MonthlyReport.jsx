@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import axiosPublic from "../../axios/axiosPublic";
-import BanglaPDF from "./BanglaPdf";
+import axiosPublic from "../../../axios/axiosPublic";
+import BanglaPDF from "./BanglaPDF";
+import { FaDownload } from "react-icons/fa";
 
 const MonthlyReport = () => {
   const localDate = new Date();
   const year = localDate.getFullYear();
   const month = String(localDate.getMonth() + 1).padStart(2, "0");
+  const thisMonth = `${month}-${year}`;
+  console.log(thisMonth);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
@@ -37,20 +40,29 @@ const MonthlyReport = () => {
     setCurrentPage(pageNumber);
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-xl">মাসিক রিপোর্ট</h2>
+        <h2 className="font-semibold text-xl">মাসিক রিপোর্ট {thisMonth}</h2>
 
         <PDFDownloadLink
           document={<BanglaPDF data={mamlaList} />}
-          fileName="মাসিক_প্রতিবেদন.pdf"
-          className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white"
+          fileName={`মাসিক_প্রতিবেদন ${thisMonth}.pdf }`}
+          className="bg-red-500 text-white btn-sm btn btn-error"
         >
-          {({ loading }) => (loading ? "Generating..." : "📥 Download PDF")}
+          {({ loading }) =>
+            loading ? (
+              "Generating..."
+            ) : (
+              <div className="flex gap-2">
+                <FaDownload />
+                {" Download PDF"}
+              </div>
+            )
+          }
         </PDFDownloadLink>
       </div>
 

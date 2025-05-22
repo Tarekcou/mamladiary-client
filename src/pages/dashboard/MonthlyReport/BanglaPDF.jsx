@@ -1,5 +1,5 @@
 // components/BanglaPDF.jsx
-import NikoshFont from "../../fonts/Nikosh.ttf"; // ✅ path must be correct
+import NikoshFont from "../../../fonts/Nikosh.ttf"; // ✅ path must be correct
 
 import {
   Document,

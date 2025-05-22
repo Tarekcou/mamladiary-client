@@ -32,7 +32,7 @@ import Rules from "./components/sidebar/Rules.jsx";
 import Gallery from "./components/sidebar/Gallery.jsx";
 import Contact from "./components/sidebar/Contact.jsx";
 import CauseListDashboard from "./pages/dashboard/CauseListDashboard.jsx";
-import MonthlyReport from "./pages/dashboard/MonthlyReport.jsx";
+import MonthlyReport from "./pages/dashboard/MonthlyReport/MonthlyReport.jsx";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 

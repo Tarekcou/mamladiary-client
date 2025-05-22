@@ -96,6 +96,8 @@ const AllMamla = () => {
     });
   };
 
+  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
+
   return (
     <div className="p-4">
       <h2 className="mb-4 font-semibold text-xl">সকল মামলা </h2>

@@ -56,6 +56,7 @@ const ComplainDetails = () => {
       }
     });
   };
+  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
 
   return (
     <div className="p-4">

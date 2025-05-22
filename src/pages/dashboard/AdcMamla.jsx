@@ -95,11 +95,12 @@ const AdcMamla = () => {
       }
     });
   };
+  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
 
   return (
     <div className="p-4">
-      <h2 className="mb-4   font-semibold text-xl text-center">
-        এডিসি মামলার রেকর্ড 
+      <h2 className="mb-4 font-semibold text-xl text-center">
+        এডিসি মামলার রেকর্ড
       </h2>
 
       {/* Search Fields */}
