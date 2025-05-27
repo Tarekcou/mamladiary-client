@@ -3,6 +3,7 @@ import axios from "axios";
 import { AuthContext } from "../../provider/AuthProvider";
 import { useContext } from "react";
 import axiosPublic from "../../axios/axiosPublic";
+    import { motion } from "framer-motion"; // For animation
 
 const Complain = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +70,13 @@ const Complain = () => {
   }
 
   return (
-    <div className="bg-white shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl">
+<motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="p-6  mx-auto  bg-white shadow-xl rounded-2xl"
+    >
+    <div className="bg-white shadow-md mx-auto mt-10 p-6 rounded-lg w-11/12 md:w-8/12">
       <h2 className="mb-4 font-bold text-2xl text-center">অভিযোগ দাখিল করুন</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -140,6 +147,7 @@ const Complain = () => {
         </button>
       </form>
     </div>
+    </motion.div>
   );
 };
 

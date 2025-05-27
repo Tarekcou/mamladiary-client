@@ -38,7 +38,7 @@ const MainLayout = () => {
     <div className="mx-auto w-11/12 lg:w-10/12">
       <Header />
 
-      <div className="relative flex gap-4 mt-4 min-h-screen">
+      <div className="relative flex gap-4 mt-4 ">
         {/* SidebarLeft */}
         <div
           className={`hidden   lg:block ${
@@ -73,7 +73,7 @@ const MainLayout = () => {
         </main>
       </div>
 
-      <div className="">
+      <div className="" >
         <Footer />
       </div>
     </div>

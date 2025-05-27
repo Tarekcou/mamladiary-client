@@ -10,6 +10,8 @@ import CasesList from "../components/CaseList";
 import axiosPublic from "../axios/axiosPublic";
 import { toast } from "sonner";
 import bgimage from "../assets/bg-image.jpg";
+import { motion } from "framer-motion"; // For animation
+
 export default function Home() {
   const [searchParams, setSearchParams] = useState(null);
   const [isShowCaseList, setShowCaseList] = useState(false);
@@ -52,7 +54,13 @@ export default function Home() {
   }, [searchParams, refetch]);
 
   return (
-    <div className="relative mx-auto h-full">
+     <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className=" mx-auto relative   bg-white "
+    >
+    <div className=" mx-auto h-full ">
       <CaseSearchForm handleSubmit={handleSubmit} />
       {/* Background Image section (always visible) */}
 
@@ -64,12 +72,13 @@ export default function Home() {
           error={error}
         />
       )}
-      <div className="flex justify-center items-center mt-[100px]">
+      <div className="flex justify-center items-center  mt-24 ">
         <div
-          className="bottom-0 absolute bg-cover bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
+          className="bottom-0  bg-cover  bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
           style={{ backgroundImage: `url(${bgimage})` }}
         ></div>
       </div>
     </div>
+    </motion.div>
   );
 }

@@ -1,11 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
+import { motion } from "framer-motion"; // For animation
 
 export default function SidebarLeft() {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 px-2 pb-10 w-full h-full text-sm">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      whileFocus="focused" 
+      className=" bg-white "
+    >
+    <div className="space-y-4 px-2  pb-10  w-full h-full text-sm">
       <div>
         <h2 className="bg-[#004080] py-6 w-full font-bold text-white btn">
           {t("the court")}
@@ -27,7 +35,7 @@ export default function SidebarLeft() {
           </li>
           <li>
             <NavLink
-              to={"/calender"}
+              to={"/calendar"}
               href="#"
               className={({ isActive }) =>
                 isActive
@@ -124,5 +132,6 @@ export default function SidebarLeft() {
         </ul>
       </div>
     </div>
+    </motion.div>
   );
 }

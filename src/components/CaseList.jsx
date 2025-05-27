@@ -4,6 +4,7 @@ import axiosPublic from "../axios/axiosPublic";
 import { useTranslation } from "react-i18next";
 import { MdError } from "react-icons/md";
 import Loading from "./common/Loading";
+import { motion } from "framer-motion";
 
 const CasesList = ({ mamla, isLoading, isError, error }) => {
   const { t } = useTranslation();
@@ -32,6 +33,12 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       </div>
     );
   return (
+     <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="p-6  mx-auto  bg-white shadow-md rounded-xl"
+    >
     <div className="mt-10">
       <h1 className="bg-[#004080] mb-4 py-2 font-semibold text-white text-xl text-center">
         📂 {t("case search result")}
@@ -76,6 +83,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
         </table>
       </div>
     </div>
+    </motion.div>
   );
 };
 

@@ -1,7 +1,41 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const Rules = () => {
-  return <div>Rules</div>;
+  const rules = [
+    "মামলার হাজিরা, আপত্তি(পিটিশন), সময়ের আবেদন ও অন্যান্য আবেদনসমূহ ধার্য তারিখ সকাল ১১.০০ ঘটিকার মধ্যে কোর্টে জমা দিতে হবে।",
+    "ফাইলিং এর সময় ওকালতনামা এবং যে মামলার আদেশের বিরুদ্ধে আপিল/রিভিশন দায়ের করবেন তার সার্টিফাইর্ড কপি দাখিল করতে হবে।",
+    "মামলার ফাইলিং ও যুক্তিতর্ক সকাল ১০.৩০ ঘটিকার মধ্যে জমা দিতে হবে।",
+    "মামলা ফাইলিং এর সময় ১০০ টাকার কোর্ট ফি ও ২ সেট ফটোকপি জমা দিতে হবে।",
+    "যে কোন পিটিশন মামলার সাথে ২০ টাকার কোর্ট ফি এবং রোজিনা (মামলার বিবাদীর নোটিশ) ১ম জন ১০ টাকা এবং পরবর্তী প্রতিজন ৫ টাকা দিতে হবে।",
+    "নোটিশে নাম, মোবাইল নম্বর ও ঠিকানা লিখে দিতে হবে, খাম ও AD Blank দিতে হবে।",
+    "যে কোন পিটিশনের সাথে ২ সেট ফটোকপি জমা দিতে হবে।",
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="p-6  mx-auto  bg-white shadow-xl rounded-2xl"
+    >
+      <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">নিয়মাবলী</h2>
+      <ul className="space-y-4 list-none px-4">
+        {rules.map((rule, index) => (
+          <motion.li
+            key={index}
+            className="flex items-start text-gray-700 text-lg"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <span className="text-blue-500 text-xl mr-2">➤</span>
+            <span>{rule}</span>
+          </motion.li>
+        ))}
+      </ul>
+    </motion.div>
+  );
 };
 
 export default Rules;
