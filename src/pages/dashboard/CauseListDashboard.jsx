@@ -60,9 +60,9 @@ const CauseListDashboard = () => {
           </label>
           <button
             onClick={handleDateChange}
-            className="text-white btn btn-success"
+            className="bg-blue-900 border-none text-white btn btn-success"
           >
-            Search
+            খুঁজুন
           </button>
         </div>
       </div>

@@ -65,14 +65,14 @@ const ComplainDetails = () => {
         <table className="table table-zebra w-full">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Location</th>
-              <th>Case No</th>
-              <th>Case Name</th>
-              <th>Description</th>
-              <th>Action</th>
+              <th>ক্রমিক </th>
+              <th>নাম </th>
+              <th>ফোন </th>
+              <th>ঠিকানা </th>
+              <th>মামলা নং </th>
+              <th>মামলার নাম </th>
+              <th>বিস্তারিত </th>
+              <th>কার্যক্রম </th>
             </tr>
           </thead>
           <tbody>

@@ -17,10 +17,12 @@ const Rules = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-6  mx-auto  bg-white shadow-xl rounded-2xl"
+      className="bg-white shadow-xl mx-auto p-6 rounded-2xl"
     >
-      <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">নিয়মাবলী</h2>
-      <ul className="space-y-4 list-none px-4">
+      <h2 className="mb-6 font-bold text-blue-600 text-3xl text-center">
+        নিয়মাবলী
+      </h2>
+      <ul className="space-y-4 px-4 list-none">
         {rules.map((rule, index) => (
           <motion.li
             key={index}
@@ -29,7 +31,7 @@ const Rules = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <span className="text-blue-500 text-xl mr-2">➤</span>
+            <span className="mr-2 text-blue-500 text-xl">➤</span>
             <span>{rule}</span>
           </motion.li>
         ))}

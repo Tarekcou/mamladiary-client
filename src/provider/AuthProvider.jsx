@@ -29,14 +29,17 @@ const AuthProvider = ({ children }) => {
         toast.success("লগ ইন  সফল হয়েছে!");
         setIsSignedIn(true);
         setUser(res.data.user);
-        setLoading(false);
-        setButtonSpin(false);
-        // ✅ Check if user is admin
-        checkAdmin();
-        // ✅ Save user in localStorage
-        // console.log(isAdmin);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        navigation("/dashboard");
+        setButtonSpin(false);
+
+        const isUserAdmin = await checkAdmin(res.data.user.email);
+        if (isUserAdmin) {
+          navigation("/dashboard");
+        } else {
+          navigation("/"); // or another page for regular users
+        }
+
+        setLoading(false);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -48,12 +51,18 @@ const AuthProvider = ({ children }) => {
 
   // signout
   const signOut = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAdmin");
+
     setUser(null);
     setIsSignedIn(false);
-    localStorage.removeItem("user");
+    setAdmin(false); // ✅ Reset isAdmin
     setLoading(false);
+
     toast.info("সাইন আউট !");
+    navigation("/"); // optionally redirect to home or login
   };
+
   // register
   const resigter = (formData) => {
     const res = axiosPublic.post("/register", formData);
@@ -62,7 +71,9 @@ const AuthProvider = ({ children }) => {
     res
       .then((response) => {
         if (response.data.insertedId) {
-          toast.success("রেজিস্ট্রেশন সফল হয়েছে!");
+          toast.success(
+            "রেজিস্ট্রেশন সফল হয়েছে, আইডি ভেরিফাই করতে এডমিনের সাথে যোগাযোগ করুন"
+          );
           navigation("/");
           setLoading(false);
           setButtonSpin(false);
@@ -85,15 +96,12 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     setLoading(true);
-
-    // ✅ Load user from localStorage if exists
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
       setIsSignedIn(true);
-
-      // ✅ Check if user is admin
-      checkAdmin();
+      checkAdmin(parsedUser.email);
       setLoading(false);
     } else {
       setLoading(false);
@@ -101,19 +109,21 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const checkAdmin = async () => {
-    // if (!user) {
-    //   return false;
-    // }
-    const storedUser = localStorage.getItem("user");
-
-    // console.log(storedUser);
-    const email = JSON.parse(storedUser)?.email;
-    const res = await axiosPublic.get(`/users/${email}`);
-    // console.log(res.data);
-    if (res.data?.role === "Admin") {
-      setAdmin(true);
-      localStorage.setItem("isAdmin", true);
+  const checkAdmin = async (email) => {
+    try {
+      const res = await axiosPublic.get(`/users/${email}`);
+      if (res.data?.role === "Admin") {
+        setAdmin(true);
+        localStorage.setItem("isAdmin", true);
+        return true;
+      } else {
+        setAdmin(false);
+        localStorage.removeItem("isAdmin");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking admin:", error);
+      return false;
     }
   };
 

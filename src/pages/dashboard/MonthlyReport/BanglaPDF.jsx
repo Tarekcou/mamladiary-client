@@ -57,10 +57,12 @@ function toBanglaNumber(num) {
     .join("");
 }
 
-const BanglaPDF = ({ data }) => (
+const BanglaPDF = ({ data, thisMonth }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <Text style={styles.heading}>মাসিক মামলার প্রতিবেদন</Text>
+      <Text style={styles.heading}>
+        মাসিক মামলার প্রতিবেদন {toBanglaNumber(thisMonth)}
+      </Text>
 
       {/* Table Header */}
       <View style={styles.tableRow}>
@@ -69,10 +71,10 @@ const BanglaPDF = ({ data }) => (
         <Text style={styles.cell}>মামলা নম্বর</Text>
         <Text style={styles.cell}>সাল</Text>
         <Text style={styles.cell}>জেলা</Text>
-        <Text style={styles.cell}>পূর্বের তারিখ</Text>
-        <Text style={styles.cell}>পরবর্তী তারিখ</Text>
+        {/* <Text style={styles.cell}>পূর্বের তারিখ</Text>
+        <Text style={styles.cell}>পরবর্তী তারিখ</Text> */}
         <Text style={styles.cell}>সর্বশেষ অবস্থা</Text>
-        <Text style={[styles.cell, styles.lastCell]}>সম্পন্নের তারিখ</Text>
+        <Text style={[styles.cell, styles.lastCell]}>নিষ্পত্তির তারিখ</Text>
       </View>
 
       {/* Table Rows */}
@@ -80,13 +82,19 @@ const BanglaPDF = ({ data }) => (
         <View style={styles.tableRow} key={index}>
           <Text style={styles.cell}>{toBanglaNumber(index + 1)}</Text>
           <Text style={styles.cell}>{item.mamlaName}</Text>
-          <Text style={styles.cell}>{item.mamlaNo}</Text>
-          <Text style={styles.cell}>{item.year}</Text>
+          <Text style={styles.cell}>{toBanglaNumber(item.mamlaNo)}</Text>
+          <Text style={styles.cell}>{toBanglaNumber(item.year)}</Text>
           <Text style={styles.cell}>{item.district}</Text>
-          <Text style={styles.cell}>{item.previousDate || "-"}</Text>
-          <Text style={styles.cell}>{item.nextDate || "-"}</Text>
+          {/* <Text style={styles.cell}>
+            {toBanglaNumber(item.previousDate) || "-"}
+          </Text>
+          <Text style={styles.cell}>
+            {toBanglaNumber(item.nextDate) || "-"}
+          </Text> */}
           <Text style={styles.cell}>{item.completedMamla || "-"}</Text>
-          <Text style={styles.cell}>{item.completionDate || "-"}</Text>
+          <Text style={styles.cell}>
+            {toBanglaNumber(item.completionDate) || "-"}
+          </Text>
         </View>
       ))}
     </Page>

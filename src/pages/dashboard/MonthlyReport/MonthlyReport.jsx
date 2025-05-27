@@ -10,7 +10,6 @@ const MonthlyReport = () => {
   const year = localDate.getFullYear();
   const month = String(localDate.getMonth() + 1).padStart(2, "0");
   const thisMonth = `${month}-${year}`;
-  console.log(thisMonth);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
@@ -39,18 +38,25 @@ const MonthlyReport = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  function toBanglaNumber(num) {
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return num
+      .toString()
+      .split("")
+      .map((digit) => banglaDigits[parseInt(digit)] || digit)
+      .join("");
+  }
 
   if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;
-
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold text-xl">মাসিক রিপোর্ট {thisMonth}</h2>
 
         <PDFDownloadLink
-          document={<BanglaPDF data={mamlaList} />}
-          fileName={`মাসিক_প্রতিবেদন ${thisMonth}.pdf }`}
+          document={<BanglaPDF data={mamlaList} thisMonth={thisMonth} />}
+          fileName={`মাসিক_প্রতিবেদন ${thisMonth}.pdf`}
           className="bg-red-500 text-white btn-sm btn btn-error"
         >
           {({ loading }) =>
@@ -76,9 +82,9 @@ const MonthlyReport = () => {
               <th className="px-4 py-2 border">সাল</th>
               <th className="px-4 py-2 border">জেলা</th>
               <th className="px-4 py-2 border">পূর্বের তারিখ</th>
-              <th className="px-4 py-2 border">পরবর্তী তারিখ</th>
-              <th className="px-4 py-2 border">সর্বশেষ অবস্থা</th>
-              <th className="px-4 py-2 border">সম্পন্নের তারিখ</th>
+              {/* <th className="px-4 py-2 border">পরবর্তী তারিখ</th>
+              <th className="px-4 py-2 border">সর্বশেষ অবস্থা</th> */}
+              <th className="px-4 py-2 border">নিষ্পত্তির তারিখ</th>
             </tr>
           </thead>
           <tbody>
@@ -86,25 +92,25 @@ const MonthlyReport = () => {
               paginatedData.map((item, idx) => (
                 <tr key={idx} className="text-center">
                   <td className="px-4 py-2 border">
-                    {(currentPage - 1) * itemsPerPage + idx + 1}
+                    {toBanglaNumber((currentPage - 1) * itemsPerPage + idx + 1)}
                   </td>
                   <td className="px-4 py-2 border">{item?.mamlaName}</td>
                   <td className="px-4 py-2 border">
-                    {item?.mamlaNo?.replace(/\D/g, "")}
+                    {toBanglaNumber(item?.mamlaNo?.replace(/\D/g, ""))}
                   </td>
                   <td className="px-4 py-2 border">
-                    {item?.year?.replace(/\D/g, "")}
+                    {toBanglaNumber(item?.year?.replace(/\D/g, ""))}
                   </td>
                   <td className="px-4 py-2 border">{item?.district}</td>
-                  <td className="px-4 py-2 border">
-                    {item?.previousDate || "-"}
+                  {/* <td className="px-4 py-2 border">
+                    {toBanglaNumber(item?.previousDate || "-")}
                   </td>
-                  <td className="px-4 py-2 border">{item?.nextDate || "-"}</td>
+                  <td className="px-4 py-2 border">{toBanglaNumber(item?.nextDate || "-")}</td> */}
                   <td className="px-4 py-2 border">
                     {item?.completedMamla || "-"}
                   </td>
                   <td className="px-4 py-2 border">
-                    {item.completionDate || "-"}
+                    {toBanglaNumber(item.completionDate || "-")}
                   </td>
                 </tr>
               ))

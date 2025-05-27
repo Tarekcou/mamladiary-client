@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 const DashboardSidebar = () => {
   return (
-    <div className="">
+    <div className="pb-10">
       <div className="space-y-4 w-full">
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">

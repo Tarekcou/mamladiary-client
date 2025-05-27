@@ -17,6 +17,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { signIn, resigter, isSignedIn, signOut, isAdmin } =
     useContext(AuthContext);
+
   const location = useLocation();
   const path = location.pathname;
   const toggleLanguage = () => {
@@ -63,10 +64,10 @@ export default function Header() {
               : " btn btn-sm "
           }
         >
-          <div className="flex items-center justify-center gap-2"><FaHome  />
-          <p>{t("home")}</p></div>
-          
-
+          <div className="flex justify-center items-center gap-2">
+            <FaHome />
+            <p>{t("home")}</p>
+          </div>
         </NavLink>
 
         <NavLink
@@ -80,7 +81,7 @@ export default function Header() {
           {t("cause list")}
         </NavLink>
 
-        {isSignedIn && isAdmin && (
+        {isAdmin && (
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>

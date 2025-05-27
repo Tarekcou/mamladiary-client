@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import axiosPublic from "../axios/axiosPublic";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const districts = [
   "চট্টগ্রাম",
@@ -94,93 +95,100 @@ export default function MamlaSearchForm({ handleSubmit }) {
     setSelectedYear(Number(e.target.value));
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
-        <div className="bg-[#004080] mb-4 py-2 font-bold text-white text-lg text-center">
-          {t("case search")}
-        </div>
-        <div className="space-y-4 text-sm">
-          <div className="gap-4 grid grid-cols-2">
-            {/* District */}
-            <label>
-              {t("district")}:
-              <select
-                name="district"
-                required
-                className="mt-1 w-full select-bordered select"
-              >
-                <option value="">{t("select district")}</option>
-                {districts.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            {/* Mamla Name */}
-            <label>
-              {t("mamla name")}:
-              <select
-                name="mamlaName"
-                required
-                className="mt-1 w-full select-bordered select"
-              >
-                <option value="">{t("select mamla name")}</option>
-                {mamlaNames.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            {/* Case Number */}
-            <label>
-              {t("case number")}:
-              <input
-                name="mamlaNo"
-                type="text"
-                className="input-bordered w-full input"
-              />
-            </label>
-
-            {/* Year */}
-            <label>
-              {t("year")}:
-              <select
-                name="year"
-                required
-                value={selectedYear}
-                onChange={handleYearChange}
-                className="w-full select-bordered select"
-              >
-                <option value="">{t("Select Year")}</option>"
-                {Array.from({ length: 50 }, (_, i) => {
-                  const year = 2000 + i;
-                  return (
-                    <option key={year} value={year}>
-                      {toBanglaNumber(year)}
-                      {/* {year} */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="relative bg-white mx-auto"
+    >
+      <form onSubmit={handleSubmit}>
+        <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
+          <div className="bg-[#004080] mb-4 py-2 font-bold text-white text-lg text-center">
+            {t("case search")}
+          </div>
+          <div className="space-y-4 text-sm">
+            <div className="gap-4 grid grid-cols-2">
+              {/* District */}
+              <label>
+                {t("district")}:
+                <select
+                  name="district"
+                  required
+                  className="mt-1 w-full select-bordered select"
+                >
+                  <option value="">{t("select district")}</option>
+                  {districts.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
                     </option>
-                  );
-                })}
-                "
-              </select>
-            </label>
-          </div>
+                  ))}
+                </select>
+              </label>
 
-          {/* Submit Button */}
-          <div className="flex items-center">
-            <button
-              type="submit"
-              className="bg-[#004080] mx-auto mt-2 border-none text-white btn btn-neutral"
-            >
-              {t("search")}
-            </button>
+              {/* Mamla Name */}
+              <label>
+                {t("mamla name")}:
+                <select
+                  name="mamlaName"
+                  required
+                  className="mt-1 w-full select-bordered select"
+                >
+                  <option value="">{t("select mamla name")}</option>
+                  {mamlaNames.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              {/* Case Number */}
+              <label>
+                {t("case number")}:
+                <input
+                  name="mamlaNo"
+                  type="text"
+                  className="input-bordered w-full input"
+                />
+              </label>
+
+              {/* Year */}
+              <label>
+                {t("year")}:
+                <select
+                  name="year"
+                  required
+                  value={selectedYear}
+                  onChange={handleYearChange}
+                  className="w-full select-bordered select"
+                >
+                  <option value="">{t("Select Year")}</option>"
+                  {Array.from({ length: 50 }, (_, i) => {
+                    const year = 2000 + i;
+                    return (
+                      <option key={year} value={year}>
+                        {toBanglaNumber(year)}
+                        {/* {year} */}
+                      </option>
+                    );
+                  })}
+                  "
+                </select>
+              </label>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex items-center">
+              <button
+                type="submit"
+                className="bg-[#004080] mx-auto mt-2 border-none text-white btn btn-neutral"
+              >
+                {t("search")}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </motion.div>
   );
 }

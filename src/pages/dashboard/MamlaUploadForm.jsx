@@ -128,19 +128,19 @@ export default function MamlaUploadForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
-      <h2 className="bg-[#004080] text-white mb-4 py-2 font-bold text-xl text-center">
+      <h2 className="bg-[#004080] mb-4 py-2 font-bold text-white text-xl text-center">
         মামলা আপলোড ফর্ম
       </h2>
 
       <div className="gap-4 grid grid-cols-2 text-sm">
         {/* Mamla Name */}
         <label>
-          Mamla Name:
+          মামলার নাম:
           <select
             name="mamlaName"
             className="mt-1 w-full select-bordered select"
           >
-            <option value="">Select Mamla Name</option>
+            <option value="">মামলার নাম নির্বাচন করুন </option>
             {mamlaNames.map((name) => (
               <option key={name} value={name}>
                 {name}
@@ -151,7 +151,7 @@ export default function MamlaUploadForm() {
 
         {/* Mamla No */}
         <label>
-          Mamla Number:
+          মামলা নম্বর:
           <input
             type="text"
             name="mamlaNo"
@@ -161,13 +161,13 @@ export default function MamlaUploadForm() {
 
         {/* Year */}
         <label>
-          Year:
+          বছর:
           <select
             value={selectedYear}
             name="year"
             className="mt-1 w-full select-bordered select"
           >
-            <option value="">Select Year</option>
+            <option value="">সাল নির্বাচন করুন </option>
             {Array.from({ length: 50 }, (_, i) => {
               const year = 2000 + i;
               return (
@@ -181,12 +181,12 @@ export default function MamlaUploadForm() {
 
         {/* District */}
         <label>
-          District:
+          জেলা :
           <select
             name="district"
             className="mt-1 w-full select-bordered select"
           >
-            <option value="">Select District</option>
+            <option value="">জেলা নির্বাচন করুণ </option>
             {districts.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -197,7 +197,7 @@ export default function MamlaUploadForm() {
 
         {/* Next Date */}
         <label>
-          Next Date:
+          পরবর্তী তারিখ:
           <input
             type="date"
             name="nextDate"
@@ -207,7 +207,7 @@ export default function MamlaUploadForm() {
 
         {/* Completed Mamla */}
         <label>
-          Completed Mamla:
+          সর্বশেষ অবস্থা:
           <input
             type="text"
             name="completedMamla"
@@ -217,7 +217,7 @@ export default function MamlaUploadForm() {
 
         {/* Completion Date */}
         <label>
-          Completion Date:
+          নিষ্পত্তির তারিখ:
           <input
             type="date"
             name="completionDate"
@@ -226,7 +226,7 @@ export default function MamlaUploadForm() {
         </label>
         {/* Completion Date */}
         <label>
-          Comments
+          মন্তব্য
           <input
             type="text"
             name="comments"
@@ -238,7 +238,7 @@ export default function MamlaUploadForm() {
       <div className="mt-6 text-center">
         <button
           type="submit"
-          className="px-6 btn bg-[#004080] text-white"
+          className="bg-[#004080] px-6 text-white btn"
           disabled={loading}
         >
           {loading ? "আপলোড হচ্ছে..." : "আপলোড করুন"}

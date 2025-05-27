@@ -135,20 +135,20 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
     <div>
       <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
         <h2 className="bg-[#004080]/30 mb-4 py-2 font-bold text-xl text-center">
-          এডিসি মামলা আপডেট ফর্ম 
+          এডিসি মামলা আপডেট ফর্ম
         </h2>
 
         <div className="gap-4 grid grid-cols-2 text-sm">
           {/* Mamla Name */}
           <label>
-            Mamla Name:
+            মামলার নাম:
             <select
               name="mamlaName"
               className="mt-1 w-full select-bordered select"
               value={formData.mamlaName}
               onChange={handleChange}
             >
-              <option value="">Select Mamla Name</option>
+              <option value="">মামলার নাম নির্বাচন করুন </option>
               {mamlaNames.map((name) => (
                 <option key={name} value={name}>
                   {name}
@@ -159,7 +159,7 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
 
           {/* Mamla Number */}
           <label>
-            Mamla Number:
+            মামলার নম্বর:
             <input
               type="text"
               name="mamlaNo"
@@ -171,14 +171,14 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
 
           {/* Year */}
           <label>
-            Year:
+            সাল:
             <select
               name="year"
               value={formData.year}
               onChange={handleChange}
               className="mt-1 w-full select-bordered select"
             >
-              <option value="">Select Year</option>
+              <option value="">সাল নির্বাচন করুন </option>
               {Array.from({ length: 50 }, (_, i) => {
                 const year = 2000 + i;
                 return (
@@ -192,14 +192,14 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
 
           {/* District */}
           <label>
-            District:
+            জেলা:
             <select
               name="district"
               value={formData.district}
               onChange={handleChange}
               className="mt-1 w-full select-bordered select"
             >
-              <option value="">Select District</option>
+              <option value="">জেলা নির্বাচন করুন </option>
               {districts.map((d) => (
                 <option key={d} value={d}>
                   {d}
@@ -212,7 +212,7 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
         <div className="mt-6 text-center">
           <button
             type="submit"
-            className="px-6 btn bg-[#004080] text-white"
+            className="bg-[#004080] px-6 text-white btn"
             disabled={loading}
           >
             {loading ? "আপডেট হচ্ছে..." : "আপডেট করুন"}

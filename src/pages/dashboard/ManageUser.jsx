@@ -77,21 +77,21 @@ const ManageUser = () => {
 
   return (
     <div className="p-2 w-full">
-      <h1 className="font-bold text-2xl">Manage All Users</h1>
+      <h1 className="font-bold text-2xl">সকল ব্যবহারকারী </h1>
 
       <div className="w-full overflow-x-auto">
-        <h1 className="font-semibold">Total User: {users.length}</h1>
-        <table className=" min-w-full table w-full border-collapse ">
+        <h1 className="font-semibold">মোট ব্যবহারকারী: {users.length}</h1>
+        <table className="table table-md w-full min-w-full">
           {/* head */}
           <thead>
             <tr className="text-xl text-center">
               {/* <th className="w-1/7">Serial</th> */}
-              <th className="w-1/7">Name</th>
-              <th className="w-1/7">Email</th>
-              <th className="w-1/7">Section</th>
-              <th className="w-1/7">Designation</th>
-              <th className="w-1/7">Role</th>
-              <th className="w-1/7">Action</th>
+              <th className="w-1/7">নাম </th>
+              <th className="w-1/7">ইমেইল </th>
+              <th className="w-1/7">সেকশন </th>
+              <th className="w-1/7">পদবী </th>
+              <th className="w-1/7">রোল </th>
+              <th className="w-1/7">কার্যক্রম </th>
             </tr>
           </thead>
           <tbody className="text-base text-center">

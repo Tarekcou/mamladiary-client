@@ -33,56 +33,56 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       </div>
     );
   return (
-     <motion.div
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-6  mx-auto  bg-white shadow-md rounded-xl"
+      className="bg-white shadow-md mx-auto p-6 rounded-xl"
     >
-    <div className="mt-10">
-      <h1 className="bg-[#004080] mb-4 py-2 font-semibold text-white text-xl text-center">
-        📂 {t("case search result")}
-      </h1>
-      <div className="overflow-x-auto">
-        <table className="shadow border border-gray-200 rounded-lg min-w-full">
-          <thead className="bg-gray-100">
-            <tr className="font-medium text-gray-700 text-sm text-left">
-              <th className="px-4 py-2">{t("mamla name")}</th>
-              <th className="px-4 py-2">{t("mamla no")}</th>
-              <th className="px-4 py-2">{t("mamla year")}</th>
-              <th className="px-4 py-2">{t("district")}</th>
-              <th className="px-4 py-2">{t("next date")}</th>
+      <div className="mt-10">
+        <h1 className="bg-[#004080] mb-4 py-2 font-semibold text-white text-xl text-center">
+          📂 {t("case search result")}
+        </h1>
+        <div className="overflow-x-auto">
+          <table className="shadow border border-gray-200 rounded-lg min-w-full">
+            <thead className="bg-gray-100">
+              <tr className="font-medium text-gray-700 text-sm text-left">
+                <th className="px-4 py-2">{t("mamla name")}</th>
+                <th className="px-4 py-2">{t("mamla no")}</th>
+                <th className="px-4 py-2">{t("mamla year")}</th>
+                <th className="px-4 py-2">{t("district")}</th>
+                <th className="px-4 py-2">{t("next date")}</th>
 
-              <th className="px-4 py-2">{t("completion stage")}</th>
-              {/* <th className="px-4 py-2">{t("গৃহীত কার্যক্রম")}</th> */}
+                <th className="px-4 py-2">{t("completion stage")}</th>
+                {/* <th className="px-4 py-2">{t("গৃহীত কার্যক্রম")}</th> */}
 
-              <th className="px-4 py-2">{t("completion date")}</th>
-              <th className="px-4 py-2">{t("comments")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              key={mamla._id}
-              className="hover:bg-gray-50 border-gray-200 border-t text-sm"
-            >
-              <td className="px-4 py-2">{mamla.mamlaName || "-"}</td>
-              <td className="px-4 py-2">
-                {mamla.mamlaNo.replace(/\D/g, "") || "-"}
-              </td>
-              <td className="px-4 py-2">
-                {mamla.year.replace(/\D/g, "") || "-"}
-              </td>
-              <td className="px-4 py-2">{mamla?.district || "-"}</td>
-              <td className="px-4 py-2">{mamla?.nextDate || "-"}</td>
+                <th className="px-4 py-2">{t("completion date")}</th>
+                <th className="px-4 py-2">{t("comments")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                key={mamla._id}
+                className="hover:bg-gray-50 border-gray-200 border-t text-sm"
+              >
+                <td className="px-4 py-2">{mamla.mamlaName || "-"}</td>
+                <td className="px-4 py-2">
+                  {mamla.mamlaNo.replace(/\D/g, "") || "-"}
+                </td>
+                <td className="px-4 py-2">
+                  {mamla.year.replace(/\D/g, "") || "-"}
+                </td>
+                <td className="px-4 py-2">{mamla?.district || "-"}</td>
+                <td className="px-4 py-2">{mamla?.nextDate || "-"}</td>
 
-              <td className="px-4 py-2">{mamla?.compltedMamla || "-"}</td>
-              <td className="px-4 py-2">{mamla?.completionDate || "-"}</td>
-              <td className="px-4 py-2">{mamla?.comments || "-"}</td>
-            </tr>
-          </tbody>
-        </table>
+                <td className="px-4 py-2">{mamla?.compltedMamla || "-"}</td>
+                <td className="px-4 py-2">{mamla?.completionDate || "-"}</td>
+                <td className="px-4 py-2">{mamla?.comments || "-"}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </motion.div>
   );
 };

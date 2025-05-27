@@ -34,7 +34,7 @@ export default function Register() {
           <input
             type="text"
             name="name"
-            placeholder="Full Name"
+            placeholder="নাম "
             value={formData.name}
             onChange={handleChange}
             required
@@ -44,7 +44,7 @@ export default function Register() {
           <input
             type="email"
             name="email"
-            placeholder="Email Address"
+            placeholder="ইমেইল"
             value={formData.email}
             onChange={handleChange}
             required
@@ -54,7 +54,7 @@ export default function Register() {
           <input
             type="text"
             name="dnothiId"
-            placeholder="DNothi ID"
+            placeholder="ডি নথি আইডি"
             value={formData.dnothiId}
             onChange={handleChange}
             required
@@ -64,7 +64,7 @@ export default function Register() {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="পাসওয়ার্ড"
             value={formData.password}
             onChange={handleChange}
             required
@@ -74,7 +74,7 @@ export default function Register() {
           <input
             type="text"
             name="section"
-            placeholder="Section"
+            placeholder="সেকশন"
             value={formData.section}
             onChange={handleChange}
             className="px-4 py-2 border rounded-lg w-full"
@@ -83,7 +83,7 @@ export default function Register() {
           <input
             type="text"
             name="designation"
-            placeholder="Podobi"
+            placeholder="পদবী"
             value={formData.designation}
             onChange={handleChange}
             className="px-4 py-2 border rounded-lg w-full"

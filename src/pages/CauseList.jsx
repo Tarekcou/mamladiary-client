@@ -44,7 +44,7 @@ const CauseList = () => {
           <table className="table table-zebra w-full">
             <thead className="bg-base-200">
               <tr>
-                <th>SL</th>
+                <th>ক্রমিক</th>
                 <th>মামলার নাম</th>
                 <th>মামলা নং</th>
                 {/* <th>পূর্ববর্তী তারিখ</th> */}

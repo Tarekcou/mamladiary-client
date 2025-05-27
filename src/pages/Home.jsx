@@ -10,7 +10,6 @@ import CasesList from "../components/CaseList";
 import axiosPublic from "../axios/axiosPublic";
 import { toast } from "sonner";
 import bgimage from "../assets/bg-image.jpg";
-import { motion } from "framer-motion"; // For animation
 
 export default function Home() {
   const [searchParams, setSearchParams] = useState(null);
@@ -25,13 +24,11 @@ export default function Home() {
   } = useQuery({
     queryKey: ["mamla", searchParams], // good for caching different search results
     queryFn: async () => {
-
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
 
-      console.log(response.data)
-     
+      console.log(response.data);
 
       return response.data;
     },
@@ -41,7 +38,7 @@ export default function Home() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
-                toast.success("অনুসন্ধান হচ্ছে ");
+    toast.success("অনুসন্ধান হচ্ছে ");
 
     setSearchParams(data); // triggers queryKey change (optional but useful)
     setShowCaseList(true); // show the case list
@@ -54,13 +51,7 @@ export default function Home() {
   }, [searchParams, refetch]);
 
   return (
-     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className=" mx-auto relative   bg-white "
-    >
-    <div className=" mx-auto h-full ">
+    <div className="mx-auto h-full">
       <CaseSearchForm handleSubmit={handleSubmit} />
       {/* Background Image section (always visible) */}
 
@@ -72,13 +63,12 @@ export default function Home() {
           error={error}
         />
       )}
-      <div className="flex justify-center items-center  mt-24 ">
+      <div className="right-0 bottom-0 left-0 absolute flex justify-center items-center">
         <div
-          className="bottom-0  bg-cover  bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
+          className="bg-cover bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
           style={{ backgroundImage: `url(${bgimage})` }}
         ></div>
       </div>
     </div>
-    </motion.div>
   );
 }

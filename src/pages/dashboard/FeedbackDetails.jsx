@@ -65,12 +65,12 @@ const FeedbackDetails = () => {
         <table className="table table-zebra w-full">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Location</th>
+              <th>ক্রমিক </th>
+              <th>নাম </th>
+              <th>ফোন </th>
+              <th>ঠিকানা </th>
 
-              <th>Description</th>
+              <th>বিস্তারিত </th>
             </tr>
           </thead>
           <tbody>

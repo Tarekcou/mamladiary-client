@@ -108,7 +108,7 @@ const AdcMamla = () => {
         <input
           type="text"
           name="adcMamlaName"
-          placeholder="Search Mamla Name"
+          placeholder="মামলার নাম অনুসন্ধান করুন"
           value={search.adcMamlaName}
           onChange={handleSearchChange}
           className="p-2 border rounded"
@@ -116,7 +116,7 @@ const AdcMamla = () => {
         <input
           type="text"
           name="mamlaNo"
-          placeholder="Search Mamla No"
+          placeholder="মামলার নং অনুসন্ধান করুন"
           value={search.mamlaNo}
           onChange={handleSearchChange}
           className="p-2 border rounded"
@@ -124,7 +124,7 @@ const AdcMamla = () => {
         <input
           type="text"
           name="district"
-          placeholder="Search District"
+          placeholder="জেলা অনুসন্ধান করুন"
           value={search.district}
           onChange={handleSearchChange}
           className="p-2 border rounded"
@@ -132,7 +132,7 @@ const AdcMamla = () => {
         <input
           type="text"
           name="year"
-          placeholder="Search Year"
+          placeholder="বছর অনুসন্ধান করুন"
           value={search.year}
           onChange={handleSearchChange}
           className="p-2 border rounded"
@@ -144,13 +144,13 @@ const AdcMamla = () => {
         <table className="bg-white border min-w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-4 py-2 border">#</th>
-              <th className="px-4 py-2 border">Mamla Name</th>
-              <th className="px-4 py-2 border">Mamla No</th>
-              <th className="px-4 py-2 border">Year</th>
-              <th className="px-4 py-2 border">District</th>
+              <th className="px-4 py-2 border">ক্রমিক</th>
+              <th className="px-4 py-2 border">মামলার নাম</th>
+              <th className="px-4 py-2 border">মামলার নং </th>
+              <th className="px-4 py-2 border">বছর </th>
+              <th className="px-4 py-2 border">জেলা </th>
 
-              <th className="px-4 py-2 border">#</th>
+              <th className="px-4 py-2 border">কার্যক্রম </th>
             </tr>
           </thead>
           <tbody>

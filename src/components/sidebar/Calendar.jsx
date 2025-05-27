@@ -1,55 +1,57 @@
 import React from "react";
-import { motion } from "framer-motion"; // For animation
+import { motion } from "framer-motion";
 
 const Calendar = () => {
   const calendarData = [
     {
       days: "রবিবার, মঙ্গলবার",
-      districts: "চট্টগ্রাম মহানগর, কক্সবাজার, কুমিল্লা, চাঁদপুর, ব্রাহ্মণবাড়িয়া",
+      districts:
+        "চট্টগ্রাম মহানগর, কক্সবাজার, কুমিল্লা, চাঁদপুর, ব্রাহ্মণবাড়িয়া",
     },
     {
       days: "সোমবার, বুধবার",
-      districts: "চট্টগ্রামের উপজেলাসমূহ, নোয়াখালী, ফেনী, লক্ষীপুর, তিন পার্বত্য জেলা",
+      districts:
+        "চট্টগ্রামের উপজেলাসমূহ, নোয়াখালী, ফেনী, লক্ষীপুর, তিন পার্বত্য জেলা",
     },
   ];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-4 mx-auto mt-10 bg-white shadow-md rounded-xl"
+      className="bg-white shadow-xl mx-auto p-4 rounded-xl"
     >
-      <h2 className="text-3xl font-bold text-center text-[#004080]  mb-6">
-        আদালতের ক্যালেন্ডার
-      </h2>
+      <div className="min-h-screen">
+        <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
+          আদালতের ক্যালেন্ডার
+        </h2>
 
-      <div className="">
-        <table className="table w-full border border-green-200">
-          <thead className="bg-[#004080]/20  text-blue-900 text-lg">
+        <table className="table border border-blue-200 w-full">
+          <thead className="bg-[#004080]/20 text-blue-900 text-lg">
             <tr>
-              <th className="py-3 px-4 text-left">দিন</th>
-              <th className="py-3 px-4 text-left">জেলা/উপজেলা</th>
+              <th scope="col" className="px-4 py-3 text-left">
+                দিন
+              </th>
+              <th scope="col" className="px-4 py-3 text-left">
+                জেলা/উপজেলা
+              </th>
             </tr>
           </thead>
           <tbody className="text-gray-700">
             {calendarData.map((row, index) => (
-              <motion.tr
-                key={index}
-                className="hover:bg-[#004080]/10"
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.2 }}
-              >
-                <td className="py-4 px-4 font-medium">{row.days}</td>
-                <td className="py-4 px-4">{row.districts}</td>
-              </motion.tr>
+              <tr key={index} className="hover:bg-[#004080]/10">
+                <td className="px-4 py-4 font-medium">{row.days}</td>
+                <td className="px-4 py-4">{row.districts}</td>
+              </tr>
             ))}
           </tbody>
         </table>
-      </div>
 
-      <p className="text-center text-xl font-bold text-gray-500 mt-4">সপ্তাহে কোর্ট ৪ দিন।</p>
+        <p className="mt-6 font-bold text-gray-500 text-xl text-center">
+          সপ্তাহে কোর্ট ৪ দিন।
+        </p>
+      </div>
     </motion.div>
   );
 };
