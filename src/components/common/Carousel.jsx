@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import banner from "../../assets/banner.jpg"
-import banner2 from "../../assets/banner2.jpg"
-import banner3 from "../../assets/banner3.jpg"
-
+import banner from "../../assets/banner.jpg";
+import banner2 from "../../assets/banner2.jpg";
+import banner3 from "../../assets/banner3.jpg";
+import govtLogo from "../../assets/govt.png";
+import logo from "../../assets/bg-image.jpg";
 const bannerSlides = [
   {
     id: 1,
@@ -59,21 +60,33 @@ const Carousel = () => {
             alt={`Slide ${slide.id}`}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white text-center px-4">
+          <div className="absolute inset-0 flex flex-col justify-center items-center bg-black/40 px-4 text-white text-center">
             <h1 className="font-bold text-xl md:text-2xl lg:text-4xl">
               {t("title")}
             </h1>
             <h2 className="text-sm lg:text-xl">{t("haeding")}</h2>
           </div>
+
+          {/* logo */}
+          <div className="top-5 z-50 absolute mx-auto w-full">
+            <div className="flex justify-between mx-auto w-11/12">
+              <img
+                className="rounded-full w-15 h-15"
+                src={logo}
+                alt="Mamla logo "
+              />
+              <img className="w-15 h-15" src={govtLogo} alt="govt logo" />
+            </div>
+          </div>
         </div>
       ))}
 
       {/* Navigation Buttons */}
-      {/* <div className="absolute flex justify-between items-center w-full px-4 top-1/2 transform -translate-y-1/2">
-        <button onClick={prevSlide} className="btn btn-circle bg-white/60">
+      {/* <div className="top-1/2 absolute flex justify-between items-center px-4 w-full -translate-y-1/2 transform">
+        <button onClick={prevSlide} className="bg-white/60 btn btn-circle">
           ❮
         </button>
-        <button onClick={nextSlide} className="btn btn-circle bg-white/60">
+        <button onClick={nextSlide} className="bg-white/60 btn btn-circle">
           ❯
         </button>
       </div> */}

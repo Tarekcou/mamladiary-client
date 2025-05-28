@@ -9,7 +9,7 @@ const CitizenCharter = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="bg-white shadow-lg mx-auto  p-6 rounded-xl">
+      <div className="bg-white shadow-lg mx-auto p-6 rounded-xl">
         <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
           সিটিজেন চার্টার
         </h2>
@@ -70,9 +70,9 @@ const CitizenCharter = () => {
         {/* Contact Info */}
         <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
           <div className="bg-gray-50 p-4 border rounded-md">
-            <h4 className="font-semibold text-gray-800">
+            {/* <h4 className="font-semibold text-gray-800">
               জনাব এস এম অনীক চৌধুরী
-            </h4>
+            </h4> */}
             <p>সিনিয়র সহকারী কমিশনার, রাজস্ব শাখা</p>
             <p>রুম নম্বর: ১০৯</p>
             <p>
@@ -87,9 +87,9 @@ const CitizenCharter = () => {
             <p>ফোনঃ ০২-৪১৩৬০৭৯৮</p>
           </div>
           <div className="bg-gray-50 p-4 border rounded-md">
-            <h4 className="font-semibold text-gray-800">
+            {/* <h4 className="font-semibold text-gray-800">
               জনাব মোহাম্মদ নূরুল্লাহ নূরী
-            </h4>
+            </h4> */}
             <p>অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব)</p>
             <p>চট্টগ্রাম</p>
             <p>রুম নং-১০৭</p>
@@ -131,9 +131,9 @@ const CitizenCharter = () => {
         {/* Contact Section */}
         <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
           <div className="bg-gray-50 p-4 border rounded-md">
-            <h4 className="font-semibold text-gray-800">
+            {/* <h4 className="font-semibold text-gray-800">
               জনাব এস এম অনীক চৌধুরী
-            </h4>
+            </h4> */}
             <p>সিনিয়র সহকারী কমিশনার, রাজস্ব শাখা</p>
             <p>রুম নম্বর: ১০৯</p>
             <p>
@@ -148,7 +148,7 @@ const CitizenCharter = () => {
             <p>ফোনঃ ০২-৪১৩৬০৭৯৮</p>
           </div>
           <div className="bg-gray-50 p-4 border rounded-md">
-            <h4 className="font-semibold text-gray-800">ড. মোঃ জিয়াউদ্দীন</h4>
+            {/* <h4 className="font-semibold text-gray-800">ড. মোঃ জিয়াউদ্দীন</h4> */}
             <p>বিভাগীয় কমিশনার (অতিরিক্ত সচিব)</p>
             <p>চট্টগ্রাম</p>
             <p>রুম নং-২০১</p>
@@ -218,9 +218,9 @@ const CitizenCharter = () => {
         {/* Contact Section */}
         <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
           <div className="bg-gray-50 p-4 border rounded-md">
-            <h4 className="font-semibold text-gray-800">
+            {/* <h4 className="font-semibold text-gray-800">
               জনাব এস এম অনীক চৌধুরী
-            </h4>
+            </h4> */}
             <p>সিনিয়র সহকারী কমিশনার, রাজস্ব শাখা</p>
             <p>রুম নম্বর: ১০৯</p>
             <p>
@@ -235,9 +235,9 @@ const CitizenCharter = () => {
             <p>ফোনঃ ০২-৪১৩৬০৭৯৮</p>
           </div>
           <div className="bg-gray-50 p-4 border rounded-md">
-            <h4 className="font-semibold text-gray-800">
+            {/* <h4 className="font-semibold text-gray-800">
               জনাব মোহাম্মদ নূরুল্লাহ নূরী
-            </h4>
+            </h4> */}
             <p>অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব)</p>
             <p>চট্টগ্রাম</p>
             <p>রুম নং-১০৭</p>

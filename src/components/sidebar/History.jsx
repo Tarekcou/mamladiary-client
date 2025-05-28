@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -59,50 +61,78 @@ const mamlaNames = [
   "রিভিউ মিচ মামলা",
   "রিভিশন",
 ];
-import { motion } from "framer-motion"; // For animation
 
 export default function History() {
   return (
     <div className="mx-auto">
-      <div className="bg-base-100 shadow-md card">
-        <div className="card-body">
-          <h2 className="font-semibold text-[#004080] text-2xl card-title">
-            অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতের ইতিহাস
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="bg-white shadow-md my-2 border border-gray-200 rounded-lg"
+      >
+        <div className="p-6 sm:p-8">
+          <h2 className="mb-4 font-semibold text-[#004080] text-2xl">
+            অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতের ইতিহাস ও কার্যক্রম
           </h2>
-          <p className="mt-2 text-gray-700 leading-relaxed">
-            অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) এর আদালত ভূমি সংক্রান্ত বিভিন্ন
-            প্রকার আপিল, রিভিশন ও পিটিশন মামলা শুনানি করে থাকেন। নামজারি,
-            জমাভাগ, উচ্ছেদ, বন্দোবস্ত, সার্টিফিকেট মামলা ইত্যাদি সহ নানা ভূমি
-            সংক্রান্ত বিষয় এই আদালতে নিষ্পত্তি হয়। এ আদালত ভূমি অধিকার রক্ষা ও
-            প্রশাসনিক স্বচ্ছতা নিশ্চিত করতে গুরুত্বপূর্ণ ভূমিকা পালন করে।
+          <p className="mb-6 text-gray-800 text-justify leading-relaxed">
+            <strong>প্রতিষ্ঠার ইতিহাস:</strong> অতিরিক্ত বিভাগীয় কমিশনার
+            (রাজস্ব) আদালতের সূচনা হয় ভূমি প্রশাসন ব্যবস্থার বিকেন্দ্রীকরণ এবং
+            বিচারিক কার্যক্রমকে অধিক কার্যকর ও দ্রুতগামী করার লক্ষ্যে। এটি
+            বিভাগীয় কমিশনারের প্রশাসনিক চাপ কমিয়ে সাধারণ জনগণকে ন্যায়বিচার
+            সহজে দেওয়ার উদ্দেশ্যে গঠিত হয়। আদালতের কার্যক্রম শুরু হয় ১৯৮০-এর
+            দশকের শেষ দিকে বা ১৯৯০-এর দশকের শুরুর দিকে (বিভাগভেদে), যখন সরকার
+            রাজস্ব প্রশাসনের স্বচ্ছতা ও দায়বদ্ধতা নিশ্চিত করতে বৃহৎ কাঠামো
+            প্রণয়ন করে।
+          </p>
+          <p className="mb-6 text-gray-800 text-justify leading-relaxed">
+            <strong>কার্যক্রম ও বিচারিক ক্ষমতা:</strong> এই আদালত ভূমি সংক্রান্ত
+            নানা বিষয়ে আপিল, রিভিশন ও পিটিশন শুনানি করে থাকে, যেমন নামজারি,
+            জমাভাগ, উচ্ছেদ, খাসজমি বন্দোবস্ত, সার্টিফিকেট মামলা, জরিপ আপত্তি
+            ইত্যাদি।
+          </p>
+          <p className="mb-6 text-gray-800 text-justify leading-relaxed">
+            <strong>কার্য এলাকা:</strong> আদালত সাধারণত বিভাগীয় সদর দপ্তরে
+            অবস্থিত:
+            <ul className="mt-1 ml-4 list-disc list-inside">
+              <li>ঢাকা বিভাগ – জেলা প্রশাসকের কার্যালয় সংলগ্ন রাজস্ব ভবন</li>
+              <li>চট্টগ্রাম বিভাগ – জেলা প্রশাসকের কার্যালয় এলাকা</li>
+              <li>
+                রাজশাহী, খুলনা, বরিশাল, সিলেট, রংপুর, ময়মনসিংহ – বিভাগীয় শহরে
+                অফিস স্থাপিত
+              </li>
+            </ul>
+          </p>
+          <p className="mb-6 text-gray-800 text-justify leading-relaxed">
+            <strong>কার্যপ্রণালী:</strong> মামলার পক্ষগণ নির্ধারিত ফি প্রদান ও
+            প্রয়োজনীয় দলিলপত্রসহ আবেদন করে থাকেন। শুনানিকালে প্রাসঙ্গিক
+            কাগজপত্র উপস্থাপন করে রায় প্রদান করা হয়।
+          </p>
+          <p className="mb-6 text-gray-800 text-justify leading-relaxed">
+            <strong>গুরুত্ব:</strong> ভূমি মালিকানার স্বচ্ছতা রক্ষা, দরিদ্র
+            জনগণের অধিকার সংরক্ষণ এবং ভূমি ব্যবস্থাপনায় জবাবদিহিতা নিশ্চিতকরণে
+            আদালত গুরুত্বপূর্ণ ভূমিকা পালন করে।
           </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="bg-white shadow-xl mx-auto p-6 rounded-2xl"
-          >
-            <div className="mt-6">
-              <h3 className="mb-2 font-bold text-gray-800 text-lg">
-                আদালতে নিষ্পত্তিকৃত মামলার প্রকারভেদ:
-              </h3>
-              <div className="bg-base-100 p-2 border border-base-200 rounded-md h-64 overflow-y-auto">
-                <div className="flex flex-wrap gap-2">
-                  {mamlaNames.map((name, idx) => (
-                    <span
-                      key={idx}
-                      className="border-[#004080] badge-outline text-sm badge badge-info"
-                    >
-                      {name}
-                    </span>
-                  ))}
-                </div>
+          <div className="mt-10">
+            <h3 className="mb-3 font-bold text-gray-800 text-lg">
+              আদালতে নিষ্পত্তিকৃত মামলার প্রকারভেদ:
+            </h3>
+            <div className="bg-gray-50 shadow-inner p-4 border border-gray-200 rounded-xl h-64 overflow-y-auto">
+              <div className="flex flex-wrap gap-2">
+                {mamlaNames.map((name, index) => (
+                  <span
+                    key={index}
+                    className="border-[#004080] badge-outline text-sm hover:scale-105 transition-transform duration-150 badge badge-info"
+                  >
+                    {name}
+                  </span>
+                ))}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
