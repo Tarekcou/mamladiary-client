@@ -71,11 +71,15 @@ const Carousel = () => {
           <div className="top-5 z-50 absolute mx-auto w-full">
             <div className="flex justify-between mx-auto w-11/12">
               <img
-                className="rounded-full w-15 h-15"
+                className="rounded-full w-10 md:w-15 h-10 md:h-15"
                 src={logo}
                 alt="Mamla logo "
               />
-              <img className="w-15 h-15" src={govtLogo} alt="govt logo" />
+              <img
+                className="w-10 md:w-15 h-10 md:h-15"
+                src={govtLogo}
+                alt="govt logo"
+              />
             </div>
           </div>
         </div>
