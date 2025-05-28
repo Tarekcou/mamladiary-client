@@ -26,7 +26,14 @@ const CauseList = () => {
 
     fetchTodayCases();
   }, [today]);
-
+  function toBanglaNumber(num) {
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return num
+      .toString()
+      .split("")
+      .map((digit) => banglaDigits[parseInt(digit)] || digit)
+      .join("");
+  }
   return (
     <div className="p-6">
       <h1 className="mb-4 font-bold text-2xl">
@@ -55,11 +62,11 @@ const CauseList = () => {
             <tbody>
               {cases.map((item, index) => (
                 <tr key={item._id}>
-                  <td>{index + 1}</td>
+                  <td>{toBanglaNumber(index + 1)}</td>
                   <td>{item.mamlaName}</td>
                   <td>{item.mamlaNo}</td>
                   {/* <td>{item.previousDate}</td> */}
-                  <td>{item.year}</td>
+                  <td>{toBanglaNumber(item.year)}</td>
                   <td>{item.completedMamla}</td>
                 </tr>
               ))}
