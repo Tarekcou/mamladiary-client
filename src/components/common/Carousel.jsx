@@ -47,7 +47,7 @@ const Carousel = () => {
   };
 
   return (
-    <div className="relative w-full h-44 md:h-64 lg:h-[250px] overflow-hidden">
+    <div className="relative w-full h-40 md:h-64 lg:h-[250px] overflow-hidden">
       {bannerSlides.map((slide, index) => (
         <div
           key={slide.id}
@@ -71,12 +71,12 @@ const Carousel = () => {
           <div className="top-5 z-50 absolute mx-auto w-full">
             <div className="flex justify-between mx-auto w-11/12">
               <img
-                className="rounded-full w-10 md:w-15 h-10 md:h-15"
+                className="shadow-md rounded-full w-10 md:w-15 h-10 md:h-15"
                 src={logo}
                 alt="Mamla logo "
               />
               <img
-                className="w-10 md:w-15 h-10 md:h-15"
+                className="shadow-md w-10 md:w-15 h-10 md:h-15"
                 src={govtLogo}
                 alt="govt logo"
               />
