@@ -8,6 +8,7 @@ import SidebarLeft from "../sidebar/SidebarLeft";
 import DashboardSidebar from "../../pages/dashboard/DashboardSidebar";
 import bgimage from "../../assets/bg-image.jpg";
 import { FaHome } from "react-icons/fa";
+import Carousel from "./Carousel";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -28,7 +29,7 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      setIsSticky(offset > 150);
+      setIsSticky(offset > 250);
     };
 
     const handleResize = () => {
@@ -124,18 +125,8 @@ export default function Header() {
   );
   return (
     <header className="z-50 relative shadow-sm w-full">
-      {/* Banner */}
-      <div
-        className="bg-cover bg-center h-44"
-        style={{ backgroundImage: `url(${banner})` }}
-      >
-        <div className="flex flex-col justify-center items-center bg-black/40 h-full text-white text-center">
-          <h1 className="font-bold text-xl md:text-2xl lg:text-4xl">
-            {t("title")}
-          </h1>
-          <h2 className="text-sm lg:text-xl">{t("haeding")}</h2>
-        </div>
-      </div>
+      {/* Carousel replacing the static banner */}
+      <Carousel />
 
       {/* Dynamic Spacer */}
       {isSticky && (

@@ -20,9 +20,9 @@ const Calendar = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-xl mx-auto p-4 rounded-xl"
+      className="bg-white shadow-sm mx-auto p-4 rounded-lg"
     >
-      <div className="min-h-screen">
+      <div className="">
         <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
           আদালতের ক্যালেন্ডার
         </h2>

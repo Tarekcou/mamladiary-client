@@ -17,9 +17,9 @@ const Rules = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-xl mx-auto p-6 rounded-2xl"
+      className="bg-white shadow-md mx-auto p-6 rounded-lg"
     >
-      <h2 className="mb-6 font-bold text-blue-600 text-3xl text-center">
+      <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
         নিয়মাবলী
       </h2>
       <ul className="space-y-4 px-4 list-none">
@@ -31,7 +31,7 @@ const Rules = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <span className="mr-2 text-blue-500 text-xl">➤</span>
+            <span className="mr-2 text-[#004080] text-xl">➤</span>
             <span>{rule}</span>
           </motion.li>
         ))}

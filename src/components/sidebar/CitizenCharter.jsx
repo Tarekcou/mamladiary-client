@@ -5,12 +5,12 @@ const CitizenCharter = () => {
   return (
     <motion.div
       className="hover:bg-[#004080]/10"
-      initial={{ opacity: 0, x: -30 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.3 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
     >
-      <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-xl">
-        <h2 className="mb-6 font-bold text-blue-700 text-3xl text-center">
+      <div className="bg-white shadow-lg mx-auto  p-6 rounded-xl">
+        <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
           সিটিজেন চার্টার
         </h2>
 

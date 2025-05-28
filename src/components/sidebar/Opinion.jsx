@@ -48,7 +48,7 @@ const Opinion = () => {
   };
 
   return (
-    <div className="mx-auto w-full md:w-9/12 min-h-[500px]">
+    <div className="mx-auto w-full mt-2 md:w-9/12 min-h-[500px]">
       {" "}
       {/* Stable wrapper */}
       <AnimatePresence mode="wait">
@@ -59,7 +59,7 @@ const Opinion = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.5 }}
-            className="bg-green-100 shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl min-h-screen text-center"
+            className="bg-green-100 shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl  text-center"
           >
             <h2 className="font-semibold text-green-700 text-xl">
               Your complain has been submitted successfully!
@@ -79,7 +79,7 @@ const Opinion = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.5 }}
-            className="bg-white shadow-sm p-4 rounded-lg min-h-screen"
+            className="bg-white shadow-sm p-4 rounded-lg "
           >
             <h2 className="mb-4 font-bold text-2xl text-center">
               ওয়েবসাইট সম্পর্কে মতামত দিন।

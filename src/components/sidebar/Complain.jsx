@@ -54,7 +54,7 @@ const Complain = () => {
 
   if (submitted) {
     return (
-      <div className="bg-green-100 shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl min-h-screen text-center">
+      <div className="bg-green-100 shadow-md mx-auto mt-10 p-6 rounded-lg max-w-xl  text-center">
         <h2 className="font-semibold text-green-700 text-xl">
           Your complain has been submitted successfully!
         </h2>
@@ -74,9 +74,9 @@ const Complain = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-xl mx-auto p-4 rounded-xl"
+      className="bg-white shadow-lg mx-auto  rounded-lg"
     >
-      <div className="bg-white shadow-md mx-auto p-6 rounded-lg w-11/12 md:w-8/12 min-h-screen">
+      <div className="bg-white shadow-md mx-auto p-6 rounded-lg w-11/12 md:w-9/12 ">
         <h2 className="mb-4 font-bold text-2xl text-center">
           অভিযোগ দাখিল করুন
         </h2>

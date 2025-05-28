@@ -11,7 +11,7 @@ export default function SidebarLeft() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       whileFocus="focused"
-      className=""
+      className="bg-white"
     >
       <div className="space-y-4 px-2 pb-10 w-full h-full text-sm">
         <div>
@@ -102,7 +102,7 @@ export default function SidebarLeft() {
                 {t("opinion")}
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to={"/gallery"}
                 href="#"
@@ -115,7 +115,7 @@ export default function SidebarLeft() {
               >
                 {t("photo gallery")}
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to={"/contacts"}
