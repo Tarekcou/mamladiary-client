@@ -11,9 +11,9 @@ export default function SidebarLeft() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       whileFocus="focused"
-      className="bg-white"
+      className=""
     >
-      <div className="space-y-4 px-2 pb-10 w-full h-full text-sm">
+      <div className="space-y-4 px-2 w-full h-full text-sm">
         <div>
           <h2 className="bg-[#004080] py-6 w-full font-bold text-white btn">
             {t("the court")}
@@ -23,11 +23,10 @@ export default function SidebarLeft() {
             <li>
               <NavLink
                 to={"/history"}
-                href="#"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-white w-full btn-neutral btn btn-sm "
-                    : "w-full btn btn-outline btn-neutral btn-sm"
+                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 btn btn-sm w-full"
                 }
               >
                 {t("history")}
@@ -39,8 +38,8 @@ export default function SidebarLeft() {
                 href="#"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-white w-full btn-neutral btn btn-sm "
-                    : "w-full btn btn-outline btn-neutral btn-sm"
+                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 btn btn-sm w-full"
                 }
               >
                 {t("court calendar")}
@@ -51,8 +50,8 @@ export default function SidebarLeft() {
               href="#"
               className={({ isActive }) =>
                 isActive
-                  ? "text-white w-full btn-neutral btn btn-sm "
-                  : "w-full btn btn-outline btn-neutral btn-sm"
+                  ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-sm w-full"
               }
             >
               {t("citizen charter")}
@@ -62,8 +61,8 @@ export default function SidebarLeft() {
               href="#"
               className={({ isActive }) =>
                 isActive
-                  ? "text-white w-full btn-neutral btn btn-sm "
-                  : "w-full btn btn-outline btn-neutral btn-sm"
+                  ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-sm w-full"
               }
             >
               {t("court rules")}
@@ -82,8 +81,8 @@ export default function SidebarLeft() {
                 href="#"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-white w-full btn-neutral btn btn-sm "
-                    : "w-full btn btn-outline btn-neutral btn-sm"
+                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 btn btn-sm w-full"
                 }
               >
                 {t("lodge your complaint")}
@@ -95,8 +94,8 @@ export default function SidebarLeft() {
                 href="#"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-white w-full btn-neutral btn btn-sm "
-                    : "w-full btn btn-outline btn-neutral btn-sm"
+                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 btn btn-sm w-full"
                 }
               >
                 {t("opinion")}
@@ -122,8 +121,8 @@ export default function SidebarLeft() {
                 href="#"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-white w-full btn-neutral btn btn-sm "
-                    : "w-full btn btn-outline btn-neutral btn-sm"
+                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 btn btn-sm w-full"
                 }
               >
                 {t("contacts")}

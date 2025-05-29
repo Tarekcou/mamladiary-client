@@ -29,15 +29,15 @@ const MainLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
 
   return (
-    <div className="mx-auto w-12/12 md:w-10/12 min-h-screen">
+    <div className="shadow-xl mx-auto w-12/12 md:w-10/12 min-h-screen">
       <Header />
 
       <div className="relative flex gap-4">
         <div
           className={`hidden lg:block ${
             isSticky
-              ? "fixed top-20 scroll-py-10 z-40 shadow-md h-full"
-              : "relative mt-2 shadow-md"
+              ? "fixed top-18 scroll-py-10 z-40 shadow-md h-full"
+              : "relative mt-1 shadow-md"
           }`}
           style={{
             width: `${sidebarWidth}px`,
@@ -61,7 +61,7 @@ const MainLayout = () => {
           className={
             path.includes("dashboard")
               ? "min-h-screen lg:w-10/12"
-              : "lg:w-10/12"
+              : "lg:w-10/12 min-h-screen"
           }
         >
           <Outlet />
