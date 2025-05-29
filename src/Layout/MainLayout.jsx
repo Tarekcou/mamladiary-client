@@ -29,7 +29,7 @@ const MainLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
 
   return (
-    <div className="mx-auto w-12/12 md:w-10/12">
+    <div className="mx-auto w-12/12 md:w-10/12 min-h-screen">
       <Header />
 
       <div className="relative flex gap-4">
@@ -57,12 +57,14 @@ const MainLayout = () => {
         )}
 
         {/* ✅ Wrap Outlet with AnimatePresence and motion.div */}
-        <main className={` relative w-full  lg:w-10/12  ${isSticky ? "" : ""}`}>
-          <div
-            className={path.includes("dashboard") ? "max-sm:min-h-screen" : ""}
-          >
-            <Outlet />
-          </div>
+        <main
+          className={
+            path.includes("dashboard")
+              ? "min-h-screen lg:w-10/12"
+              : "lg:w-10/12"
+          }
+        >
+          <Outlet />
         </main>
       </div>
 
