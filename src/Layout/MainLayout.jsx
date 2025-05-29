@@ -29,7 +29,7 @@ const MainLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
 
   return (
-    <div className="shadow-xl mx-auto w-12/12 md:w-10/12 min-h-screen">
+    <div className="shadow-xl mx-auto w-12/12 md:w-10/12">
       <Header />
 
       <div className="relative flex gap-4">
@@ -61,7 +61,7 @@ const MainLayout = () => {
           className={
             path.includes("dashboard")
               ? "min-h-screen lg:w-10/12"
-              : "lg:w-10/12 min-h-screen"
+              : "lg:w-10/12 "
           }
         >
           <Outlet />
