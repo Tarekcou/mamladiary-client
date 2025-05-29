@@ -61,7 +61,7 @@ const MainLayout = () => {
           className={
             path.includes("dashboard")
               ? "min-h-screen lg:w-10/12"
-              : "lg:w-10/12 "
+              : "lg:w-10/12 h-screen"
           }
         >
           <Outlet />
