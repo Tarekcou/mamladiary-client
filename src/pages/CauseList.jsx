@@ -37,7 +37,7 @@ const CauseList = () => {
   return (
     <div className="p-6">
       <h1 className="mb-4 font-bold text-2xl">
-        আজকের মামলা কার্যতালিকা - {today}
+        আজকের মামলা কার্যতালিকা - {toBanglaNumber(today)}
       </h1>
 
       {loading ? (
@@ -64,7 +64,7 @@ const CauseList = () => {
                 <tr key={item._id}>
                   <td>{toBanglaNumber(index + 1)}</td>
                   <td>{item.mamlaName}</td>
-                  <td>{item.mamlaNo}</td>
+                  <td>{toBanglaNumber(item.mamlaNo)}</td>
                   {/* <td>{item.previousDate}</td> */}
                   <td>{toBanglaNumber(item.year)}</td>
                   <td>{item.completedMamla}</td>

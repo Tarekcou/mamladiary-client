@@ -127,7 +127,7 @@ export default function MamlaUploadForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
+    <form onSubmit={handleSubmit} className="bg-gray-100 shadow-md mx-auto p-6">
       <h2 className="bg-[#004080] mb-4 py-2 font-bold text-white text-xl text-center">
         মামলা আপলোড ফর্ম
       </h2>

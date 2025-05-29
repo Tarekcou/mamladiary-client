@@ -3,11 +3,11 @@ import { NavLink } from "react-router";
 
 const DashboardSidebar = () => {
   return (
-    <div className="pb-10">
+    <div className="pb-10 px-2">
       <div className="space-y-4 w-full">
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
-        <ul className="flex flex-col space-y-1 list-disc list-inside">
-          <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
+        <ul className="flex  flex-col space-y-1 list-disc list-inside">
+          <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center rounded-md">
             ড্যাসবোর্ড
           </h2>
           {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
@@ -18,7 +18,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm  btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm "
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             মামলা আপলোড
@@ -29,7 +29,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn-outline btn-sm btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             সকল মামলা
@@ -46,7 +46,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             এডিসি মামলা আপলোড
@@ -57,7 +57,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn-outline btn btn-sm btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             সকল এডিসি মামলা
@@ -74,7 +74,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             সকল ব্যবহারকারী
@@ -90,7 +90,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             কেস ডায়েরী
@@ -100,7 +100,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             অভিযোগ
@@ -110,7 +110,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             মতামত
@@ -120,7 +120,7 @@ const DashboardSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm"
+                : "text-gray-700 btn btn-sm border-gray-300"
             }
           >
             মাসিক রিপোর্ট

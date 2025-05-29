@@ -56,13 +56,13 @@ export default function Header() {
   };
   const navMenu = (
     <>
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-between  w-full">
         <NavLink
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "  btn btn-sm btn-neutral  font-semibold"
-              : " btn btn-sm "
+              ? "  btn lg:btn-sm btn-neutral  font-semibold bg-[#004080]"
+              : " btn lg:btn-sm border border-gray-300"
           }
         >
           <div className="flex justify-center items-center gap-2">
@@ -75,8 +75,8 @@ export default function Header() {
           to="/causelist"
           className={({ isActive }) =>
             isActive
-              ? "btn btn-sm btn-neutral underline-offset-4 font-semibold"
-              : " btn btn-sm"
+              ? "btn lg:btn-sm btn-neutral underline-offset-4 font-semibold bg-[#004080]"
+              : " btn lg:btn-sm border-gray-300"
           }
         >
           {t("cause list")}
@@ -87,8 +87,8 @@ export default function Header() {
             to="/dashboard"
             className={({ isActive }) =>
               isActive
-                ? "btn-neutral btn btn-sm  underline-offset-4 font-semibold"
-                : " btn btn-sm"
+                ? "btn-neutral btn lg:btn-sm  underline-offset-4 font-semibold bg-[#004080]"
+                : " btn lg:btn-sm border-gray-300"
             }
           >
             {t("dashboard")}
@@ -101,7 +101,7 @@ export default function Header() {
     <>
       <div className="space-x-2">
         {isSignedIn ? (
-          <button onClick={handleLogout} className={"btn btn-sm text-red-600"}>
+          <button onClick={handleLogout} className={"btn btn-sm border-gray-300 text-red-600"}>
             {t("sign out")}
           </button>
         ) : (
@@ -111,7 +111,7 @@ export default function Header() {
             className={({ isActive }) =>
               isActive
                 ? "text-white btn-neutral btn btn-sm  underline-offset-4 font-semibold"
-                : "btn btn-sm"
+                : "btn btn-sm border-gray-300"
             }
           >
             {t("sign in")}
@@ -144,7 +144,7 @@ export default function Header() {
         <nav
           // style={{ backgroundImage: `url(${menuImage})` }}
           ref={navRef}
-          className={`flex justify-between items-center bg-base-100 md:px-6  transition-all duration-300 ease-in-out navbar ${
+          className={`flex justify-between items-center bg-gray-100 md:px-6  transition-all duration-300 ease-in-out navbar ${
             isSticky ? "shadow-sm" : ""
           }`}
         >
@@ -173,9 +173,9 @@ export default function Header() {
               </div>
               <ul
                 tabIndex={0}
-                className="z-1 bg-base-100 mt-4 p-2 rounded-box w-84 menu menu-sm dropdown-content"
+                className="z-1 bg-gray-100 mt-4 p-2 rounded-box w-84 menu menu-sm dropdown-content"
               >
-                <div className="py-5">{navMenu}</div>
+                <div className="py-5 w-full ">{navMenu}</div>
                 {path.includes("dashboard") ? (
                   <DashboardSidebar />
                 ) : (

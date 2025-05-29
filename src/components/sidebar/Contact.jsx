@@ -19,9 +19,9 @@ const Contact = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-sm mx-auto p-6 rounded-md"
+      className="bg-gray-100 shadow-sm mx-auto p-6 rounded-md"
     >
-    <div className="bg-white  ">
+    <div className="bg-gray-100  ">
       <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2>
       <div className="space-y-4">
         {contacts.map((person, index) => (

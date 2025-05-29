@@ -133,7 +133,7 @@ const AdcMamlaEditForm = ({ editedMamla: mamla }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md mx-auto p-6">
+      <form onSubmit={handleSubmit} className="bg-gray-100 shadow-md mx-auto p-6">
         <h2 className="bg-[#004080]/30 mb-4 py-2 font-bold text-xl text-center">
           এডিসি মামলা আপডেট ফর্ম
         </h2>

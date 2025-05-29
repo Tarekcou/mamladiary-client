@@ -37,7 +37,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-md mx-auto p-3 rounded-xl"
+      className="bg-gray-100 shadow-md h-full mx-auto p-3 rounded-xl"
     >
       <div className="mt-10">
         <h1 className="bg-[#004080] mb-4 py-2 font-semibold text-white text-xl text-center">

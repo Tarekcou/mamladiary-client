@@ -69,7 +69,7 @@ export default function History() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="bg-white shadow-md my-2 border border-gray-200 rounded-lg"
+        className="bg-gray-100 shadow-md my-2 border border-gray-200 rounded-lg"
       >
         <div className="p-6 sm:p-8">
           <h2 className="mb-4 font-semibold text-[#004080] text-2xl">

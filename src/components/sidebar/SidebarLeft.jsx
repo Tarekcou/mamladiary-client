@@ -26,7 +26,7 @@ export default function SidebarLeft() {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full"
+                    : "text-gray-700 btn btn-sm w-full border-gray-300"
                 }
               >
                 {t("history")}
@@ -39,7 +39,7 @@ export default function SidebarLeft() {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full"
+                    : "text-gray-700 btn btn-sm w-full border-gray-300"
                 }
               >
                 {t("court calendar")}
@@ -51,7 +51,7 @@ export default function SidebarLeft() {
               className={({ isActive }) =>
                 isActive
                   ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-sm w-full"
+                  : "text-gray-700 btn btn-sm w-full border-gray-300"
               }
             >
               {t("citizen charter")}
@@ -62,7 +62,7 @@ export default function SidebarLeft() {
               className={({ isActive }) =>
                 isActive
                   ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-sm w-full"
+                  : "text-gray-700 btn btn-sm w-full border-gray-300"
               }
             >
               {t("court rules")}
@@ -82,7 +82,7 @@ export default function SidebarLeft() {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full"
+                    : "text-gray-700 btn btn-sm w-full border-gray-300"
                 }
               >
                 {t("lodge your complaint")}
@@ -95,7 +95,7 @@ export default function SidebarLeft() {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full"
+                    : "text-gray-700 btn btn-sm w-full border-gray-300"
                 }
               >
                 {t("opinion")}
@@ -122,7 +122,7 @@ export default function SidebarLeft() {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full"
+                    : "text-gray-700 btn btn-sm w-full border-gray-300"
                 }
               >
                 {t("contacts")}

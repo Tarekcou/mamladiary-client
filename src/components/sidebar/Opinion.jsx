@@ -79,7 +79,7 @@ const Opinion = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.5 }}
-            className="bg-white shadow-sm p-4 rounded-lg "
+            className="bg-gray-100 shadow-sm p-4 rounded-lg "
           >
             <h2 className="mb-4 font-bold text-2xl text-center">
               ওয়েবসাইট সম্পর্কে মতামত দিন।

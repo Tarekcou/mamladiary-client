@@ -99,7 +99,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      className="relative bg-white mx-auto"
+      className="relative bg-gray-100 mx-auto"
     >
       <form onSubmit={handleSubmit}>
         <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
@@ -114,7 +114,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 <select
                   name="district"
                   required
-                  className="mt-1 w-full select-bordered select"
+                  className="mt-1 w-full select-bordered select  bg-gray-100"
                 >
                   <option value="">{t("select district")}</option>
                   {districts.map((d) => (
@@ -131,7 +131,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 <select
                   name="mamlaName"
                   required
-                  className="mt-1 w-full select-bordered select"
+                  className="mt-1 w-full select-bordered select  bg-gray-100"
                 >
                   <option value="">{t("select mamla name")}</option>
                   {mamlaNames.map((name) => (
@@ -148,7 +148,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 <input
                   name="mamlaNo"
                   type="text"
-                  className="input-bordered w-full input"
+                  className="input-bordered w-full input  bg-gray-100"
                 />
               </label>
 
@@ -160,7 +160,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                   required
                   value={selectedYear}
                   onChange={handleYearChange}
-                  className="w-full select-bordered select"
+                  className="w-full select-bordered select bg-gray-100"
                 >
                   <option value="">{t("Select Year")}</option>"
                   {Array.from({ length: 50 }, (_, i) => {

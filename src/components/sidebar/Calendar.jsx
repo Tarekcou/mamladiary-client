@@ -20,7 +20,7 @@ const Calendar = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-sm mx-auto p-4 rounded-lg"
+      className="bg-gray-100 shadow-sm mx-auto p-4 rounded-lg"
     >
       <div className="">
         <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">

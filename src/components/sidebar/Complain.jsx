@@ -74,9 +74,9 @@ const Complain = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-lg mx-auto  rounded-lg"
+      className="bg-gray-100 shadow-lg mx-auto  rounded-lg"
     >
-      <div className="bg-white shadow-md mx-auto p-6 rounded-lg w-11/12 md:w-9/12 ">
+      <div className="bg-gray-100 shadow-md mx-auto p-6 rounded-lg w-11/12 md:w-9/12 ">
         <h2 className="mb-4 font-bold text-2xl text-center">
           অভিযোগ দাখিল করুন
         </h2>

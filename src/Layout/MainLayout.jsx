@@ -29,7 +29,7 @@ const MainLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
 
   return (
-    <div className="shadow-xl min-h-screen mx-auto w-12/12 md:w-10/12">
+    <div className="shadow-xl min-h-screen mx-auto w-12/12 md:w-10/12 ">
       <Header />
 
       <div className="relative flex gap-4">

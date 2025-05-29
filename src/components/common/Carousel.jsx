@@ -47,7 +47,7 @@ const Carousel = () => {
   };
 
   return (
-    <div className="relative w-full h-40 md:h-56 lg:h-[220px] overflow-hidden">
+    <div className="relative w-full h-44 md:h-56 lg:h-64 overflow-hidden">
       {bannerSlides.map((slide, index) => (
         <div
           key={slide.id}
@@ -87,10 +87,10 @@ const Carousel = () => {
 
       {/* Navigation Buttons */}
       {/* <div className="top-1/2 absolute flex justify-between items-center px-4 w-full -translate-y-1/2 transform">
-        <button onClick={prevSlide} className="bg-white/60 btn btn-circle">
+        <button onClick={prevSlide} className="bg-gray-100/60 btn btn-circle">
           ❮
         </button>
-        <button onClick={nextSlide} className="bg-white/60 btn btn-circle">
+        <button onClick={nextSlide} className="bg-gray-100/60 btn btn-circle">
           ❯
         </button>
       </div> */}

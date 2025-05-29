@@ -141,7 +141,7 @@ const AdcMamla = () => {
 
       {/* Table */}
       <div className="w-full overflow-x-auto">
-        <table className="bg-white border min-w-full">
+        <table className="bg-gray-100 border min-w-full">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 border">ক্রমিক</th>

@@ -17,7 +17,7 @@ const Rules = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white shadow-md mx-auto p-6 rounded-lg"
+      className="bg-gray-100 shadow-md mx-auto p-6 rounded-lg"
     >
       <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
         নিয়মাবলী

@@ -9,7 +9,7 @@ const CitizenCharter = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="bg-white shadow-lg mx-auto p-6 rounded-xl">
+      <div className="bg-gray-100 shadow-lg mx-auto p-6 rounded-xl">
         <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
           সিটিজেন চার্টার
         </h2>
@@ -108,7 +108,7 @@ const CitizenCharter = () => {
       </div>
 
       {/* Sand Mahal Approval Table */}
-      <div className="bg-white shadow mt-10 p-6 border border-gray-200 rounded-xl">
+      <div className="bg-gray-100 shadow mt-10 p-6 border border-gray-200 rounded-xl">
         <h3 className="mb-2 font-bold text-blue-700 text-xl">
           বালুমহালের তালিকা অনুমোদন
         </h3>
@@ -167,7 +167,7 @@ const CitizenCharter = () => {
       </div>
 
       {/* Waterbody Appeal Resolution Table */}
-      <div className="bg-white shadow mt-10 p-6 border border-gray-200 rounded-xl">
+      <div className="bg-gray-100 shadow mt-10 p-6 border border-gray-200 rounded-xl">
         <h3 className="mb-2 font-bold text-blue-700 text-xl">
           ২০ একর পর্যন্ত জলমহাল ব্যবস্থাপনা কমিটির রায়ের বিরুদ্ধে আপিল নিষ্পত্তি
         </h3>
