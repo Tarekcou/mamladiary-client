@@ -92,7 +92,7 @@ const Dashboard = () => {
   // Monthly data
   const monthlyCount = Array(12).fill(0);
   cases.forEach((item) => {
-    const date = item.nextDate || item.createdAt;
+    const date = item.completionDate;
     if (date) {
       const month = dayjs(date).month();
       monthlyCount[month]++;
