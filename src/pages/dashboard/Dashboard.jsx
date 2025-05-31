@@ -156,7 +156,9 @@ const Dashboard = () => {
 
       {/* Monthly Chart */}
       <div className="bg-white shadow p-4 rounded-md">
-        <h2 className="mb-3 font-semibold text-lg">মাস ভিত্তিক মামলার তথ্য</h2>
+        <h2 className="mb-3 font-semibold text-lg">
+          মাস ভিত্তিক মামলার নিষ্পত্তির সংখ্যা
+        </h2>
         <div style={{ overflowX: "auto" }}>
           <div
             style={{
