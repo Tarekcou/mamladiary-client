@@ -51,7 +51,7 @@ export default function Home() {
   }, [searchParams, refetch]);
 
   return (
-    <div className="mx-auto h-full ">
+    <div className="mx-auto">
       <CaseSearchForm handleSubmit={handleSubmit} />
       {/* Background Image section (always visible) */}
 
@@ -63,7 +63,7 @@ export default function Home() {
           error={error}
         />
       )}
-      <div className=" flex justify-center items-center pt-16">
+      <div className="flex justify-center items-center pt-16">
         <div
           className="bg-cover bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
           style={{ backgroundImage: `url(${bgimage})` }}

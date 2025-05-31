@@ -56,7 +56,7 @@ export default function Header() {
   };
   const navMenu = (
     <>
-      <div className="flex gap-4 justify-between  w-full">
+      <div className="flex justify-between gap-4 w-full">
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -101,7 +101,10 @@ export default function Header() {
     <>
       <div className="space-x-2">
         {isSignedIn ? (
-          <button onClick={handleLogout} className={"btn btn-sm border-gray-300 text-red-600"}>
+          <button
+            onClick={handleLogout}
+            className={"btn btn-sm border-gray-300 text-red-600"}
+          >
             {t("sign out")}
           </button>
         ) : (
@@ -153,7 +156,7 @@ export default function Header() {
               <div
                 tabIndex={0}
                 role="button"
-                className="lg:hidden btn btn-ghost"
+                className="md:hidden btn btn-ghost"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +178,7 @@ export default function Header() {
                 tabIndex={0}
                 className="z-1 bg-gray-100 mt-4 p-2 rounded-box w-84 menu menu-sm dropdown-content"
               >
-                <div className="py-5 w-full ">{navMenu}</div>
+                <div className="py-5 w-full">{navMenu}</div>
                 {path.includes("dashboard") ? (
                   <DashboardSidebar />
                 ) : (
