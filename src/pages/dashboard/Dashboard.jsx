@@ -103,7 +103,13 @@ const Dashboard = () => {
     month: name,
     সংখ্যা: monthlyCount[index],
   }));
-  if (isLoading) return <p className="mt-10 text-center">লোড হচ্ছে...</p>;
+  if (isLoading)
+    return (
+      <>
+        <h1 className="p-10 font-bold text-2xl">ড্যাশবোর্ডে আপনাকে স্বাগতম</h1>
+        <p className="mt-10 text-center">লোড হচ্ছে...</p>;
+      </>
+    );
   if (isError)
     return (
       <p className="mt-10 text-red-500 text-center">

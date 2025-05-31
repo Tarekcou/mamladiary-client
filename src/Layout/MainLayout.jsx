@@ -11,6 +11,7 @@ const MainLayout = () => {
   const location = useLocation();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const path = location.pathname;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsSticky(window.scrollY > 260);
@@ -55,6 +56,8 @@ const MainLayout = () => {
             }
           />
         )}
+        {/* for mobile device navbar menu take space */}
+        {/* <div className="md:hidden sm:h-[600px]"></div> */}
 
         <main
           className={`flex-grow ${

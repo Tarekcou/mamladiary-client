@@ -178,7 +178,7 @@ export default function Header() {
               </div>
               <ul
                 tabIndex={0}
-                className="z-50 bg-gray-100 mt-4 p-2 rounded-box w-84 overflow-y-auto menu menu-sm dropdown-content"
+                className="z-50 bg-gray-100 shadow-2xl mt-4 p-2 rounded-box w-84 overflow-y-auto menu-sm dropdown-content"
               >
                 <div className="py-5 w-full">{navMenu}</div>
                 {path.includes("dashboard") ? (
