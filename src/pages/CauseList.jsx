@@ -44,11 +44,11 @@ const CauseList = () => {
         <div className="mt-10 text-center">লোড হচ্ছে...</div>
       ) : cases.length === 0 ? (
         <div className="mt-16 h-full text-red-500 text-center">
-          আজকের জন্য কোন মামলা পাওয়া যায়নি।
+          আজ কোনো মামলা চলমান নেই।
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="table table-zebra w-full">
+        <div className="max-w-screen overflow-x-auto">
+          <table className="table table-pin-cols table-pin-rows table-xs">
             <thead className="bg-base-200">
               <tr>
                 <th>ক্রমিক</th>

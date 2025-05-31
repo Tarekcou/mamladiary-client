@@ -29,10 +29,10 @@ const MainLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
 
   return (
-    <div className="flex flex-col shadow-xl mx-auto w-12/12 md:w-10/12">
+    <div className="flex flex-col shadow-xl mx-auto w-full md:w-10/12 min-h-screen">
       <Header />
 
-      <div className="relative flex gap-4">
+      <div className="relative flex flex-grow gap-4">
         <div
           className={`hidden md:block ${
             isSticky
@@ -56,9 +56,10 @@ const MainLayout = () => {
           />
         )}
 
-        {/* ✅ Wrap Outlet with AnimatePresence and motion.div */}
         <main
-          className={path.includes("dashboard") ? " lg:w-10/12" : "lg:w-10/12 "}
+          className={`flex-grow ${
+            path.includes("dashboard") ? "lg:w-10/12" : "lg:w-10/12"
+          }`}
         >
           <Outlet />
         </main>

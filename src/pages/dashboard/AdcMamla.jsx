@@ -140,8 +140,8 @@ const AdcMamla = () => {
       </div>
 
       {/* Table */}
-      <div className="w-full overflow-x-auto">
-        <table className="bg-gray-100 border min-w-full">
+      <div className="max-w-screen overflow-x-auto">
+        <table className="table table-pin-cols table-pin-rows">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 border">ক্রমিক</th>
@@ -229,7 +229,7 @@ const AdcMamla = () => {
       </div>
 
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
+        <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-box">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button className="top-2 right-2 absolute btn btn-sm btn-circle btn-ghost">

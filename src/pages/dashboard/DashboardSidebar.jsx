@@ -1,15 +1,18 @@
 import React from "react";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 
 const DashboardSidebar = () => {
   return (
-    <div className="pb-10 px-2">
+    <div className="px-2 pb-10">
       <div className="space-y-4 w-full">
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
-        <ul className="flex  flex-col space-y-1 list-disc list-inside">
-          <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center rounded-md">
+        <ul className="flex flex-col space-y-1 list-disc list-inside">
+          <Link
+            to={"/dashboard"}
+            className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
+          >
             ড্যাসবোর্ড
-          </h2>
+          </Link>
           {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
             রাজস্ব আদালত মামলা
           </h2> */}

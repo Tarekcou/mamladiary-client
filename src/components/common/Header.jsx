@@ -126,6 +126,8 @@ export default function Header() {
       </div>
     </>
   );
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <header className="z-50 relative shadow-sm w-full">
       {/* Carousel replacing the static banner */}
@@ -176,7 +178,7 @@ export default function Header() {
               </div>
               <ul
                 tabIndex={0}
-                className="z-1 bg-gray-100 mt-4 p-2 rounded-box w-84 menu menu-sm dropdown-content"
+                className="z-50 bg-gray-100 mt-4 p-2 rounded-box w-84 overflow-y-auto menu menu-sm dropdown-content"
               >
                 <div className="py-5 w-full">{navMenu}</div>
                 {path.includes("dashboard") ? (

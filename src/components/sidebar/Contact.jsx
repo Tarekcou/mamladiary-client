@@ -15,19 +15,19 @@ const Contact = () => {
   ];
 
   return (
-     <motion.div
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className="bg-gray-100 shadow-sm mx-auto p-6 rounded-md"
     >
-    <div className="bg-gray-100  ">
-      <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2>
-      <div className="space-y-4">
+      <div className="bg-gray-100">
+        <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2>
+        {/* <div className="space-y-4">
         {contacts.map((person, index) => (
            <motion.li
                       key={index}
-                      className=" p-4 border border-gray-200 rounded-md"
+                      className="p-4 border border-gray-200 rounded-md"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
@@ -40,8 +40,8 @@ const Contact = () => {
             </p>
           </motion.li>
         ))}
+      </div> */}
       </div>
-    </div>
     </motion.div>
   );
 };

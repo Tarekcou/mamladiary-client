@@ -52,7 +52,9 @@ const MonthlyReport = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-xl">মাসিক রিপোর্ট :- {toBanglaNumber(thisMonth)}</h2>
+        <h2 className="font-semibold text-xl">
+          মাসিক রিপোর্ট :- {toBanglaNumber(thisMonth)}
+        </h2>
 
         <PDFDownloadLink
           document={<BanglaPDF data={mamlaList} thisMonth={thisMonth} />}
@@ -72,8 +74,8 @@ const MonthlyReport = () => {
         </PDFDownloadLink>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="bg-gray-100 border min-w-full">
+      <div className="max-w-screen overflow-x-auto">
+        <table className="table table-pin-cols table-pin-rows">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 border">ক্রম</th>

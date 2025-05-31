@@ -25,8 +25,8 @@ export default function SidebarLeft() {
                 to={"/history"}
                 className={({ isActive }) =>
                   isActive
-                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full border-gray-300"
+                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-bold"
+                    : "text-gray-700 btn btn-sm w-full border-gray-300 font-bold"
                 }
               >
                 {t("history")}

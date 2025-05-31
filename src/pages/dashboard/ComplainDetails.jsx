@@ -61,8 +61,8 @@ const ComplainDetails = () => {
   return (
     <div className="p-4">
       <h2 className="mb-4 font-bold text-xl">সকল অভিযোগ</h2>
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
+      <div className="max-w-screen overflow-x-auto">
+        <table className="table table-pin-cols table-pin-rows">
           <thead>
             <tr>
               <th>ক্রমিক </th>

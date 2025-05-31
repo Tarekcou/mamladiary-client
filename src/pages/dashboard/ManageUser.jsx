@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import axiosPublic from "../../axios/axiosPublic";
 import Swal from "sweetalert2";
+import { MdDelete } from "react-icons/md";
 const ManageUser = () => {
   const {
     refetch,
@@ -81,66 +82,65 @@ const ManageUser = () => {
 
       <div className="w-full overflow-x-auto">
         <h1 className="font-semibold">মোট ব্যবহারকারী: {users.length}</h1>
-        <table className="table table-md w-full min-w-full">
-          {/* head */}
-          <thead>
-            <tr className="text-xl text-center">
-              {/* <th className="w-1/7">Serial</th> */}
-              <th className="w-1/7">নাম </th>
-              <th className="w-1/7">ইমেইল </th>
-              <th className="w-1/7">সেকশন </th>
-              <th className="w-1/7">পদবী </th>
-              <th className="w-1/7">রোল </th>
-              <th className="w-1/7">কার্যক্রম </th>
-            </tr>
-          </thead>
-          <tbody className="text-base text-center">
-            {users.map((user, index) => (
-              <tr
-                key={user._id}
-                className="hover:bg-gray-50 border-gray-200 border-t"
-              >
-                {/* <td className="w-1/7">{index + 1}</td> */}
-                <td className="w-1/7 break-words whitespace-normal">
-                  {user?.name || "-"}
-                </td>
-                <td className="flex-1 w-1/7 break-words whitespace-normal">
-                  {user?.email || "-"}
-                </td>
-                <td className="w-1/7 break-words whitespace-normal">
-                  {user?.section || "-"}
-                </td>
-                <td className="w-1/7 break-words whitespace-normal">
-                  {user?.designation || "-"}
-                </td>
-                <td className="w-1/7 break-words whitespace-normal">
-                  <div className="font-bold text-green-600">
-                    <select
-                      id="role"
-                      value={user?.role}
-                      onChange={(e) => handleMakeAdmin(user, e.target.value)}
-                      className="w-full select-bordered select"
-                    >
-                      <option disabled selected>
-                        Choose a role
-                      </option>
-                      <option>User</option>
-                      <option>Admin</option>
-                    </select>
-                  </div>
-                </td>
-                <td className="w-1/7">
-                  <button
-                    onClick={() => handleUserDelete(user._id)}
-                    className="btn btn-error btn-sm"
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="max-w-screen overflow-x-auto">
+          <table className="table table-pin-cols table-pin-rows">
+            {/* head */}
+            <thead>
+              <tr className="text-xl text-center">
+                {/* <th className="w-1/7">Serial</th> */}
+                <th className="w-1/7">নাম </th>
+                <th className="w-1/7">ইমেইল </th>
+                <th className="w-1/7">সেকশন </th>
+                <th className="w-1/7">পদবী </th>
+                <th className="w-1/7">রোল </th>
+                <th className="w-1/7">কার্যক্রম </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-base text-center">
+              {users.map((user, index) => (
+                <tr
+                  key={user._id}
+                  className="hover:bg-gray-50 border-gray-200 border-t"
+                >
+                  {/* <td className="w-1/7">{index + 1}</td> */}
+                  <td className="w-1/7 break-words whitespace-normal">
+                    {user?.name || "-"}
+                  </td>
+                  <td className="flex-1 w-1/7 break-words whitespace-normal">
+                    {user?.email || "-"}
+                  </td>
+                  <td className="w-1/7 break-words whitespace-normal">
+                    {user?.section || "-"}
+                  </td>
+                  <td className="w-1/7 break-words whitespace-normal">
+                    {user?.designation || "-"}
+                  </td>
+                  <td className="w-1/7 break-words whitespace-normal">
+                    <div className="font-bold text-green-600">
+                      <select
+                        id="role"
+                        value={user?.role}
+                        onChange={(e) => handleMakeAdmin(user, e.target.value)}
+                        className="w-full select-bordered select"
+                      >
+                        <option disabled selected>
+                          Choose a role
+                        </option>
+                        <option>User</option>
+                        <option>Admin</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td className="w-1/7">
+                    <button onClick={() => handleUserDelete(user._id)}>
+                      <MdDelete className="text-red-500 text-2xl cursor-pointer" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

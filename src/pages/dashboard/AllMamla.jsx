@@ -99,7 +99,7 @@ const AllMamla = () => {
   if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 overflow-x-auto">
       <h2 className="mb-4 font-semibold text-xl">সকল মামলা </h2>
 
       {/* Search Fields */}
@@ -139,8 +139,8 @@ const AllMamla = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="bg-gray-100 border min-w-full">
+      <div className="max-w-screen overflow-x-auto">
+        <table className="table table-pin-cols table-pin-rows">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 border">ক্রমিক </th>
@@ -183,7 +183,7 @@ const AllMamla = () => {
                   <td className="px-4 py-2 border">
                     <label
                       htmlFor="my_modal_3"
-                      className="btn"
+                      className="btn btn-sm"
                       onClick={() => {
                         handleEdit(item);
                         document.getElementById("my_modal_3").showModal();
@@ -191,10 +191,9 @@ const AllMamla = () => {
                     >
                       <FaEdit />
                     </label>
-
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="btn"
+                      className="btn btn-sm"
                     >
                       <MdDeleteForever className="text-xl" />
                     </button>
@@ -203,7 +202,7 @@ const AllMamla = () => {
               ))
             ) : (
               <tr>
-                <td className="px-4 py-4 border text-center" colSpan="8">
+                <td className="px-4 py-4 border text-center" colSpan="10">
                   No records found.
                 </td>
               </tr>
@@ -211,7 +210,6 @@ const AllMamla = () => {
           </tbody>
         </table>
       </div>
-
       {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
         <p>
@@ -239,15 +237,11 @@ const AllMamla = () => {
           </button>
         </div>
       </div>
-      {/* The button to open modal */}
-      {/* <label htmlFor="my_modal_6" className="btn">
-        open modal
-      </label> */}
 
-      {/* Put this part before </body> tag */}
+      {/* Dialog */}
 
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
+        <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-box">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button className="top-2 right-2 absolute btn btn-sm btn-circle btn-ghost">
