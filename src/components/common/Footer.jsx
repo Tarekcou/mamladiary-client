@@ -3,24 +3,24 @@ import logo from "../../assets/bg-image.jpg"
 import govt from "../../assets/govt.png"
 const Footer = () => {
   return (
-  <footer className="footer  gap-2 place-items-center bg-[#004080] text-neutral-content items-center p-4 md:p-6">
+  <footer className="flex justify-around  gap-2 place-items-center bg-[#004080] text-neutral-content items-center p-4 md:p-8">
   <aside className="flex items-center ">
     <div className=" flex justify-center gap-5 items-center ">
       <img className="w-5 h-5 md:w-7 md:h-7  bg-white/50 rounded-full" src={logo} alt="logo" />
-        <p className="text-xs text-gray-200">
+        <p className="text-xs md:text-md text-gray-200 text-center">
           পরিকল্পনা ও বাস্তবায়নঃ সহকারী প্রোগ্রামার <br></br> বিভাগীয় কমিশনারের কার্যালয়, চট্টগ্রাম
         </p>
     </div>
   </aside>
-  <nav className="grid-flow-col gap-4  ">
+  <nav className="flex gap-4  ">
     <a href="https://www.chittagongdiv.gov.bd/"
-  target="_blank"
-  rel="noopener noreferrer">
+      target="_blank"
+      rel="noopener noreferrer">
     <img  className="fill-current w-5 h-5 md:w-7 md:h-7 cursor-pointer" src={govt} alt="govt logo"  />
     </a>
     <a href="https://www.youtube.com/channel/UCCUTHosMCb0Z2lsQMcsjMsQ"
-  target="_blank"
-  rel="noopener noreferrer">
+      target="_blank"
+      rel="noopener noreferrer">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -32,13 +32,13 @@ const Footer = () => {
       </svg>
     </a>
     <a href="https://www.facebook.com/pages/Divisional%20commissioner%20office%20Chittagong/193268770882286/"
-  target="_blank"
-  rel="noopener noreferrer">
+      target="_blank"
+      rel="noopener noreferrer">
       <svg
         xmlns="http://www.w3.org/2000/svg"
        
         viewBox="0 0 24 24"
-        className="fill-current w-5 h-5 md:w-7 md:h-7cursor-pointer">
+        className="fill-current w-5 h-5 md:w-7 md:h-7 cursor-pointer">
         <path
           d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
       </svg>
