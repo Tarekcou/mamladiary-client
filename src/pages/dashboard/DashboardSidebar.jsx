@@ -11,7 +11,7 @@ const DashboardSidebar = () => {
             to={"/dashboard"}
             className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
           >
-            ড্যাসবোর্ড
+            ড্যাশবোর্ড
           </Link>
           {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
             রাজস্ব আদালত মামলা
