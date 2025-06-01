@@ -65,7 +65,7 @@ export default function Home() {
       )}
       <div className="flex justify-center items-center pt-16">
         <div
-          className="bg-cover bg-no-repeat bg-center opacity-20 w-[100px] h-[100px]"
+          className="bg-cover bg-no-repeat bg-center opacity-20 w-16 h-16 md:w-24 md:h-24"
           style={{ backgroundImage: `url(${bgimage})` }}
         ></div>
       </div>
