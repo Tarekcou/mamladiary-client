@@ -3,7 +3,7 @@ import logo from "../../assets/bg-image.jpg"
 import govt from "../../assets/govt.png"
 const Footer = () => {
   return (
-  <footer className="footer place-items-center gap-2 sm:footer-horizontal bg-[#004080] text-neutral-content items-center p-4 md:p-6">
+  <footer className="footer  gap-2 place-items-center bg-[#004080] text-neutral-content items-center p-4 md:p-6">
   <aside className="flex items-center ">
     <div className=" flex justify-center gap-5 items-center ">
       <img className="w-4 h-4 md:w-6 md:h-6  bg-white/50 rounded-full" src={logo} alt="logo" />
