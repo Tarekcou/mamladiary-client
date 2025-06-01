@@ -1,53 +1,64 @@
 import React from "react";
-import logo from "../../assets/bg-image.jpg"
-import govt from "../../assets/govt.png"
+import logo from "../../assets/bg-image.jpg";
+import govt from "../../assets/govt.png";
 const Footer = () => {
   return (
-  <footer className="flex justify-around  gap-2 place-items-center bg-[#004080] text-neutral-content items-center p-4 md:p-8">
-  <aside className="flex items-center ">
-    <div className=" flex justify-center gap-5 items-center ">
-      <img className="w-5 h-5 md:w-7 md:h-7  bg-white/50 rounded-full" src={logo} alt="logo" />
-        <p className="text-xs md:text-md text-gray-200 text-center">
-          পরিকল্পনা ও বাস্তবায়নঃ সহকারী প্রোগ্রামার <br></br> বিভাগীয় কমিশনারের কার্যালয়, চট্টগ্রাম
-        </p>
-    </div>
-  </aside>
-  <nav className="flex gap-4  ">
-    <a href="https://www.chittagongdiv.gov.bd/"
-      target="_blank"
-      rel="noopener noreferrer">
-    <img  className="fill-current w-5 h-5 md:w-7 md:h-7 cursor-pointer" src={govt} alt="govt logo"  />
-    </a>
-    <a href="https://www.youtube.com/channel/UCCUTHosMCb0Z2lsQMcsjMsQ"
-      target="_blank"
-      rel="noopener noreferrer">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        className="fill-current w-5 h-5 md:w-7 md:h-7 cursor-pointer">
-        <path
-          d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-      </svg>
-    </a>
-    <a href="https://www.facebook.com/pages/Divisional%20commissioner%20office%20Chittagong/193268770882286/"
-      target="_blank"
-      rel="noopener noreferrer">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-       
-        viewBox="0 0 24 24"
-        className="fill-current w-5 h-5 md:w-7 md:h-7 cursor-pointer">
-        <path
-          d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-      </svg>
-    </a>
-  </nav>
-</footer>
-   
-  
-    
+    <footer className="flex justify-around items-center place-items-center gap-2 bg-[#004080] p-4 md:p-6 text-neutral-content">
+      <aside className="flex items-center">
+        <div className="flex justify-center items-center gap-3">
+          <img
+            className="bg-white/50 rounded-full w-5 md:w-7 h-5 md:h-7"
+            src={logo}
+            alt="logo"
+          />
+          <p className="text-gray-200 md:text-md text-xs text-center">
+            পরিকল্পনা ও কারিগরি সহায়তায়ঃ সহকারী প্রোগ্রামার <br></br> বিভাগীয়
+            কমিশনারের কার্যালয়, চট্টগ্রাম
+          </p>
+        </div>
+      </aside>
+      <nav className="flex gap-4">
+        <a
+          href="https://www.chittagongdiv.gov.bd/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            className="fill-current w-5 md:w-7 h-5 md:h-7 cursor-pointer"
+            src={govt}
+            alt="govt logo"
+          />
+        </a>
+        <a
+          href="https://www.youtube.com/channel/UCCUTHosMCb0Z2lsQMcsjMsQ"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            className="fill-current w-5 md:w-7 h-5 md:h-7 cursor-pointer"
+          >
+            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+          </svg>
+        </a>
+        <a
+          href="https://www.facebook.com/pages/Divisional%20commissioner%20office%20Chittagong/193268770882286/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className="fill-current w-5 md:w-7 h-5 md:h-7 cursor-pointer"
+          >
+            <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
+          </svg>
+        </a>
+      </nav>
+    </footer>
   );
 };
 
