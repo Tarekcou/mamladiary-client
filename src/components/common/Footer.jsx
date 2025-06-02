@@ -1,7 +1,10 @@
 import React from "react";
 import logo from "../../assets/bg-image.jpg";
 import govt from "../../assets/govt.png";
+import { useTranslation } from "react-i18next";
 const Footer = () => {
+    const { t, i18n } = useTranslation();
+  
   return (
     <footer className="flex justify-around items-center place-items-center gap-2 bg-[#004080] p-4 md:p-6 text-neutral-content">
       <aside className="flex items-center">
@@ -12,8 +15,8 @@ const Footer = () => {
             alt="logo"
           />
           <p className="text-gray-200 md:text-md text-xs text-center">
-            পরিকল্পনা ও কারিগরি সহায়তায়ঃ সহকারী প্রোগ্রামার <br></br> বিভাগীয়
-            কমিশনারের কার্যালয়, চট্টগ্রাম
+            {t("planning")} <br></br> {t("office")}
+            
           </p>
         </div>
       </aside>
