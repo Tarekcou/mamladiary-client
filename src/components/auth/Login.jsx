@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
+import LoginLottie from "../lottie/LoginLottie";
 
 export default function Login() {
   const location = useLocation();
@@ -25,8 +26,12 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center px-4">
-      <div className="bg-gray-100 py-4 rounded-2xl w-10/12 md:w-8/12 lg:w-6/12">
+    <div className="flex md:flex-row flex-col justify-center items-center px-4">
+      {/* Lottie */}
+      <div className="flex-1">
+        <LoginLottie />
+      </div>
+      <div className="flex-1 bg-gray-100 py-4 rounded-2xl">
         <h2 className="mb-6 font-bold text-2xl text-center">সাইন ইন </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">

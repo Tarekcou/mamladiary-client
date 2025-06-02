@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import axiosPublic from "../axios/axiosPublic";
+import axiosPublic from "../../axios/axiosPublic";
+import ListLottie from "../lottie/ListLottie";
 
 const CauseList = () => {
   const [cases, setCases] = useState([]);
@@ -36,9 +37,12 @@ const CauseList = () => {
   }
   return (
     <div className="p-6">
-      <h1 className="mb-4 font-bold text-2xl">
-        আজকের মামলা কার্যতালিকা - {toBanglaNumber(today)}
-      </h1>
+      <div className="flex justify-start items-center gap-4">
+        <h1 className="mb-4 font-bold text-2xl">
+          আজকের মামলা কার্যতালিকা - {toBanglaNumber(today)}
+        </h1>
+        <ListLottie />
+      </div>
 
       {loading ? (
         <div className="mt-10 text-center">লোড হচ্ছে...</div>

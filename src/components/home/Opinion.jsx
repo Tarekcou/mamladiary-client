@@ -81,9 +81,7 @@ const Opinion = () => {
             transition={{ duration: 0.5 }}
             className="bg-gray-100 shadow-sm p-4 rounded-lg"
           >
-            <h2 className="mb-4 font-bold text-2xl text-center">
-              ওয়েবসাইট সম্পর্কে মতামত দিন।
-            </h2>
+            <h2 className="mb-4 font-bold text-2xl text-center">মতামত দিন।</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"

@@ -22,7 +22,7 @@ const MonthlyReport = () => {
   } = useQuery({
     queryKey: ["monthlyMamla"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/monthlyReport`, {
+      const res = await axiosPublic.get(`/report`, {
         params: { month, year },
       });
       return res.data || [];

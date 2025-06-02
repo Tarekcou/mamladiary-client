@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { motion } from "framer-motion"; // For animation
 
 export default function SidebarLeft() {
   const { t } = useTranslation();
-
+  const location = useLocation();
+  const currentHash = location.hash;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -13,13 +14,13 @@ export default function SidebarLeft() {
       whileFocus="focused"
       className=""
     >
-      <div className="space-y-4 px-2 w-full h-full text-sm">
+      <div className="px-2 w-full h-full text-sm">
         <div>
           <h2 className="bg-[#004080] py-6 w-full font-bold text-white btn">
             {t("the court")}
           </h2>
 
-          <ul className="space-y-1 p-2">
+          <ul className="p-2">
             <li>
               <NavLink
                 to={"/history"}
@@ -74,29 +75,27 @@ export default function SidebarLeft() {
           <h2 className="bg-[#004080] w-full font-bold text-white btn">
             {t("resources")}
           </h2>
-          <ul className="space-y-1 p-2 w-full">
+          <ul className="p-2 w-full">
             <li>
               <NavLink
-                to={"/complain"}
-                href="#"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full border-gray-300"
-                }
+                to={"/#complain"}
+                className={`btn btn-sm w-full menu-link ${
+                  currentHash === "#complain"
+                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 border-gray-300"
+                }`}
               >
                 {t("lodge your complaint")}
               </NavLink>
             </li>
             <li>
               <NavLink
-                to={"/opinion"}
-                href="#"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full border-gray-300"
-                }
+                to="/#opinion"
+                className={`btn btn-sm w-full menu-link ${
+                  currentHash === "#opinion"
+                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 border-gray-300"
+                }`}
               >
                 {t("opinion")}
               </NavLink>
@@ -117,13 +116,12 @@ export default function SidebarLeft() {
             </li> */}
             <li>
               <NavLink
-                to={"/contacts"}
-                href="#"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full border-gray-300"
-                }
+                to="/#contacts"
+                className={`btn btn-sm w-full menu-link ${
+                  currentHash === "#contacts"
+                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 border-gray-300"
+                }`}
               >
                 {t("contacts")}
               </NavLink>

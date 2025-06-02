@@ -1,9 +1,9 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import axiosPublic from "../axios/axiosPublic";
+import axiosPublic from "../../axios/axiosPublic";
 import { useTranslation } from "react-i18next";
 import { MdError } from "react-icons/md";
-import Loading from "./common/Loading";
+import Loading from "../common/Loading";
 import { motion } from "framer-motion";
 
 const CasesList = ({ mamla, isLoading, isError, error }) => {
@@ -37,14 +37,14 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-md h-full mx-auto p-3 rounded-xl"
+      className="bg-gray-100 shadow-sm mx-auto p-3 rounded-xl h-full"
     >
       <div className="mt-10">
         <h1 className="bg-[#004080] mb-4 py-2 font-semibold text-white text-xl text-center">
           📂 {t("case search result")}
         </h1>
-        <div className="overflow-x-auto">
-          <table className="shadow border border-gray-200 rounded-lg min-w-full">
+        <div className="w-full overflow-x-auto">
+          <table className="border border-gray-200 rounded-md min-w-auto text-sm table-auto">
             <thead className="bg-gray-100">
               <tr className="font-medium text-gray-700 text-sm text-left">
                 <th className="px-4 py-2">{t("mamla name")}</th>

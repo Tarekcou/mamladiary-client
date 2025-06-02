@@ -5,6 +5,7 @@ import Footer from "../components/common/Footer";
 import { Outlet, useLocation } from "react-router";
 import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
 import bgimage from "../assets/bg-image.jpg";
+import Opinion from "../components/home/Opinion";
 
 const MainLayout = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -60,13 +61,14 @@ const MainLayout = () => {
         {/* <div className="md:hidden sm:h-[600px]"></div> */}
 
         <main
-          className={`flex-grow ${
+          className={`flex-grow  ${
             path.includes("dashboard") ? "lg:w-10/12" : "lg:w-10/12"
           }`}
         >
           <Outlet />
         </main>
       </div>
+      {/* Contact/OPinion Form */}
 
       <Footer />
     </div>

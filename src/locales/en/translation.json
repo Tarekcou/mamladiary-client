@@ -36,8 +36,9 @@
   "dashboard": "Dashboard",
   "search": "Search",
 
-  "completion stage":"Completion Stage",
-  "comments":"Comments",
-  "planning": "Planning & Technical Help: Assistant Programmer",
-  "office":"Divisional Commissioner Office, Chattogram"
+  "completion stage": "Completion Stage",
+  "comments": "Comments",
+  "planning": "Planning & Technical Help:",
+  "office": "Divisional Commissioner Office, Chattogram",
+  "post": " Assistant Programmer"
 }

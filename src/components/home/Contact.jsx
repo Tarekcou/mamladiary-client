@@ -19,13 +19,13 @@ const Contact = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-sm mx-auto p-6 rounded-md"
+      className="bg-gray-100 shadow-sm mx-auto p-4 rounded-md w-11/12"
     >
       <div className="bg-gray-100">
-        <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2>
-        <div className="space-y-4">
+        {/* <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2> */}
+        <div className="flex md:flex-row flex-col justify-center items-center space-y-4">
           {contacts.map((person, index) => (
-            <motion.li
+            <motion.div
               key={index}
               className="p-4 border border-gray-200 rounded-md"
               initial={{ opacity: 0, x: -20 }}
@@ -37,7 +37,7 @@ const Contact = () => {
               <p className="mt-1 text-gray-700 text-sm">
                 মোবাইল নম্বরঃ {person.phone}
               </p>
-            </motion.li>
+            </motion.div>
           ))}
         </div>
       </div>

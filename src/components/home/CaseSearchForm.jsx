@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
-import axiosPublic from "../axios/axiosPublic";
+import axiosPublic from "../../axios/axiosPublic";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import SearchLottie from "../lottie/SearchLottie";
 
 const districts = [
   "চট্টগ্রাম",
@@ -79,7 +80,7 @@ const mamlaNames = [
   "রিভিশন",
 ];
 
-export default function MamlaSearchForm({ handleSubmit }) {
+export default function CaseSearchForm({ handleSubmit }) {
   const { t } = useTranslation();
   const [selectedYear, setSelectedYear] = useState(2025);
   const toBanglaNumber = (number) => {
@@ -102,9 +103,10 @@ export default function MamlaSearchForm({ handleSubmit }) {
       className="relative bg-gray-100 mx-auto"
     >
       <form onSubmit={handleSubmit}>
-        <div className="flex-1 shadow-sm px-4 pt-2 pb-2">
-          <div className="bg-[#004080] mb-4 py-2 font-bold text-white text-lg text-center">
-            {t("case search")}
+        <div className="flex-1 shadow-sm px-4 pt-1 pb-2">
+          <div className="flex justify-center items-center gap-2 bg-[#004080] mb-4 py-2 font-bold text-white text-lg text-center">
+            <p> {t("case search")}</p>
+            <SearchLottie className="bg-white" />
           </div>
           <div className="space-y-4 text-sm">
             <div className="gap-4 grid grid-cols-2">
@@ -114,7 +116,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 <select
                   name="district"
                   required
-                  className="mt-1 w-full select-bordered select  bg-gray-100"
+                  className="bg-gray-100 mt-1 w-full select-bordered select"
                 >
                   <option value="">{t("select district")}</option>
                   {districts.map((d) => (
@@ -131,7 +133,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 <select
                   name="mamlaName"
                   required
-                  className="mt-1 w-full select-bordered select  bg-gray-100"
+                  className="bg-gray-100 mt-1 w-full select-bordered select"
                 >
                   <option value="">{t("select mamla name")}</option>
                   {mamlaNames.map((name) => (
@@ -148,7 +150,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                 <input
                   name="mamlaNo"
                   type="text"
-                  className="input-bordered w-full input  bg-gray-100"
+                  className="bg-gray-100 input-bordered w-full input"
                 />
               </label>
 
@@ -160,7 +162,7 @@ export default function MamlaSearchForm({ handleSubmit }) {
                   required
                   value={selectedYear}
                   onChange={handleYearChange}
-                  className="w-full select-bordered select bg-gray-100"
+                  className="bg-gray-100 w-full select-bordered select"
                 >
                   <option value="">{t("Select Year")}</option>"
                   {Array.from({ length: 50 }, (_, i) => {
