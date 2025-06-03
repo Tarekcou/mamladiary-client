@@ -7,7 +7,7 @@ const SearchLottie = () => (
     animationData={loginAnim}
     loop
     autoplay
-    style={{ height: 50 }}
+    style={{ height: 60 }}
   />
 );
 export default SearchLottie;

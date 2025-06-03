@@ -35,11 +35,11 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
     return (
       <div className="flex justify-center items-center p-10">
         <MdError />
-        {
+        
           <h1 className="p-2 text-center">
             {"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}
           </h1>
-        }
+        
       </div>
     );
   return (
@@ -47,17 +47,17 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-sm mx-auto p-3 py-10 rounded-xl h-full"
+      className="bg-gray-100 shadow-sm mx-auto md:p-3 py-10 rounded-xl h-full"
     >
       <div className="mt-5">
         <div className="py-2">
-        <h1 className="bg-[#004080] mb-4 py-4 font-semibold text-xl md:text-3xl flex gap-2 items-center justify-center text-white  text-center">
+        <h1 className="bg-[#004080]  mb-4 py-4 font-semibold text-xl md:text-2xl flex gap-2 items-center justify-center text-white  text-center">
           <FaFolderOpen /> {t("case search result")}
         </h1>
         <ResultLottie />
         </div>
        
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-w-screen">
           <table className="shadow border  table table-bordered border-gray-200 rounded-lg min-w-full text-xl">
             <thead className="bg-gray-200">
               <tr className="font-medium text-gray-700 text-xl  text-center">

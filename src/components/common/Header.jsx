@@ -129,7 +129,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="z-50 relative shadow-sm w-full">
+    <header className="z-50 relative shadow-sm w-full ">
       {/* Carousel replacing the static banner */}
       <Carousel />
 
@@ -142,7 +142,7 @@ export default function Header() {
       <div
         className={`transition-all duration-500 ${
           isSticky
-            ? "fixed top-0 left-0 right-0 z-50 lg:w-10/12 w-11/12 mx-auto shadow-sm"
+            ? "fixed top-0 left-0 right-0 z-50 lg:w-10/12 w-full mx-auto shadow-sm"
             : "relative"
         }`}
       >

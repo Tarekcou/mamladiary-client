@@ -42,24 +42,24 @@ const MamlaStats = () => {
   }, []);
 
   return (
-    <div className="flex md:flex-row flex-col space-y-2 bg-blue-100 my-10 w-full">
-      <div className="flex-1 stat">
+    <div className=" stats stats-vertical lg:stats-horizontal shadow  bg-blue-100 my-10 w-full">
+      <div className="flex-1 stat ">
         <div className="text-secondary stat-figure">
           <Briefcase className="stroke-current w-8 h-8" />
         </div>
         <div className="stat-title">মোট চলমান মামলা</div>
-        <div className="stat-value">
+        <div className="stat-value text-xl md:text-3xl">
           {cases.length.toLocaleString("bn-BD")}টি
         </div>
         <div className="stat-desc">বর্তমানে বিচারাধীন মামলার সংখ্যা</div>
       </div>
 
-      <div className="flex-1 stat">
+      <div className="flex-1 stat ">
         <div className="text-secondary stat-figure">
           <CheckCircle className="stroke-current w-8 h-8 text-green-600" />
         </div>
         <div className="stat-title">মোট নিষ্পন্ন মামলা</div>
-        <div className="stat-value">{mamlaCount.toLocaleString("bn-BD")}</div>
+        <div className="stat-value text-xl md:text-3xl">{mamlaCount.toLocaleString("bn-BD")}</div>
         <div className="stat-desc">সকল নিষ্পন্ন মামলার মোট সংখ্যা</div>
       </div>
 
@@ -70,7 +70,7 @@ const MamlaStats = () => {
         <div className="stat-title">
           {year.toLocaleString("bn-BD")} সালে মোট নিষ্পন্ন মামলার সংখ্যা
         </div>
-        <div className="stat-value">
+        <div className="stat-value text-xl md:text-3xl">
           {yearlyMamlaCount.toLocaleString("bn-BD")}
         </div>
         <div className="stat-desc">

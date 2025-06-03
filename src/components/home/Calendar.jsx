@@ -44,7 +44,7 @@ const Calendar = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-sm mx-auto p-4 rounded-t-lg"
+      className="bg-gray-100 shadow-sm mx-auto p-2 md:p-4 rounded-t-lg"
     >
       <div className=" ">
         <div className="flex justify-center items-center  my-2">
@@ -70,13 +70,13 @@ const Calendar = () => {
           <tbody className="text-gray-700">
     {calendarData.map((row, index) => (
       <tr key={index} className="hover:bg-[#004080]/10">
-        <td className="px-4 py-4 font-medium border-r-1">{row.days}</td>
-        <td className="px-4 py-4 border-r-1">{row.districts}</td>
+        <td className="px-4 py-4 font-medium border-r border-gray-300">{row.days}</td>
+        <td className="px-4 py-4 border-r border-gray-300">{row.districts}</td>
 
         {/* ✅ Only render this cell in the first row */}
         {index === 0 && (
           <td rowSpan={2} className="align-middle">
-            <p className=" font-bold text-gray-600 text-xl text-center">
+            <p className=" font-bold text-gray-600 text-base md:text-xl text-center">
               সপ্তাহে কোর্ট ৪ দিন।
             </p>
           </td>

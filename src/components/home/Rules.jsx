@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useLocation } from "react-router";
 import { FcRules } from "react-icons/fc";
 import { FaArrowDown } from "react-icons/fa6";
+import { FaArrowUp } from "react-icons/fa";
 
 const Rules = () => {
   const rules = [
@@ -40,10 +41,10 @@ const Rules = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-md mx-auto p-6 rounded-b-lg"
+      className="bg-gray-100 shadow-md mx-auto p-2 md:p-6 rounded-b-lg"
     >
       <div className="flex items-center justify-center my-6 gap-3">
-        <h2 className="font-bold text-[#004080] text-3xl text-center">আদালতের নিয়মাবলী</h2>
+        <h2 className="font-bold text-[#004080] text-xl md:text-3xl text-center">আদালতের নিয়মাবলী</h2>
         <FcRules className="text-5xl" />
       </div>
 
@@ -51,7 +52,7 @@ const Rules = () => {
         {(showAll ? rules : rules.slice(0, 3)).map((rule, index) => (
           <motion.li
             key={index}
-            className="flex items-start text-gray-700 text-lg"
+            className="flex items-start text-gray-700 text-md md:text-lg"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -65,10 +66,11 @@ const Rules = () => {
       <div className="mt-6 cursor-pointer text-center w-full  items-center flex justify-center">
         <button
           onClick={() => setShowAll(!showAll)}
-          className="text-blue-800 flex flex-col cursor-pointer items-center justify-center  text-xl hover:underline font-medium"
+          className="text-blue-800 flex flex-col cursor-pointer items-center justify-center  text-base hover:underline font-medium"
         >
           {showAll ? "সংক্ষিপ্ত করুন" : "বিস্তারিত দেখুন"}
-          <FaArrowDown />
+          {showAll? <FaArrowUp />:      <FaArrowDown />}
+     
         </button>
       </div>
     </motion.div>

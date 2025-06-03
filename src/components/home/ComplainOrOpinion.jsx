@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import Complain from "./Complain";
 import Opinion from "./Opinion";
 import ArrowLottie from "../lottie/ArrowLottie";
+import { GiClick } from "react-icons/gi";
+
 export const faqData = [
   {
     id: "complain", // 💡 anchor link target
@@ -36,7 +38,7 @@ const ComplainOrOpinion = () => {
   }, [location]);
 
   return (
-    <div className="space-y-3 p-6 md:p-10">
+    <div className="space-y-3 p-2  md:p-10">
       <h2 className="my-10 mb-4 font-bold text-blue-900 text-xl md:text-3xl text-center">
         মতামত ও অভিযোগ জানান <ArrowLottie />
       </h2>
@@ -55,8 +57,9 @@ const ComplainOrOpinion = () => {
               () => setOpenId(openId === faq.id ? "" : faq.id) // toggle logic
             }
           />
-          <div className="collapse-title font-semibold text-blue-900">
+          <div className="collapse-title flex gap-10  items-center font-semibold text-blue-900">
             <div className="text-xl">{faq.question}</div>
+            <GiClick className="mr-20"/>
           </div>
           <div className="collapse-content text-sm">{faq.answer}</div>
         </div>
