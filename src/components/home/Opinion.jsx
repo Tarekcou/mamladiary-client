@@ -79,7 +79,7 @@ const Opinion = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.5 }}
-            className="bg-gray-100 shadow-sm p-4 rounded-lg"
+            className="bg-gray-100 p-4 rounded-lg"
           >
             <h2 className="mb-4 font-bold text-2xl text-center">মতামত দিন।</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,7 +87,7 @@ const Opinion = () => {
                 type="text"
                 name="name"
                 placeholder="নাম "
-                className="bg-gray-50 input-bordered w-full input"
+                className="bg-gray-100 input-bordered w-full input"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -96,7 +96,7 @@ const Opinion = () => {
                 type="tel"
                 name="phone"
                 placeholder="ফোন নং"
-                className="bg-gray-50 input-bordered w-full input"
+                className="bg-gray-100 input-bordered w-full input"
                 value={formData.phone}
                 onChange={handleChange}
                 required
@@ -105,7 +105,7 @@ const Opinion = () => {
                 type="text"
                 name="location"
                 placeholder="ঠিকানা "
-                className="bg-gray-50 input-bordered w-full input"
+                className="bg-gray-100 input-bordered w-full input"
                 value={formData.location}
                 onChange={handleChange}
                 required
@@ -113,7 +113,7 @@ const Opinion = () => {
               <textarea
                 name="description"
                 placeholder="বিস্তারিত "
-                className="bg-gray-50 textarea-bordered w-full textarea"
+                className="bg-gray-100 textarea-bordered w-full textarea"
                 value={formData.description}
                 onChange={handleChange}
                 required

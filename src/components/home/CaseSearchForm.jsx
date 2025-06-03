@@ -108,7 +108,7 @@ export default function CaseSearchForm({ handleSubmit }) {
             <p> {t("case search")}</p>
             <SearchLottie className="bg-white" />
           </div>
-          <div className="space-y-4 text-sm">
+          <div className="space-y-4 text-lg font-semibold">
             <div className="gap-4 grid grid-cols-2">
               {/* District */}
               <label>

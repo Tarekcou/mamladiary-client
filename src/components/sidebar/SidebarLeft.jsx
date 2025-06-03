@@ -20,7 +20,7 @@ export default function SidebarLeft() {
             {t("the court")}
           </h2>
 
-          <ul className="p-2">
+          <ul className="p-2 space-y-1">
             <li>
               <NavLink
                 to={"/history"}
@@ -75,7 +75,7 @@ export default function SidebarLeft() {
           <h2 className="bg-[#004080] w-full font-bold text-white btn">
             {t("resources")}
           </h2>
-          <ul className="p-2 w-full">
+          <ul className="p-2 w-full space-y-1">
             <li>
               <NavLink
                 to={"/#complain"}

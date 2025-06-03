@@ -76,7 +76,7 @@ const Complain = () => {
       transition={{ duration: 0.6 }}
       className="bg-gray-100 shadow-lg mx-auto rounded-lg"
     >
-      <div className="bg-gray-100 shadow-md mx-auto p-6 rounded-lg w-11/12 md:w-9/12">
+      <div className="bg-gray-100  mx-auto p-6 rounded-lg w-11/12 md:w-9/12">
         <h2 className="mb-4 font-bold text-2xl text-center">
           অভিযোগ দাখিল করুন
         </h2>
@@ -85,7 +85,7 @@ const Complain = () => {
             type="text"
             name="name"
             placeholder="নাম "
-            className="bg-gray-50 input-bordered w-full input"
+            className="bg-gray-100 input-bordered w-full input"
             value={formData.name}
             onChange={handleChange}
             required
@@ -95,7 +95,7 @@ const Complain = () => {
             type="tel"
             name="phone"
             placeholder="ফোন নম্বর"
-            className="bg-gray-50 input-bordered w-full input"
+            className="bg-gray-100 input-bordered w-full input"
             value={formData.phone}
             onChange={handleChange}
             required
@@ -105,7 +105,7 @@ const Complain = () => {
             type="text"
             name="location"
             placeholder="ঠিকানা "
-            className="bg-gray-50 input-bordered w-full input"
+            className="bg-gray-100 input-bordered w-full input"
             value={formData.location}
             onChange={handleChange}
             required
@@ -115,7 +115,7 @@ const Complain = () => {
             type="text"
             name="mamlaNo"
             placeholder="মামলা নং "
-            className="bg-gray-50 input-bordered w-full input"
+            className="bg-gray-100 input-bordered w-full input"
             value={formData.mamlaNo}
             onChange={handleChange}
             required
@@ -125,7 +125,7 @@ const Complain = () => {
             type="text"
             name="mamlaName"
             placeholder="মামলার  নাম "
-            className="bg-gray-50 input-bordered w-full input"
+            className="bg-gray-100 input-bordered w-full input"
             value={formData.mamlaName}
             onChange={handleChange}
             required
@@ -134,7 +134,7 @@ const Complain = () => {
           <textarea
             name="description"
             placeholder="বিস্তারিত অভিযোগ"
-            className="bg-gray-50 textarea-bordered w-full textarea"
+            className="bg-gray-100 textarea-bordered w-full textarea"
             value={formData.description}
             onChange={handleChange}
             required
