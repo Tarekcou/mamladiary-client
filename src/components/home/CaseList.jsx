@@ -7,6 +7,7 @@ import Loading from "../common/Loading";
 import { motion } from "framer-motion";
 import ResultLottie from "../lottie/ResultLottie";
 import { FaFolderOpen } from "react-icons/fa6";
+import CaseListSkeleton from "./CaseListSkeleton";
 
 const CasesList = ({ mamla, isLoading, isError, error }) => {
   const { t } = useTranslation();
@@ -19,27 +20,34 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       .join("");
   }
 
-  if (isLoading) return <Loading />;
-  if (isError)
+  if (isLoading) return <CaseListSkeleton />;
+  if (isError) {
+    const isNetworkError =
+      error?.message?.includes("Network Error") ||
+      error?.code === "ERR_NETWORK" ||
+      !window.navigator.onLine;
+
     return (
-      <p>
-        <MdError />
-        {
-          <h1 className="p-10 text-center">
-            {"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}
+      <div className="flex flex-col justify-center items-center gap-2 p-10 text-red-600 text-center">
+        <MdError className="text-4xl" />
+        {isNetworkError ? (
+          <h1>
+            ইন্টারনেট সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে আপনার সংযোগ পরীক্ষা
+            করুন।
           </h1>
-        }
-      </p>
+        ) : (
+          <h1>দুঃখিত, মামলার তথ্য পাওয়া যায়নি।</h1>
+        )}
+      </div>
     );
+  }
+
   if (!mamla || mamla.length === 0)
     return (
-      <div className="flex justify-center items-center p-10">
-        <MdError />
-        
-          <h1 className="p-2 text-center">
-            {"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}
-          </h1>
-        
+      <div className="flex justify-center items-center p-10 text-red-600">
+        <MdError className="text-4xl" />
+
+        <h1 className="p-2 text-center">{"দুঃখিত মামলার তথ্য পাওয়া যায়নি "}</h1>
       </div>
     );
   return (
@@ -51,16 +59,16 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
     >
       <div className="mt-5">
         <div className="py-2">
-        <h1 className="bg-[#004080]  mb-4 py-4 font-semibold text-xl md:text-2xl flex gap-2 items-center justify-center text-white  text-center">
-          <FaFolderOpen /> {t("case search result")}
-        </h1>
-        <ResultLottie />
+          <h1 className="flex justify-center items-center gap-2 bg-[#004080] mb-4 py-4 font-semibold text-white text-xl md:text-2xl text-center">
+            <FaFolderOpen /> {t("case search result")}
+          </h1>
+          <ResultLottie />
         </div>
-       
-        <div className="overflow-x-auto max-w-screen">
-          <table className="shadow border  table table-bordered border-gray-200 rounded-lg min-w-full text-xl">
+
+        <div className="max-w-screen overflow-x-auto">
+          <table className="table table-bordered shadow border border-gray-200 rounded-lg max-w-full text-base md:text-lg">
             <thead className="bg-gray-200">
-              <tr className="font-medium text-gray-700 text-xl  text-center">
+              <tr className="font-medium text-gray-700 text-xl text-center">
                 <th className="px-4 py-2">{t("mamla name")}</th>
                 <th className="px-4 py-2">{t("mamla no")}</th>
                 <th className="px-4 py-2">{t("mamla year")}</th>
@@ -77,7 +85,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
             <tbody>
               <tr
                 key={mamla._id}
-                className="hover:bg-gray-100 border-gray-300 border text-center"
+                className="hover:bg-gray-100 border border-gray-300 text-center"
               >
                 <td className="px-4 py-2">{mamla.mamlaName || "-"}</td>
                 <td className="px-4 py-2">
@@ -87,10 +95,14 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
                   {toBanglaNumber(mamla.year.replace(/\D/g, "")) || "-"}
                 </td>
                 <td className="px-4 py-2">{mamla?.district || "-"}</td>
-                <td className="px-4 py-2">{toBanglaNumber(mamla?.nextDate) || "-"}</td>
+                <td className="px-4 py-2">
+                  {toBanglaNumber(mamla?.nextDate) || "-"}
+                </td>
 
                 <td className="px-4 py-2">{mamla?.compltedMamla || "-"}</td>
-                <td className="px-4 py-2">{toBanglaNumber(mamla?.completionDate) || "-"}</td>
+                <td className="px-4 py-2">
+                  {toBanglaNumber(mamla?.completionDate) || "-"}
+                </td>
                 <td className="px-4 py-2">{mamla?.comments || "-"}</td>
               </tr>
             </tbody>

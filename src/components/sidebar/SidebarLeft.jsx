@@ -12,15 +12,15 @@ export default function SidebarLeft() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       whileFocus="focused"
-      className=""
+      className="h-full"
     >
-      <div className="px-2 w-full h-full text-sm">
+      <div className="w-full h-full text-sm">
         <div>
           <h2 className="bg-[#004080] py-6 w-full font-bold text-white btn">
             {t("the court")}
           </h2>
 
-          <ul className="p-2 space-y-1">
+          <ul className="space-y-1 p-2">
             <li>
               <NavLink
                 to={"/history"}
@@ -33,7 +33,7 @@ export default function SidebarLeft() {
                 {t("history")}
               </NavLink>
             </li>
-            
+
             <NavLink
               to={"/citizenCharter"}
               href="#"
@@ -45,37 +45,38 @@ export default function SidebarLeft() {
             >
               {t("citizen charter")}
             </NavLink>
-
-            <li>
+            <div className="hidden md:block space-y-1">
+              <li>
+                <NavLink
+                  to={"/#calendar"}
+                  className={`btn btn-sm w-full menu-link ${
+                    currentHash === "#calendar"
+                      ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                      : "text-gray-700 border-gray-300"
+                  }`}
+                >
+                  {t("court calendar")}
+                </NavLink>
+              </li>
               <NavLink
-                to={"/#calendar"}
-                 className={`btn btn-sm w-full menu-link ${
-                  currentHash === "#calendar"
-                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 border-gray-300"
-                }`}
-              >
-                {t("court calendar")}
-              </NavLink>
-            </li>
-            <NavLink
-              to={"/#rules"}
-               className={`btn btn-sm w-full menu-link ${
+                to={"/#rules"}
+                className={`btn btn-sm w-full menu-link ${
                   currentHash === "#rules"
                     ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
                     : "text-gray-700 border-gray-300"
                 }`}
-            >
-              {t("court rules")}
-            </NavLink>
+              >
+                {t("court rules")}
+              </NavLink>
+            </div>
           </ul>
         </div>
 
-        <div>
+        <div className="hidden md:block">
           <h2 className="bg-[#004080] w-full font-bold text-white btn">
             {t("resources")}
           </h2>
-          <ul className="p-2 w-full space-y-1">
+          <ul className="space-y-1 p-2 w-full">
             <li>
               <NavLink
                 to={"/#complain"}

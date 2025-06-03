@@ -56,9 +56,7 @@ const Footer = () => {
       </div>
 
       <nav className="flex flex-col gap-1">
-        <h1 className="font-bold  text-blue-900 text-md">
-          সামাজিক যোগাযোগ{" "}
-        </h1>
+        <h1 className="font-bold text-blue-900 text-md">সামাজিক যোগাযোগ </h1>
 
         <a
           href="https://www.youtube.com/channel/UCCUTHosMCb0Z2lsQMcsjMsQ"

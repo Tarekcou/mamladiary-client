@@ -4,6 +4,10 @@ import banner from "../../assets/banner.jpg";
 import banner2 from "../../assets/banner2.jpg";
 import banner3 from "../../assets/banner3.jpg";
 import govtLogo from "../../assets/govt.png";
+import court1 from "../../assets/court.jpg";
+import court2 from "../../assets/court2.jpg";
+import court4 from "../../assets/court4.jpg";
+import court5 from "../../assets/court5.jpg";
 import logo from "../../assets/bg-image.jpg";
 const bannerSlides = [
   {
@@ -12,11 +16,15 @@ const bannerSlides = [
   },
   {
     id: 2,
-    image: banner2,
+    image: court1,
   },
   {
     id: 3,
-    image: banner3,
+    image: court4,
+  },
+  {
+    id: 4,
+    image: court5,
   },
 ];
 
