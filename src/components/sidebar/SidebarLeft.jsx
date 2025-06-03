@@ -35,7 +35,7 @@ export default function SidebarLeft() {
             </li>
             <li>
               <NavLink
-                to={"/calendar"}
+                to={"/#calendar"}
                 href="#"
                 className={({ isActive }) =>
                   isActive
@@ -58,8 +58,7 @@ export default function SidebarLeft() {
               {t("citizen charter")}
             </NavLink>
             <NavLink
-              to={"/rules"}
-              href="#"
+              to={"/#rules"}
               className={({ isActive }) =>
                 isActive
                   ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"

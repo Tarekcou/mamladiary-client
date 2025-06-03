@@ -16,6 +16,8 @@ import Contact from "./Contact";
 import ContactLottie from "../lottie/ContactLottie";
 import ComplainOrOpinion from "./ComplainOrOpinion";
 import ScaleLottie from "../lottie/ScaleLottie";
+import Calendar from "./Calendar";
+import Rules from "./Rules";
 
 export default function Home() {
   const [searchParams, setSearchParams] = useState(null);
@@ -74,6 +76,17 @@ export default function Home() {
 
       <div>
         <MamlaStats />
+      </div>
+
+
+      {/* Calendar */}
+
+      <div>
+        <Calendar />
+      </div>
+      {/* RUles */}
+      <div>
+        <Rules />
       </div>
       {/* As usual quesiotn */}
 

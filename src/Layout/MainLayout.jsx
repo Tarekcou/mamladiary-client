@@ -38,8 +38,8 @@ const MainLayout = () => {
         <div
           className={`hidden md:block ${
             isSticky
-              ? "fixed top-18 scroll-py-10 z-40 shadow-md h-full"
-              : "relative mt-1 shadow-md"
+              ? "fixed top-18 scroll-py-10 z-40 shadow-xs h-full"
+              : "relative mt-1 shadow-xs"
           }`}
           style={{
             width: `${sidebarWidth}px`,

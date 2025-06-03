@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router";
 
 const Calendar = () => {
   const calendarData = [
@@ -14,6 +15,24 @@ const Calendar = () => {
         "চট্টগ্রামের উপজেলাসমূহ, নোয়াখালী, ফেনী, লক্ষীপুর, তিন পার্বত্য জেলা",
     },
   ];
+
+   const location = useLocation();
+  const [openId, setOpenId] = useState("");
+
+  // When URL changes, update the open section
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      setOpenId(id);
+      // Optional: scroll into view smoothly
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100); // delay ensures DOM is ready
+      }
+    }
+  }, [location]);
 
   return (
     <motion.div

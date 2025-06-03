@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router";
 
 const Rules = () => {
   const rules = [
@@ -11,6 +12,24 @@ const Rules = () => {
     "নোটিশে নাম, মোবাইল নম্বর ও ঠিকানা লিখে দিতে হবে, খাম ও AD Blank দিতে হবে।",
     "যে কোন পিটিশনের সাথে ২ সেট ফটোকপি জমা দিতে হবে।",
   ];
+
+   const location = useLocation();
+  const [openId, setOpenId] = useState("");
+
+  // When URL changes, update the open section
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      setOpenId(id);
+      // Optional: scroll into view smoothly
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100); // delay ensures DOM is ready
+      }
+    }
+  }, [location]);
 
   return (
     <motion.div

@@ -21,9 +21,7 @@ import Register from "./components/auth/Register.jsx";
 import ComplainDetails from "./pages/dashboard/ComplainDetails.jsx";
 import FeedbackDetails from "./pages/dashboard/FeedbackDetails.jsx";
 import CitizenCharter from "./components/sidebar/CitizenCharter.jsx";
-import Calendar from "./components/sidebar/Calendar.jsx";
 import History from "./components/sidebar/History.jsx";
-import Rules from "./components/sidebar/Rules.jsx";
 import Gallery from "./components/sidebar/Gallery.jsx";
 import CauseListDashboard from "./pages/dashboard/CauseListDashboard.jsx";
 import MonthlyReport from "./pages/dashboard/MonthlyReport/MonthlyReport.jsx";
@@ -32,6 +30,8 @@ import Home from "./components/home/Home.jsx";
 import Complain from "./components/home/Complain.jsx";
 import Opinion from "./components/home/Opinion.jsx";
 import { Contact } from "lucide-react";
+import Calendar from "./components/home/Calendar.jsx";
+import Rules from "./components/home/Rules.jsx";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
