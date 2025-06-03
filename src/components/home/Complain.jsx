@@ -145,7 +145,7 @@ const Complain = () => {
             className="bg-[#004080] rounded-lg w-full text-white btn btn-square"
           >
             {isLoading ? <span className="loading loading-spinner"></span> : ""}
-            দাখিল করুন
+           অভিযোগ দাখিল করুন
           </button>
         </form>
       </div>

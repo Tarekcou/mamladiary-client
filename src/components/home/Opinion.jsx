@@ -48,7 +48,7 @@ const Opinion = () => {
   };
 
   return (
-    <div className="mx-auto mt-2 w-full md:w-9/12 min-h-[500px]">
+    <div className="mx-auto mt-2 w-full md:w-9/12 ">
       {" "}
       {/* Stable wrapper */}
       <AnimatePresence mode="wait">
@@ -79,7 +79,7 @@ const Opinion = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.5 }}
-            className="bg-gray-100 p-4 rounded-lg"
+            className="bg-gray-100 p-10 rounded-lg w-full shadow-md"
           >
             <h2 className="mb-4 font-bold text-2xl text-center">মতামত দিন।</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,7 +112,7 @@ const Opinion = () => {
               />
               <textarea
                 name="description"
-                placeholder="বিস্তারিত "
+                placeholder="বিস্তারিত মতামত"
                 className="bg-gray-100 textarea-bordered w-full textarea"
                 value={formData.description}
                 onChange={handleChange}
@@ -123,7 +123,7 @@ const Opinion = () => {
                 className="bg-[#004080] rounded-lg w-full text-white btn btn-square"
               >
                 {isLoading && <span className="loading loading-spinner"></span>}
-                মন্তব্য দাখিল করুন
+                মতামত দাখিল করুন
               </button>
             </form>
           </motion.div>
