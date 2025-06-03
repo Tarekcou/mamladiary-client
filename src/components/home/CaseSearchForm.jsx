@@ -104,7 +104,7 @@ export default function CaseSearchForm({ handleSubmit }) {
     >
       <form onSubmit={handleSubmit}>
         <div className="flex-1 shadow-sm px-4 pt-1 pb-2">
-          <div className="flex justify-center items-center gap-2 bg-[#004080] mb-4 py-2 font-bold text-white text-lg text-center">
+          <div className="flex justify-center text-xl md:text-3xl items-center gap-2 bg-[#004080] mb-4 py-2 font-bold text-white  text-center">
             <p> {t("case search")}</p>
             <SearchLottie className="bg-white" />
           </div>

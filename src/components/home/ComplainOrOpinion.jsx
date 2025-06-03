@@ -48,6 +48,8 @@ const ComplainOrOpinion = () => {
         >
           <input
             type="checkbox"
+              style={{ scrollMarginTop: "80px" }} // ✅ Adjust this based on your navbar height
+
             checked={openId === faq.id}
             onChange={
               () => setOpenId(openId === faq.id ? "" : faq.id) // toggle logic

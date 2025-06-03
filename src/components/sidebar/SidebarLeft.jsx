@@ -33,19 +33,7 @@ export default function SidebarLeft() {
                 {t("history")}
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to={"/#calendar"}
-                href="#"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                    : "text-gray-700 btn btn-sm w-full border-gray-300"
-                }
-              >
-                {t("court calendar")}
-              </NavLink>
-            </li>
+            
             <NavLink
               to={"/citizenCharter"}
               href="#"
@@ -57,13 +45,26 @@ export default function SidebarLeft() {
             >
               {t("citizen charter")}
             </NavLink>
+
+            <li>
+              <NavLink
+                to={"/#calendar"}
+                 className={`btn btn-sm w-full menu-link ${
+                  currentHash === "#calendar"
+                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 border-gray-300"
+                }`}
+              >
+                {t("court calendar")}
+              </NavLink>
+            </li>
             <NavLink
               to={"/#rules"}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-sm w-full border-gray-300"
-              }
+               className={`btn btn-sm w-full menu-link ${
+                  currentHash === "#rules"
+                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 border-gray-300"
+                }`}
             >
               {t("court rules")}
             </NavLink>

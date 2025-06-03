@@ -51,7 +51,7 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
     >
       <div className="mt-5">
         <div className="py-2">
-        <h1 className="bg-[#004080] mb-4 py-4 font-semibold flex gap-2 items-center justify-center text-white text-xl text-center">
+        <h1 className="bg-[#004080] mb-4 py-4 font-semibold text-xl md:text-3xl flex gap-2 items-center justify-center text-white  text-center">
           <FaFolderOpen /> {t("case search result")}
         </h1>
         <ResultLottie />

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router";
+import { FcRules } from "react-icons/fc";
+import { FaArrowDown } from "react-icons/fa6";
 
 const Rules = () => {
   const rules = [
@@ -13,48 +15,62 @@ const Rules = () => {
     "যে কোন পিটিশনের সাথে ২ সেট ফটোকপি জমা দিতে হবে।",
   ];
 
-   const location = useLocation();
+  const location = useLocation();
   const [openId, setOpenId] = useState("");
+  const [showAll, setShowAll] = useState(false); // 🌟 Toggle state
 
-  // When URL changes, update the open section
+  // Scroll into view if hash in URL
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.replace("#", "");
       setOpenId(id);
-      // Optional: scroll into view smoothly
       const element = document.getElementById(id);
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100); // delay ensures DOM is ready
+        }, 100);
       }
     }
   }, [location]);
 
   return (
     <motion.div
+      id="rules"
+      style={{ scrollMarginTop: "80px" }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-md mx-auto p-6 rounded-lg"
+      className="bg-gray-100 shadow-md mx-auto p-6 rounded-b-lg"
     >
-      <h2 className="mb-6 font-bold text-[#004080] text-3xl text-center">
-        নিয়মাবলী
-      </h2>
+      <div className="flex items-center justify-center my-6 gap-3">
+        <h2 className="font-bold text-[#004080] text-3xl text-center">আদালতের নিয়মাবলী</h2>
+        <FcRules className="text-5xl" />
+      </div>
+
       <ul className="space-y-4 px-4 list-none">
-        {rules.map((rule, index) => (
+        {(showAll ? rules : rules.slice(0, 3)).map((rule, index) => (
           <motion.li
             key={index}
             className="flex items-start text-gray-700 text-lg"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
+            transition={{ delay: index * 0.05 }}
           >
             <span className="mr-2 text-[#004080] text-xl">➤</span>
             <span>{rule}</span>
           </motion.li>
         ))}
       </ul>
+
+      <div className="mt-6 cursor-pointer text-center w-full  items-center flex justify-center">
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-blue-800 flex flex-col cursor-pointer items-center justify-center  text-xl hover:underline font-medium"
+        >
+          {showAll ? "সংক্ষিপ্ত করুন" : "বিস্তারিত দেখুন"}
+          <FaArrowDown />
+        </button>
+      </div>
     </motion.div>
   );
 };
