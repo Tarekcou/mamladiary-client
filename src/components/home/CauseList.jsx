@@ -38,7 +38,7 @@ const CauseList = () => {
   return (
     <div className="p-6">
       <div className="flex justify-start items-center gap-4">
-        <h1 className="mb-4 font-bold text-2xl md:text-3xl ">
+        <h1 className="mb-4 font-bold text-xl md:text-2xl ">
           আজকের মামলা কার্যতালিকা - {toBanglaNumber(today)}
         </h1>
         <ListLottie />
