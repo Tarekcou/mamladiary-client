@@ -1,6 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation } from "react-router";
 import { motion } from "framer-motion"; // For animation
+import { MdWorkHistory } from "react-icons/md";
+import { FaRegHandshake } from "react-icons/fa";
+import { BsFileEarmarkRuled } from "react-icons/bs";
+import { FaCommentDots } from "react-icons/fa6";
+import { MdContacts } from "react-icons/md";
+
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaCommentMedical } from "react-icons/fa6";
+import { ImHammer2 } from "react-icons/im";
+import { LuAlignVerticalJustifyEnd } from "react-icons/lu";
+
+import { GiInjustice } from "react-icons/gi";
+  
 
 export default function SidebarLeft() {
   const { t } = useTranslation();
@@ -16,23 +29,32 @@ export default function SidebarLeft() {
     >
       <div className="w-full h-full text-sm">
         <div>
-          <h2 className="bg-[#004080] py-6 w-full font-bold text-white btn">
+            <div className="flex text-start bg-[#004080] btn items-center gap-2 h-full">
+
+          <h2 className="py-2 flex items-center  gap-2 font-bold text-white  text-xl  w-10/12 ">
+          <GiInjustice />
+
             {t("the court")}
           </h2>
+          </div>
 
-          <ul className="space-y-1 p-2">
-            <li>
-              <NavLink
-                to={"/history"}
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-bold"
-                    : "text-gray-700 btn btn-sm w-full border-gray-300 font-bold"
-                }
-              >
-                {t("history")}
-              </NavLink>
-            </li>
+          <ul className="space-y-1 p-2 text-start">
+           
+        <NavLink
+  to="/history"
+  className={({ isActive }) =>
+    isActive
+      ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-bold text-start"
+      : "text-gray-700 btn btn-sm w-full border-gray-300 font-bold text-start"
+  }
+>
+  <div className="flex items-center gap-2  w-10/12 h-full">
+    <MdWorkHistory className="text-base" />
+    <span className="leading-none">{t("history")}</span>
+  </div>
+</NavLink>
+          
+
 
             <NavLink
               to={"/citizenCharter"}
@@ -43,10 +65,14 @@ export default function SidebarLeft() {
                   : "text-gray-700 btn btn-sm w-full border-gray-300"
               }
             >
-              {t("citizen charter")}
+  <div className="flex items-center gap-2  w-10/12 h-full">
+                   <FaRegHandshake className="text-base"/>               
+                 <p>{t("citizen charter")}</p>
+                </div>
+              
             </NavLink>
             <div className="hidden md:block space-y-1">
-              <li>
+         
                 <NavLink
                   to={"/#calendar"}
                   className={`btn btn-sm w-full menu-link ${
@@ -55,9 +81,14 @@ export default function SidebarLeft() {
                       : "text-gray-700 border-gray-300"
                   }`}
                 >
+                    <div className="flex items-center gap-2  w-10/12 h-full">
+
+                  <FaCalendarAlt />
+
                   {t("court calendar")}
+                  </div>
                 </NavLink>
-              </li>
+          
               <NavLink
                 to={"/#rules"}
                 className={`btn btn-sm w-full menu-link ${
@@ -66,16 +97,29 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
+                  <div className="flex items-center gap-2  w-10/12 h-full">
+
+                <BsFileEarmarkRuled />
+
+
                 {t("court rules")}
+                </div>
               </NavLink>
             </div>
           </ul>
         </div>
 
         <div className="hidden md:block">
-          <h2 className="bg-[#004080] w-full font-bold text-white btn">
+          <div className="flex text-start bg-[#004080] btn items-center gap-2 h-full">
+
+          <h2 className="py-2 flex items-center  gap-2 font-bold text-white  text-xl  w-10/12 ">
+          <LuAlignVerticalJustifyEnd />
+
+
             {t("resources")}
           </h2>
+          </div>
+          
           <ul className="space-y-1 p-2 w-full">
             <li>
               <NavLink
@@ -86,7 +130,12 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
+                  <div className="flex items-center gap-2  w-10/12 h-full">
+
+                <FaCommentDots />
+
                 {t("lodge your complaint")}
+                </div>
               </NavLink>
             </li>
             <li>
@@ -98,7 +147,12 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
+                  <div className="flex items-center gap-2  w-10/12 h-full">
+
+                <FaCommentMedical />
+
                 {t("opinion")}
+                </div>
               </NavLink>
             </li>
             {/* <li>
@@ -124,7 +178,12 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
+                  <div className="flex items-center gap-2  w-10/12 h-full">
+
+                <MdContacts />
+
                 {t("contacts")}
+                </div>
               </NavLink>
             </li>
           </ul>

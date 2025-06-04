@@ -9,6 +9,7 @@ import court2 from "../../assets/court2.jpg";
 import court4 from "../../assets/court4.jpg";
 import court5 from "../../assets/court5.jpg";
 import logo from "../../assets/bg-image.jpg";
+import ScaleLottie from "../lottie/ScaleLottie";
 const bannerSlides = [
   {
     id: 1,
@@ -83,6 +84,7 @@ const Carousel = () => {
                 src={govtLogo}
                 alt="govt logo"
               />
+              {/* <ScaleLottie /> */}
               <img
                 className="shadow-md rounded-full w-10 md:w-15 h-10 md:h-15"
                 src={logo}

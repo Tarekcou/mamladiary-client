@@ -5,7 +5,7 @@ const SearchLottie = () => (
   <Lottie
     className="text-white"
     animationData={loginAnim}
-    loop
+    loop="2"
     autoplay
     style={{ height: 60 }}
   />

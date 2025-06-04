@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
 import { CheckCircle, CalendarCheck, Briefcase } from "lucide-react";
+import { motion } from "framer-motion";
 
 const MamlaStats = () => {
   const [cases, setCases] = useState([]);
@@ -42,6 +43,12 @@ const MamlaStats = () => {
   }, []);
 
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="bg-gray-100 shadow-sm mx-auto md:p-3 py-10 rounded-xl h-full"
+    >
     <div className="bg-blue-100 shadow my-10 w-full stats stats-vertical lg:stats-horizontal">
       <div className="flex-1 stat">
         <div className="text-secondary stat-figure">
@@ -82,6 +89,7 @@ const MamlaStats = () => {
         </div>
       </div>
     </div>
+    </motion.div>
   );
 };
 

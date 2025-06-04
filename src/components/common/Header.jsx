@@ -9,6 +9,8 @@ import DashboardSidebar from "../../pages/dashboard/DashboardSidebar";
 import bgimage from "../../assets/bg-image.jpg";
 import { FaHome } from "react-icons/fa";
 import Carousel from "./Carousel";
+import { MdDashboard } from "react-icons/md";
+import { RiBookletLine } from "react-icons/ri";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -79,7 +81,12 @@ export default function Header() {
               : " btn lg:btn-sm border-gray-300"
           }
         >
-          {t("cause list")}
+          <div className="flex justify-center items-center gap-2">
+            <RiBookletLine />
+
+              <p>{t("cause list")}</p>
+          </div>
+          
         </NavLink>
 
         {isAdmin && (
@@ -91,7 +98,11 @@ export default function Header() {
                 : " btn lg:btn-sm border-gray-300"
             }
           >
-            {t("dashboard")}
+            <div className="flex justify-center items-center gap-2">
+            <MdDashboard />
+
+              <p>{t("dashboard")}</p>
+          </div>
           </NavLink>
         )}
       </div>

@@ -58,11 +58,14 @@ const CasesList = ({ mamla, isLoading, isError, error }) => {
       className="bg-gray-100 shadow-sm mx-auto md:p-3 py-10 rounded-xl h-full"
     >
       <div className="mt-5">
-        <div className="py-2">
-          <h1 className="flex justify-center items-center gap-2 bg-[#004080] mb-4 py-4 font-semibold text-white text-xl md:text-2xl text-center">
-            <FaFolderOpen /> {t("case search result")}
+        <div className="border">
+          <h1 className="flex justify-center items-center gap-2 bg-[#004080] py-4 font-semibold text-white text-xl md:text-2xl text-center">
+            <FaFolderOpen /> {t("case search result")} 
+            <div>
+              <ResultLottie />
+            </div>
           </h1>
-          <ResultLottie />
+          
         </div>
 
         <div className="max-w-screen overflow-x-auto">

@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 import axiosPublic from "../../axios/axiosPublic";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import SearchLottie from "../lottie/SearchLottie";
 import { FaFolderOpen } from "react-icons/fa";
-
+import logo from "../../assets/bg-image.jpg"
+import SearchLottie from "../lottie/SearchLottie";
 const districts = [
   "চট্টগ্রাম",
   "কক্সবাজার",
@@ -106,7 +106,8 @@ export default function CaseSearchForm({ handleSubmit }) {
       <form onSubmit={handleSubmit}>
         <div className="flex-1 shadow-sm md:px-4 pt-1 pb-2">
           <div className="flex justify-center items-center gap-2 bg-[#004080] mb-4 py-1 font-bold text-white text-xl md:text-2xl text-center">
-            <FaFolderOpen />
+            {/* <FaFolderOpen /> */}
+            <img className="w-5 h-5 md:w-8 md:h-8 rounded-full" src={logo} alt="logo" />
             <p> {t("case search")}</p>
             <SearchLottie className="bg-white" />
           </div>
