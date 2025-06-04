@@ -44,7 +44,7 @@ const Rules = () => {
       className="bg-gray-100 shadow-md mx-auto p-2 md:p-6 rounded-b-lg"
     >
       <div className="flex items-center justify-center my-6 gap-3">
-        <h2 className="font-bold text-[#004080] text-xl md:text-3xl text-center">আদালতের নিয়মাবলী</h2>
+        <h2 className="font-bold text-[#004080] text-2xl md:text-3xl text-center">আদালতের নিয়মাবলী</h2>
         <FcRules className="text-5xl" />
       </div>
 

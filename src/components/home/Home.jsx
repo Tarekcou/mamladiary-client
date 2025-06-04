@@ -95,7 +95,7 @@ export default function Home() {
           <QuestionLottie />
         </div>
         <div className="flex-1">
-          <h2 className="mb-4 font-bold text-center text-blue-900 text-xl md:text-3xl">
+          <h2 className="mb-4 font-bold text-center text-blue-900 text-2xl md:text-3xl">
             সচরাচর জিজ্ঞাসা (FAQ)
           </h2>
           <Questions />
@@ -110,7 +110,7 @@ export default function Home() {
       <div>
         <div className="flex justify-center items-center">
           <ContactLottie />
-          <h2 className="my-8 font-bold text-blue-900 text-xl md:text-3xl text-center">
+          <h2 className="my-8 font-bold text-blue-900 text-2xl md:text-3xl text-center">
             যোগাযোগ করুন
           </h2>
         </div>

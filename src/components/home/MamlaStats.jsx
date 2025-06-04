@@ -47,9 +47,9 @@ const MamlaStats = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-sm mx-auto md:p-3 py-10 rounded-xl h-full"
+      className="bg-gray-100 shadow-sm mx-auto md:p-3 py-2  h-full"
     >
-    <div className="bg-blue-100 shadow my-10 w-full stats stats-vertical lg:stats-horizontal">
+    <div className="bg-blue-100 shadow my-5 w-full stats stats-vertical lg:stats-horizontal">
       <div className="flex-1 stat">
         <div className="text-secondary stat-figure">
           <Briefcase className="stroke-current w-8 h-8" />

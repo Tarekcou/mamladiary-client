@@ -44,11 +44,11 @@ const Calendar = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-sm mx-auto p-2 md:p-4 rounded-t-lg"
+      className="bg-gray-100 shadow-sm mx-auto md:p-4 rounded-t-lg"
     >
       <div className=" ">
         <div className="flex justify-center items-center  my-2">
-            <h2 className=" font-bold text-[#004080] text-xl md:text-3xl text-center">
+            <h2 className=" font-bold text-[#004080] text-2xl md:text-3xl text-center">
           আদালতের ক্যালেন্ডার
         </h2>
         <CalendarLottie />

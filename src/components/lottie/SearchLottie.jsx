@@ -2,12 +2,14 @@ import Lottie from "lottie-react";
 import loginAnim from "../../assets/lottie/search.json";
 
 const SearchLottie = () => (
-  <Lottie
-    className="text-white"
+  <div className="w-full h-36 md:h-40 p-0 m-0"> 
+<Lottie
+    className="text-white     -my-5 h-36  md:h-44"
     animationData={loginAnim}
-    loop="2"
+    loop={5}
     autoplay
-    style={{ height: 60 }}
   />
+  </div>
+  
 );
 export default SearchLottie;

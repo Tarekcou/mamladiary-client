@@ -39,7 +39,7 @@ const ComplainOrOpinion = () => {
 
   return (
     <div className="space-y-3 p-2  md:p-10">
-      <h2 className="my-10 mb-4 font-bold text-blue-900 text-xl md:text-3xl text-center">
+      <h2 className="my-10 mb-4 font-bold text-blue-900 text-2xl md:text-3xl text-center">
         মতামত ও অভিযোগ জানান <ArrowLottie />
       </h2>
       {faqData.map((faq, index) => (

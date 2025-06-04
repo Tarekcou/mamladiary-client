@@ -7,7 +7,7 @@ const CalendarLottie = () => (
     className="-mx-12"
     animationData={loginAnim}
     style={{ height: 100 }}
-    loop={false} // 👉 disables looping
+    loop={3} // 👉 disables looping
   />
 );
 
