@@ -13,7 +13,6 @@ import { ImHammer2 } from "react-icons/im";
 import { LuAlignVerticalJustifyEnd } from "react-icons/lu";
 
 import { GiInjustice } from "react-icons/gi";
-  
 
 export default function SidebarLeft() {
   const { t } = useTranslation();
@@ -29,32 +28,28 @@ export default function SidebarLeft() {
     >
       <div className="w-full h-full text-sm">
         <div>
-            <div className="flex text-start bg-[#004080] btn items-center gap-2 h-full">
+          <div className="flex items-center gap-2 bg-[#004080] h-full text-start btn">
+            <h2 className="flex items-center gap-2 py-2 w-full font-bold text-white text-xl">
+              <GiInjustice />
 
-          <h2 className="py-2 flex items-center  gap-2 font-bold text-white  text-xl  w-10/12 ">
-          <GiInjustice />
-
-            {t("the court")}
-          </h2>
+              {t("the court")}
+            </h2>
           </div>
 
           <ul className="space-y-1 p-2 text-start">
-           
-        <NavLink
-  to="/history"
-  className={({ isActive }) =>
-    isActive
-      ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-bold text-start"
-      : "text-gray-700 btn btn-sm w-full border-gray-300 font-bold text-start"
-  }
->
-  <div className="flex items-center gap-2  w-10/12 h-full">
-    <MdWorkHistory className="text-base" />
-    <span className="leading-none">{t("history")}</span>
-  </div>
-</NavLink>
-          
-
+            <NavLink
+              to="/history"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-bold text-start"
+                  : "text-gray-700 btn btn-sm w-full border-gray-300 font-bold text-start"
+              }
+            >
+              <div className="flex items-center gap-2 w-full h-full">
+                <MdWorkHistory className="text-base" />
+                <span className="leading-none">{t("history")}</span>
+              </div>
+            </NavLink>
 
             <NavLink
               to={"/citizenCharter"}
@@ -65,30 +60,27 @@ export default function SidebarLeft() {
                   : "text-gray-700 btn btn-sm w-full border-gray-300"
               }
             >
-  <div className="flex items-center gap-2  w-10/12 h-full">
-                   <FaRegHandshake className="text-base"/>               
-                 <p>{t("citizen charter")}</p>
-                </div>
-              
+              <div className="flex items-center gap-2 w-full h-full">
+                <FaRegHandshake className="text-base" />
+                <p>{t("citizen charter")}</p>
+              </div>
             </NavLink>
             <div className="hidden md:block space-y-1">
-         
-                <NavLink
-                  to={"/#calendar"}
-                  className={`btn btn-sm w-full menu-link ${
-                    currentHash === "#calendar"
-                      ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
-                      : "text-gray-700 border-gray-300"
-                  }`}
-                >
-                    <div className="flex items-center gap-2  w-10/12 h-full">
-
+              <NavLink
+                to={"/#calendar"}
+                className={`btn btn-sm w-full menu-link ${
+                  currentHash === "#calendar"
+                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    : "text-gray-700 border-gray-300"
+                }`}
+              >
+                <div className="flex items-center gap-2 w-full h-full">
                   <FaCalendarAlt />
 
                   {t("court calendar")}
-                  </div>
-                </NavLink>
-          
+                </div>
+              </NavLink>
+
               <NavLink
                 to={"/#rules"}
                 className={`btn btn-sm w-full menu-link ${
@@ -97,12 +89,10 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
-                  <div className="flex items-center gap-2  w-10/12 h-full">
+                <div className="flex items-center gap-2 w-full h-full">
+                  <BsFileEarmarkRuled />
 
-                <BsFileEarmarkRuled />
-
-
-                {t("court rules")}
+                  {t("court rules")}
                 </div>
               </NavLink>
             </div>
@@ -110,31 +100,28 @@ export default function SidebarLeft() {
         </div>
 
         <div className="hidden md:block">
-          <div className="flex text-start bg-[#004080] btn items-center gap-2 h-full">
+          <div className="flex items-center gap-2 bg-[#004080] h-full text-start btn">
+            <h2 className="flex items-center gap-2 py-2 w-full font-bold text-white text-xl">
+              <LuAlignVerticalJustifyEnd />
 
-          <h2 className="py-2 flex items-center  gap-2 font-bold text-white  text-xl  w-10/12 ">
-          <LuAlignVerticalJustifyEnd />
-
-
-            {t("resources")}
-          </h2>
+              {t("resources")}
+            </h2>
           </div>
-          
+
           <ul className="space-y-1 p-2 w-full">
             <li>
               <NavLink
                 to={"/#complain"}
-                className={`btn btn-sm w-full menu-link ${
+                className={`btn btn-sm w-full   menu-link ${
                   currentHash === "#complain"
                     ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
                     : "text-gray-700 border-gray-300"
                 }`}
               >
-                  <div className="flex items-center gap-2  w-10/12 h-full">
+                <div className="flex items-center gap-2 w-full h-full">
+                  <FaCommentDots />
 
-                <FaCommentDots />
-
-                {t("lodge your complaint")}
+                  <p>{t("lodge your complaint")}</p>
                 </div>
               </NavLink>
             </li>
@@ -147,11 +134,10 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
-                  <div className="flex items-center gap-2  w-10/12 h-full">
+                <div className="flex items-center gap-2 w-full h-full">
+                  <FaCommentMedical />
 
-                <FaCommentMedical />
-
-                {t("opinion")}
+                  {t("opinion")}
                 </div>
               </NavLink>
             </li>
@@ -178,11 +164,10 @@ export default function SidebarLeft() {
                     : "text-gray-700 border-gray-300"
                 }`}
               >
-                  <div className="flex items-center gap-2  w-10/12 h-full">
+                <div className="flex items-center gap-2 w-full h-full">
+                  <MdContacts />
 
-                <MdContacts />
-
-                {t("contacts")}
+                  {t("contacts")}
                 </div>
               </NavLink>
             </li>

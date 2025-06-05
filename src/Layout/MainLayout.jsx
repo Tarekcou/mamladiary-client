@@ -29,17 +29,17 @@ const MainLayout = () => {
   const layoutWidth = screenWidth * (10 / 12);
   const sidebarWidth = layoutWidth * (2 / 12);
   const mainWidth = layoutWidth * (10 / 12);
-
+  console.log(sidebarWidth);
   return (
     <div className="flex flex-col shadow-xl mx-auto w-full md:w-10/12 min-h-screen">
       <Header />
 
-      <div className="relative flex flex-grow gap-4">
+      <div className="relative flex flex-grow gap-2">
         <div
           className={`hidden md:block   ${
             isSticky
-              ? "fixed top-18 scroll-py-10 z-40 shadow-xs h-full"
-              : "relative md:mt-1 shadow-xs"
+              ? "fixed top-16 scroll-py-10 z-40 shadow-md h-full"
+              : "relative  mt-1 shadow-md"
           }`}
           style={{
             width: `${sidebarWidth}px`,
@@ -62,11 +62,7 @@ const MainLayout = () => {
         {/* for mobile device navbar menu take space */}
         {/* <div className="md:hidden sm:h-[600px]"></div> */}
 
-        <main
-          className={`flex-grow  ${
-            path.includes("dashboard") ? "lg:w-10/12" : "lg:w-10/12"
-          }`}
-        >
+        <main className={` md:w-10/12 `}>
           <Outlet />
         </main>
       </div>

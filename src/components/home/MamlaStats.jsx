@@ -47,48 +47,48 @@ const MamlaStats = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gray-100 shadow-sm mx-auto md:p-3 py-2  h-full"
+      className="bg-gray-100 shadow-sm mx-auto md:p-1 h-full"
     >
-    <div className="bg-blue-100 shadow my-5 w-full stats stats-vertical lg:stats-horizontal">
-      <div className="flex-1 stat">
-        <div className="text-secondary stat-figure">
-          <Briefcase className="stroke-current w-8 h-8" />
+      <div className="bg-blue-100 shadow rounded-none w-full stats stats-vertical lg:stats-horizontal">
+        <div className="flex-1 stat">
+          <div className="text-secondary stat-figure">
+            <Briefcase className="stroke-current w-8 h-8" />
+          </div>
+          <div className="stat-title">মোট চলমান মামলা</div>
+          <div className="text-xl md:text-3xl stat-value">
+            {cases.length == 0
+              ? "-"
+              : cases.length.toLocaleString("bn-BD") + "টি"}
+          </div>
+          <div className="stat-desc">বর্তমানে বিচারাধীন মামলার সংখ্যা</div>
         </div>
-        <div className="stat-title">মোট চলমান মামলা</div>
-        <div className="text-xl md:text-3xl stat-value">
-          {cases.length == 0
-            ? "-"
-            : cases.length.toLocaleString("bn-BD") + "টি"}
-        </div>
-        <div className="stat-desc">বর্তমানে বিচারাধীন মামলার সংখ্যা</div>
-      </div>
 
-      <div className="flex-1 stat">
-        <div className="text-secondary stat-figure">
-          <CheckCircle className="stroke-current w-8 h-8 text-green-600" />
+        <div className="flex-1 stat">
+          <div className="text-secondary stat-figure">
+            <CheckCircle className="stroke-current w-8 h-8 text-green-600" />
+          </div>
+          <div className="stat-title">মোট নিষ্পন্ন মামলা</div>
+          <div className="text-xl md:text-3xl stat-value">
+            {mamlaCount.toLocaleString("bn-BD")}
+          </div>
+          <div className="stat-desc">সকল নিষ্পন্ন মামলার মোট সংখ্যা</div>
         </div>
-        <div className="stat-title">মোট নিষ্পন্ন মামলা</div>
-        <div className="text-xl md:text-3xl stat-value">
-          {mamlaCount.toLocaleString("bn-BD")}
-        </div>
-        <div className="stat-desc">সকল নিষ্পন্ন মামলার মোট সংখ্যা</div>
-      </div>
 
-      <div className="flex-1 stat">
-        <div className="text-secondary stat-figure">
-          <CalendarCheck className="stroke-current w-8 h-8 text-blue-600" />
-        </div>
-        <div className="stat-title">
-          {year.toLocaleString("bn-BD")} সালে মোট নিষ্পন্ন মামলার সংখ্যা
-        </div>
-        <div className="text-xl md:text-3xl stat-value">
-          {yearlyMamlaCount.toLocaleString("bn-BD")}
-        </div>
-        <div className="stat-desc">
-          {year.toLocaleString("bn-BD")} সালের বার্ষিক নিষ্পত্তির হিসাব
+        <div className="flex-1 stat">
+          <div className="text-secondary stat-figure">
+            <CalendarCheck className="stroke-current w-8 h-8 text-blue-600" />
+          </div>
+          <div className="stat-title">
+            {year.toLocaleString("bn-BD")} সালে মোট নিষ্পন্ন মামলার সংখ্যা
+          </div>
+          <div className="text-xl md:text-3xl stat-value">
+            {yearlyMamlaCount.toLocaleString("bn-BD")}
+          </div>
+          <div className="stat-desc">
+            {year.toLocaleString("bn-BD")} সালের বার্ষিক নিষ্পত্তির হিসাব
+          </div>
         </div>
       </div>
-    </div>
     </motion.div>
   );
 };

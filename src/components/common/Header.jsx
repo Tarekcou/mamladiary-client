@@ -58,7 +58,7 @@ export default function Header() {
   };
   const navMenu = (
     <>
-      <div className="flex justify-between gap-4 w-full">
+      <div className="flex justify-between gap-1 md:gap-4 w-full">
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -84,9 +84,8 @@ export default function Header() {
           <div className="flex justify-center items-center gap-2">
             <RiBookletLine />
 
-              <p>{t("cause list")}</p>
+            <p>{t("cause list")}</p>
           </div>
-          
         </NavLink>
 
         {isAdmin && (
@@ -99,10 +98,10 @@ export default function Header() {
             }
           >
             <div className="flex justify-center items-center gap-2">
-            <MdDashboard />
+              <MdDashboard />
 
               <p>{t("dashboard")}</p>
-          </div>
+            </div>
           </NavLink>
         )}
       </div>

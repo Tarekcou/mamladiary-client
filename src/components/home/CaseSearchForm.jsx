@@ -3,7 +3,7 @@ import axiosPublic from "../../axios/axiosPublic";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaFolderOpen } from "react-icons/fa";
-import logo from "../../assets/bg-image.jpg"
+import logo from "../../assets/bg-image.jpg";
 import SearchLottie from "../lottie/SearchLottie";
 const districts = [
   "চট্টগ্রাম",
@@ -105,16 +105,17 @@ export default function CaseSearchForm({ handleSubmit }) {
     >
       <form onSubmit={handleSubmit}>
         <div className="flex-1 shadow-sm md:px-4 pt-1 pb-2">
-          <div className="flex justify-center items-center gap-2 bg-[#004080]  py-5  font-bold text-white text-xl md:text-2xl text-center">
+          <div className="flex justify-center items-center gap-2 bg-[#004080] font-bold text-white text-xl md:text-2xl text-center">
             {/* <FaFolderOpen /> */}
-            <img className="w-5 h-5 md:w-8 md:h-8 rounded-full" src={logo} alt="logo" />
+            {/* <img
+              className="rounded-full w-5 md:w-8 h-5 md:h-8"
+              src={logo}
+              alt="logo"
+            /> */}
             <p> {t("case search")}</p>
-            
-          </div>
-          <div className=" ">
             <SearchLottie className="bg-white border" />
-
-            </div>
+          </div>
+          <div className=" "></div>
           <div className="space-y-4 p-4 font-semibold text-lg">
             <div className="gap-4 grid grid-cols-2">
               {/* District */}
