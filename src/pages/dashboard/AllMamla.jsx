@@ -3,7 +3,7 @@ import axiosPublic from "../../axios/axiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import MamlaEditForm from "./MamlaEditForm";
 import { FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdMessage } from "react-icons/md";
 import Swal from "sweetalert2";
 
 const AllMamla = () => {
@@ -67,7 +67,7 @@ const AllMamla = () => {
   const [editedMamla, setEditedMamla] = useState(null);
 
   const handleEdit = (mamla) => {
-    console.log(mamla);
+    // console.log(mamla);
     setEditedMamla(mamla);
   };
   const handleDelete = (id) => {
@@ -92,6 +92,45 @@ const AllMamla = () => {
             refetch();
           }
         });
+      }
+    });
+  };
+
+  const handleMessage = (mamla) => {
+    const phoneNo = "+88" + mamla.phoneNumbers?.badi?.[0];
+    console.log(phoneNo);
+    Swal.fire({
+      title: "আপনি মেসেজ প্রেরন করতে চান?",
+      text: `আপনার প্রেরিত মেসেজঃ ${mamla.mamlaName} মামলার জন্য পরবর্তী তারিখ ${mamla.nextDate}।`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "হ্যাঁ প্রেরণ করুন !",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic
+          .post(
+            `/message`,
+
+            {
+              from: "অবিক(রাজস্ব)", // max 11 characters, no spaces
+              to: "+88" + mamla.phoneNumbers?.badi?.[0],
+              //  phone: mamla.phoneNumbers?.badi?.[0] || mamla.phoneNumbers?.bibadi?.[0],
+              text: `${mamla.mamlaName} মামলার জন্য পরবর্তী তারিখ ${mamla.nextDate}।`,
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            if (res.data.success) {
+              Swal.fire({
+                title: "সফলতা!",
+                text: "আপনার মেসেজ সফলভাবে প্রেরণ করা হয়েছে।",
+                icon: "success",
+              });
+              refetch();
+            }
+          });
       }
     });
   };
@@ -143,16 +182,43 @@ const AllMamla = () => {
         <table className="table table-pin-cols table-pin-rows">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-4 py-2 border">ক্রমিক </th>
-              <th className="px-4 py-2 border">মামলার নাম</th>
-              <th className="px-4 py-2 border">মামলার নং </th>
-              <th className="px-4 py-2 border">বছর </th>
-              <th className="px-4 py-2 border">জেলা </th>
-              <th className="px-4 py-2 border">পূর্ববর্তী তারিখ </th>
-              <th className="px-4 py-2 border">পরবর্তী তারিখ </th>
-              <th className="px-4 py-2 border">সর্বশেষ অবস্থা </th>
-              <th className="px-4 py-2 border">নিষ্পত্তির তারিখ </th>
-              <th className="px-4 py-2 border">কার্যক্রম</th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                ক্রমিক
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                মামলার নাম
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                মামলার নং
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                বছর
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                জেলা
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                পূর্ববর্তী তারিখ
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                পরবর্তী তারিখ
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                সর্বশেষ অবস্থা
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                নিষ্পত্তির তারিখ
+              </th>
+              <th className="px-4 py-2 border text-center" colSpan="2">
+                ফোন নম্বর
+              </th>
+              <th className="px-4 py-2 border" rowSpan="2">
+                কার্যক্রম
+              </th>
+            </tr>
+            <tr>
+              <th className="px-4 py-2 border">বাদী</th>
+              <th className="px-4 py-2 border">বিবাদী</th>
             </tr>
           </thead>
           <tbody>
@@ -180,6 +246,25 @@ const AllMamla = () => {
                   <td className="px-4 py-2 border">
                     {item.completionDate || "-"}
                   </td>
+
+                  {/* Badi phone numbers */}
+                  <td className="px-4 py-2 border text-left">
+                    {item.phoneNumbers?.badi?.length > 0
+                      ? item.phoneNumbers.badi.map((phone, i) => (
+                          <p key={`badi-${i}`}>📞 {phone}</p>
+                        ))
+                      : "-"}
+                  </td>
+
+                  {/* Bibadi phone numbers */}
+                  <td className="px-4 py-2 border text-left">
+                    {item.phoneNumbers?.bibadi?.length > 0
+                      ? item.phoneNumbers.bibadi.map((phone, i) => (
+                          <p key={`bibadi-${i}`}>📞 {phone}</p>
+                        ))
+                      : "-"}
+                  </td>
+
                   <td className="px-4 py-2 border">
                     <label
                       htmlFor="my_modal_3"
@@ -197,12 +282,18 @@ const AllMamla = () => {
                     >
                       <MdDeleteForever className="text-xl" />
                     </button>
+                    <button
+                      onClick={() => handleMessage(item)}
+                      className="btn btn-sm"
+                    >
+                      <MdMessage className="text-xl" />
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td className="px-4 py-4 border text-center" colSpan="10">
+                <td className="px-4 py-4 border text-center" colSpan="12">
                   No records found.
                 </td>
               </tr>
@@ -210,6 +301,7 @@ const AllMamla = () => {
           </tbody>
         </table>
       </div>
+
       {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
         <p>

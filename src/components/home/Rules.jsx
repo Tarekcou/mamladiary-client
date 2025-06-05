@@ -43,8 +43,10 @@ const Rules = () => {
       transition={{ duration: 0.6 }}
       className="bg-gray-100 shadow-md mx-auto p-2 md:p-6 rounded-b-lg"
     >
-      <div className="flex items-center justify-center my-6 gap-3">
-        <h2 className="font-bold text-[#004080] text-2xl md:text-3xl text-center">আদালতের নিয়মাবলী</h2>
+      <div className="flex justify-center items-center gap-3 my-6">
+        <h2 className="font-bold text-[#004080] text-2xl md:text-3xl text-center">
+          আদালতের নিয়মাবলী
+        </h2>
         <FcRules className="text-5xl" />
       </div>
 
@@ -52,7 +54,7 @@ const Rules = () => {
         {(showAll ? rules : rules.slice(0, 3)).map((rule, index) => (
           <motion.li
             key={index}
-            className="flex items-start text-gray-700 text-md md:text-lg"
+            className="flex items-start text-gray-700 text-sm md:text-base"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -63,14 +65,13 @@ const Rules = () => {
         ))}
       </ul>
 
-      <div className="mt-6 cursor-pointer text-center w-full  items-center flex justify-center">
+      <div className="flex justify-center items-center mt-6 w-full text-center cursor-pointer">
         <button
           onClick={() => setShowAll(!showAll)}
-          className="text-blue-800 flex flex-col cursor-pointer items-center justify-center  text-base hover:underline font-medium"
+          className="flex flex-col justify-center items-center font-medium text-blue-800 text-base hover:underline cursor-pointer"
         >
           {showAll ? "সংক্ষিপ্ত করুন" : "বিস্তারিত দেখুন"}
-          {showAll? <FaArrowUp />:      <FaArrowDown />}
-     
+          {showAll ? <FaArrowUp /> : <FaArrowDown />}
         </button>
       </div>
     </motion.div>

@@ -105,11 +105,11 @@ export default function CaseSearchForm({ handleSubmit }) {
     >
       <form onSubmit={handleSubmit}>
         <div className="flex-1 shadow-sm md:px-4 pt-1 pb-2">
-          <div className="flex justify-center items-center gap-2 bg-[#004080] font-bold text-white text-xl md:text-2xl text-center">
+          <div className="flex justify-center items-center gap-2 bg-[#004080] border-red-500 font-bold text-white text-xl md:text-2xl text-center">
             {/* <FaFolderOpen /> */}
             {/* <img
               className="rounded-full w-5 md:w-8 h-5 md:h-8"
-              src={logo}
+              src={logo}dfa
               alt="logo"
             /> */}
             <p> {t("case search")}</p>

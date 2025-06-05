@@ -68,10 +68,10 @@ const Calendar = () => {
           <tbody className="text-gray-700">
             {calendarData.map((row, index) => (
               <tr key={index} className="hover:bg-[#004080]/10">
-                <td className="px-4 py-4 border-gray-300 border-r font-medium">
+                <td className="px-4 py-4 border-gray-300 border-r font-medium text-base">
                   {row.days}
                 </td>
-                <td className="px-4 py-4 border-gray-300 border-r">
+                <td className="px-4 py-4 border-gray-300 border-r text-base">
                   {row.districts}
                 </td>
 

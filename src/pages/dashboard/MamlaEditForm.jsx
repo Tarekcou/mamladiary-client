@@ -3,7 +3,7 @@ import axiosPublic from "../../axios/axiosPublic";
 import { toast } from "sonner";
 import { AuthContext } from "../../provider/AuthProvider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -103,10 +103,15 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
     nextDate: "",
     completedMamla: "",
     completionDate: "",
+    phoneNumbers: "",
   });
 
   const [loading, setLoading] = useState(false);
   const { isLoading } = useContext(AuthContext);
+  const [badiPhones, setBadiPhones] = useState([""]);
+  const [bibadiPhones, setBibadiPhones] = useState([""]);
+  const [newBadiNumber, setNewBadiNumber] = useState("");
+  const [newBibadiNumber, setNewBibadiNumber] = useState("");
 
   // Populate form with existing mamla
   useEffect(() => {
@@ -121,6 +126,9 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
         completedMamla: mamla.completedMamla || "",
         completionDate: mamla.completionDate || "",
       });
+
+      setBadiPhones(mamla.phoneNumbers?.badi || [""]);
+      setBibadiPhones(mamla.phoneNumbers?.bibadi || [""]);
       setSelected(mamla.completedMamla || "");
     }
   }, [mamla]);
@@ -159,6 +167,7 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
         nextDate: "",
         completedMamla: "",
         completionDate: "",
+        phoneNumbers: "",
       });
     },
     onError: (error) => {
@@ -169,8 +178,15 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newFormData = { ...formData, createdAt: today };
-    mutation.mutate(newFormData);
+    const updatedData = {
+      ...formData,
+      phoneNumbers: {
+        badi: badiPhones,
+        bibadi: bibadiPhones,
+      },
+      createdAt: today,
+    };
+    mutation.mutate(updatedData);
   };
 
   const [options, setOptions] = useState([...new Set(mamlaStatus)]);
@@ -195,9 +211,23 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
     setFormData((prev) => ({ ...prev, completedMamla: value }));
   };
 
+  const handleAddNumber = () => {
+    if (newNumber.trim() !== "") {
+      setPhoneNumbers([...phoneNumbers, newNumber.trim()]);
+      setNewNumber("");
+    }
+  };
+
+  const handleDeleteNumber = (index) => {
+    const updated = phoneNumbers.filter((_, i) => i !== index);
+    setPhoneNumbers(updated.length ? updated : [""]);
+  };
   return (
     <div>
-      <form onSubmit={handleSubmit} className="bg-gray-100 shadow-md mx-auto p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-100 shadow-md mx-auto p-6"
+      >
         <h2 className="bg-[#004080]/30 mb-4 py-2 font-bold text-xl text-center">
           অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতের মামলার তথ্য আপডেট করুন
         </h2>
@@ -350,6 +380,103 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
               className="mt-1 input-bordered w-full input"
             />
           </label>
+
+          {/* update phone */}
+          {/* বাদীর ফোন নম্বর */}
+          <div className="col-span-2 mt-4">
+            <label className="block mb-2 font-medium">
+              বাদীর ফোন নম্বরসমূহ:
+            </label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {badiPhones.map((number, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-blue-100 px-3 py-1 rounded-full text-blue-800"
+                >
+                  <span>{number}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = badiPhones.filter((_, i) => i !== index);
+                      setBadiPhones(updated.length ? updated : [""]);
+                    }}
+                  >
+                    <FaTimes className="text-red-500 hover:text-red-700" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={newBadiNumber}
+                onChange={(e) => setNewBadiNumber(e.target.value)}
+                placeholder="নতুন বাদীর ফোন নম্বর লিখুন"
+                className="input-bordered w-full input"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (newBadiNumber.trim() !== "") {
+                    setBadiPhones([...badiPhones, newBadiNumber.trim()]);
+                    setNewBadiNumber("");
+                  }
+                }}
+                className="btn-outline btn btn-sm"
+              >
+                <FaPlus /> যোগ করুন
+              </button>
+            </div>
+          </div>
+
+          {/* বিবাদীর ফোন নম্বর */}
+          <div className="col-span-2 mt-4">
+            <label className="block mb-2 font-medium">
+              বিবাদীর ফোন নম্বরসমূহ:
+            </label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {bibadiPhones.map((number, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full text-green-800"
+                >
+                  <span>{number}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = bibadiPhones.filter(
+                        (_, i) => i !== index
+                      );
+                      setBibadiPhones(updated.length ? updated : [""]);
+                    }}
+                  >
+                    <FaTimes className="text-red-500 hover:text-red-700" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={newBibadiNumber}
+                onChange={(e) => setNewBibadiNumber(e.target.value)}
+                placeholder="নতুন বিবাদীর ফোন নম্বর লিখুন"
+                className="input-bordered w-full input"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (newBibadiNumber.trim() !== "") {
+                    setBibadiPhones([...bibadiPhones, newBibadiNumber.trim()]);
+                    setNewBibadiNumber("");
+                  }
+                }}
+                className="btn-outline btn btn-sm"
+              >
+                <FaPlus /> যোগ করুন
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="mt-6 text-center">

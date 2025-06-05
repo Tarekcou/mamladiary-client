@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axiosPublic from "../../axios/axiosPublic";
 import { toast } from "sonner";
-
+import { X } from "lucide-react"; // For close icon, optional
 const mamlaNames = [
   "সার্টিফিকেট আপিল",
   "নামজারি আপিল",
@@ -81,6 +81,10 @@ const districts = [
 export default function MamlaUploadForm() {
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(2025);
+  const [badiInput, setBadiInput] = useState("");
+  const [bibadiInput, setBibadiInput] = useState("");
+  const [badiPhones, setBadiPhones] = useState([]);
+  const [bibadiPhones, setBibadiPhones] = useState([]);
 
   const toBanglaNumber = (number) => {
     const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
@@ -94,6 +98,29 @@ export default function MamlaUploadForm() {
   const today = `${localDate.getFullYear()}-${String(
     localDate.getMonth() + 1
   ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+
+  // Phone no
+  const addBadiPhone = () => {
+    if (badiInput && !badiPhones.includes(badiInput)) {
+      setBadiPhones([...badiPhones, badiInput]);
+      setBadiInput("");
+    }
+  };
+
+  const addBibadiPhone = () => {
+    if (bibadiInput && !bibadiPhones.includes(bibadiInput)) {
+      setBibadiPhones([...bibadiPhones, bibadiInput]);
+      setBibadiInput("");
+    }
+  };
+
+  const removePhone = (type, number) => {
+    if (type === "badi") {
+      setBadiPhones(badiPhones.filter((n) => n !== number));
+    } else {
+      setBibadiPhones(bibadiPhones.filter((n) => n !== number));
+    }
+  };
 
   // submit handler
   const handleSubmit = async (e) => {
@@ -109,6 +136,10 @@ export default function MamlaUploadForm() {
       completedMamla: form.completedMamla.value,
       completionDate: form.completionDate.value,
       comments: form.comments.value,
+      phoneNumbers: {
+        badi: badiPhones,
+        bibadi: bibadiPhones,
+      },
       createdAt: today,
     };
 
@@ -116,7 +147,7 @@ export default function MamlaUploadForm() {
       setLoading(true);
       const res = await axiosPublic.post("/mamlas", mamlaData);
       toast.success("আপলোড সফল হয়েছে");
-
+      setPhoneNumbers([]); // clear after submit
       form.reset();
     } catch (err) {
       console.error("Upload failed:", err);
@@ -233,6 +264,77 @@ export default function MamlaUploadForm() {
             className="mt-1 input-bordered w-full input"
           />
         </label>
+        {/* phone no */}
+        {/* ফোন নম্বর (বাদি) */}
+        <div className="col-span-2 mt-4">
+          <label className="block mb-1">ফোন নম্বর (বাদি):</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={badiInput}
+              onChange={(e) => setBadiInput(e.target.value)}
+              placeholder="01xxxxxxxxx"
+              className="input-bordered w-full input"
+            />
+            <button
+              type="button"
+              onClick={addBadiPhone}
+              className="bg-[#004080] text-white btn"
+            >
+              যুক্ত করুন
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {badiPhones.map((num) => (
+              <div
+                key={num}
+                className="flex items-center gap-2 px-3 py-4 text-white text-sm badge badge-success"
+              >
+                {num}
+                <button type="button" onClick={() => removePhone("badi", num)}>
+                  <X className="cursor-pointer" size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ফোন নম্বর (বিবাদি) */}
+        <div className="col-span-2 mt-4">
+          <label className="block mb-1">ফোন নম্বর (বিবাদি):</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={bibadiInput}
+              onChange={(e) => setBibadiInput(e.target.value)}
+              placeholder="01xxxxxxxxx"
+              className="input-bordered w-full input"
+            />
+            <button
+              type="button"
+              onClick={addBibadiPhone}
+              className="bg-[#004080] text-white btn"
+            >
+              যুক্ত করুন
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {bibadiPhones.map((num) => (
+              <div
+                key={num}
+                className="flex items-center gap-2 px-3 py-4 text-white text-sm badge badge-error"
+              >
+                {num}
+                <button
+                  type="button"
+                  onClick={() => removePhone("bibadi", num)}
+                >
+                  <X className="cursor-pointer" size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="mt-6 text-center">
