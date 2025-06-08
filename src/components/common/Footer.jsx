@@ -9,7 +9,7 @@ const Footer = () => {
   const { t, i18n } = useTranslation();
 
   return (
-    <footer className="flex justify-around items-center place-items-center bg-gray-200 shadow-xl mx-auto p-4 w-full text-neutral-content">
+    <footer className="z-60 flex justify-around items-center place-items-center bg-gray-200 shadow-xl mx-auto p-4 w-full text-neutral-content">
       <div className="flex flex-col gap-1">
         <h1 className="font-bold text-blue-900 text-md">গুরুত্বপূর্ণ লিংক </h1>
         <a

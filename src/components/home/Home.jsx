@@ -36,7 +36,7 @@ export default function Home() {
         params: searchParams,
       });
 
-      console.log(response.data);
+      // console.log(response.data);
 
       return response.data;
     },
@@ -78,7 +78,6 @@ export default function Home() {
         <MamlaStats />
       </div>
 
-
       {/* Calendar */}
 
       <div>
@@ -95,7 +94,7 @@ export default function Home() {
           <QuestionLottie />
         </div>
         <div className="flex-1">
-          <h2 className="mb-4 font-bold text-center text-blue-900 text-2xl md:text-3xl">
+          <h2 className="mb-4 font-bold text-blue-900 text-2xl md:text-3xl text-center">
             সচরাচর জিজ্ঞাসা (FAQ)
           </h2>
           <Questions />
@@ -115,7 +114,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="flex flex-col  justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
           <Contact />
         </div>
       </div>

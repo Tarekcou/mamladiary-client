@@ -29,14 +29,13 @@ const MainLayout = () => {
   const layoutWidth = screenWidth * (10 / 12);
   const sidebarWidth = layoutWidth * (2 / 12);
   const mainWidth = layoutWidth * (10 / 12);
-  console.log(sidebarWidth);
   return (
     <div className="flex flex-col shadow-xl mx-auto w-full md:w-10/12 min-h-screen">
       <Header />
 
-      <div className="relative flex flex-grow gap-2">
+      <div className="relative flex flex-grow">
         <div
-          className={`hidden md:block   ${
+          className={`hidden lg:block   ${
             isSticky
               ? "fixed top-16 scroll-py-10 z-40 shadow-md h-full"
               : "relative  mt-1 shadow-md"
@@ -50,12 +49,11 @@ const MainLayout = () => {
 
         {isSticky && (
           <div
-            className="hidden md:block"
-            style={
-              isSticky && window.innerWidth >= 1024
-                ? { width: `${sidebarWidth}px` }
-                : {}
-            }
+            className="hidden lg:block"
+            style={{
+              width: `${sidebarWidth}px`,
+              height: "calc(100vh - 64px)", // Adjust for header height
+            }}
           />
         )}
 

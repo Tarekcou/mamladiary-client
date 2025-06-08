@@ -62,7 +62,7 @@ const Dashboard = () => {
     axiosPublic
       .get("/allMamla")
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setLoading(false);
         setCases(res.data);
       })

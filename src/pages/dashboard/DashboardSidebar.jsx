@@ -3,8 +3,8 @@ import { Link, NavLink } from "react-router";
 
 const DashboardSidebar = () => {
   return (
-    <div className="px-2 pb-10">
-      <div className="space-y-4 w-full">
+    <div className="bg-gray-100 px-2 pb-10 h-full">
+      <div className="w-full">
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">
           <Link
@@ -38,6 +38,7 @@ const DashboardSidebar = () => {
             সকল মামলা
           </NavLink>
         </ul>
+        <div className="m-0 p-0 divider"></div>
 
         {/* ADC Mamla */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">
@@ -66,6 +67,7 @@ const DashboardSidebar = () => {
             সকল এডিসি মামলা
           </NavLink>
         </ul>
+        <div className="m-0 p-0 divider"></div>
 
         {/* Users Management */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">
@@ -84,7 +86,7 @@ const DashboardSidebar = () => {
           </NavLink>
         </ul>
         {/* Others Management */}
-        <ul className="flex flex-col space-y-1 list-disc list-inside">
+        <ul className="flex flex-col list-disc list-inside">
           {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
             অন্যান্য
           </h2> */}

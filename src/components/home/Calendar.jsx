@@ -54,7 +54,7 @@ const Calendar = () => {
         </div>
 
         <table className="table border border-blue-200 w-full">
-          <thead className="bg-[#004080]/20 text-blue-900 text-lg">
+          <thead className="text-blue-900 text-lg">
             <tr>
               <th scope="col" className="px-4 py-3 text-left">
                 দিন
@@ -62,7 +62,7 @@ const Calendar = () => {
               <th scope="col" className="px-4 py-3 text-left">
                 জেলা/উপজেলা
               </th>
-              <th className="px-4 py-2">নোট</th> {/* ✅ Add third header */}
+              <th className="px-4 py-2">নোট</th>
             </tr>
           </thead>
           <tbody className="text-gray-700">

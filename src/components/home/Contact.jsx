@@ -16,6 +16,8 @@ const Contact = () => {
 
   return (
     <motion.div
+      style={{ scrollMarginTop: "80px" }}
+      id="contacts"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -23,11 +25,11 @@ const Contact = () => {
     >
       <div className="bg-gray-100">
         {/* <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2> */}
-        <div className="flex md:flex-row flex-col gap-6  justify-around   items-center ">
+        <div className="flex md:flex-row flex-col justify-around items-center gap-6">
           {contacts.map((person, index) => (
             <motion.div
               key={index}
-              className="p-4 rounded-md border-r-2 border-l-2"
+              className="p-4 border-r-2 border-l-2 rounded-md"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}

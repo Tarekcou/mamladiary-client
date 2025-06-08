@@ -114,10 +114,11 @@ const AllMamla = () => {
             `/message`,
 
             {
-              from: "অবিক(রাজস্ব)", // max 11 characters, no spaces
-              to: "+88" + mamla.phoneNumbers?.badi?.[0],
+              // from: "অবিক(রাজস্ব)", // max 11 characters, no spaces
+              // to: "+88" + mamla.phoneNumbers?.badi?.[0],
+              to: mamla.phoneNumbers?.badi?.[0],
               //  phone: mamla.phoneNumbers?.badi?.[0] || mamla.phoneNumbers?.bibadi?.[0],
-              text: `${mamla.mamlaName} মামলার জন্য পরবর্তী তারিখ ${mamla.nextDate}।`,
+              message: `${mamla.mamlaName} মামলার জন্য পরবর্তী তারিখ ${mamla.nextDate}।`,
             }
           )
           .then((res) => {
