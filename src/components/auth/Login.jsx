@@ -26,7 +26,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex md:flex-row flex-col justify-center items-center px-4">
+    <div className="flex md:flex-row flex-col justify-center items-center mx-auto px-4">
       {/* Lottie */}
       <div className="flex-1">
         <LoginLottie />

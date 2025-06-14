@@ -23,27 +23,37 @@ const AuthProvider = ({ children }) => {
   const signIn = async (formData) => {
     setButtonSpin(true);
     setLoading(true);
+
+    // ✅ Wait for the admin check before proceeding
+    console.log(formData);
+    const isUserAdmin = await checkAdmin(formData.dnothiId);
+    console.log(isUserAdmin);
+    if (!isUserAdmin) {
+      toast.warning("অনুগ্রহপূর্বক এডমিন এর সাথে যোগাযোগ করুন");
+      setButtonSpin(false);
+      setLoading(false);
+
+      return;
+    }
+
     try {
       const res = await axiosPublic.post("/login", formData);
+
       if (res.status === 200) {
-        toast.success("লগ ইন  সফল হয়েছে!");
+        toast.success("লগ ইন সফল হয়েছে!");
         setIsSignedIn(true);
         setUser(res.data.user);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        setButtonSpin(false);
 
-        const isUserAdmin = await checkAdmin(res.data.user.email);
-        if (isUserAdmin) {
-          navigation("/dashboard");
-        } else {
-          navigation("/"); // or another page for regular users
-        }
+        // ✅ Admin already checked, so no need to check again here
+        navigation("/dashboard");
 
         setLoading(false);
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.warning("লগ ইন ব্যার্থ হয়েছে!");
+      toast.warning("লগ ইন ব্যর্থ হয়েছে!");
+    } finally {
       setButtonSpin(false);
       setLoading(false);
     }
@@ -101,7 +111,7 @@ const AuthProvider = ({ children }) => {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       setIsSignedIn(true);
-      checkAdmin(parsedUser.email);
+      checkAdmin(parsedUser.dnothiId);
       setLoading(false);
     } else {
       setLoading(false);
@@ -109,10 +119,12 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const checkAdmin = async (email) => {
+  const checkAdmin = async (dnothiId) => {
+    console.log("Checking admin status for DNothi ID:", dnothiId);
     try {
-      const res = await axiosPublic.get(`/users/${email}`);
-      if (res.data?.role === "Admin") {
+      const res = await axiosPublic.get(`/users/${dnothiId}`);
+      console.log("Admin check response:", res.data);
+      if (res.data?.isAdmin) {
         setAdmin(true);
         localStorage.setItem("isAdmin", true);
         return true;

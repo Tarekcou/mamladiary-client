@@ -66,7 +66,9 @@ const MainLayout = () => {
       </div>
       {/* Contact/OPinion Form */}
 
-      <Footer />
+      <div className="z-60">
+        <Footer />
+      </div>
     </div>
   );
 };

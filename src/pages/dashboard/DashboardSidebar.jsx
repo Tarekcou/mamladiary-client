@@ -20,8 +20,8 @@ const DashboardSidebar = () => {
             to="/dashboard/mamlaUpload"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm  btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             মামলা আপলোড
@@ -31,8 +31,8 @@ const DashboardSidebar = () => {
             to="/dashboard/allMamla"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn-outline btn-sm btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             সকল মামলা
@@ -49,8 +49,8 @@ const DashboardSidebar = () => {
             to="/dashboard/adcMamlaUpload"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             এডিসি মামলা আপলোড
@@ -60,8 +60,8 @@ const DashboardSidebar = () => {
             to="/dashboard/allAdcMamla"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn-outline btn btn-sm btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             সকল এডিসি মামলা
@@ -69,33 +69,29 @@ const DashboardSidebar = () => {
         </ul>
         <div className="m-0 p-0 divider"></div>
 
-        {/* Users Management */}
-        <ul className="flex flex-col space-y-1 list-disc list-inside">
+        {/* Others Management */}
+        <ul className="flex flex-col gap-1 list-disc list-inside">
           {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
-            ব্যবহারকারী
+            অন্যান্য
           </h2> */}
+          {/* Users Management */}
+
           <NavLink
             to="/dashboard/allUsers"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             সকল ব্যবহারকারী
           </NavLink>
-        </ul>
-        {/* Others Management */}
-        <ul className="flex flex-col list-disc list-inside">
-          {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
-            অন্যান্য
-          </h2> */}
           <NavLink
             to="/dashboard/causeList"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             কেস ডায়েরী
@@ -104,8 +100,8 @@ const DashboardSidebar = () => {
             to="/dashboard/complain"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             অভিযোগ
@@ -114,8 +110,8 @@ const DashboardSidebar = () => {
             to="/dashboard/feedback"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             মতামত
@@ -124,8 +120,8 @@ const DashboardSidebar = () => {
             to="/dashboard/monthlyReport"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 btn btn-sm btn-outline btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-sm border-gray-300"
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
             মাসিক রিপোর্ট

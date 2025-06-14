@@ -20,7 +20,7 @@ export default function SidebarLeft() {
   const location = useLocation();
   const currentHash = location.hash;
   const sectionIds = ["calendar", "rules", "complain", "opinion", "contacts"];
-  const activeId = useScrollSpy(sectionIds, 100); // 100px top offset
+  const activeId = useScrollSpy(sectionIds, 30); // 100px top offset
 
   return (
     <motion.div
@@ -84,19 +84,20 @@ export default function SidebarLeft() {
                   {t("court calendar")}
                 </div>
               </NavLink>
-
               <NavLink
                 to={"/#rules"}
-                className={`btn btn-sm w-full menu-link -scroll-mt-[10px] ${
+                className={`btn btn-sm w-full menu-link scroll-mt-[40px]  ${
                   activeId === "rules"
                     ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                     : "text-gray-700 border-gray-300"
                 }`}
               >
                 <div className="flex items-center gap-2 w-full h-full">
-                  <BsFileEarmarkRuled />
+                  <div className="flex items-center gap-2 w-full h-full">
+                    <BsFileEarmarkRuled />
 
-                  {t("court rules")}
+                    {t("court rules")}
+                  </div>
                 </div>
               </NavLink>
             </div>
@@ -115,7 +116,7 @@ export default function SidebarLeft() {
           <ul className="space-y-1 p-2 w-full">
             <NavLink
               to={"/#complain"}
-              className={`btn btn-sm w-full   menu-link scroll-mt-[100px] ${
+              className={`btn btn-sm w-full   menu-link scroll-mt-[10px] ${
                 activeId === "complain"
                   ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                   : "text-gray-700 border-gray-300"
@@ -130,7 +131,7 @@ export default function SidebarLeft() {
 
             <NavLink
               to="/#opinion"
-              className={`btn btn-sm w-full menu-link scroll-mt-[100px] ${
+              className={`btn btn-sm w-full menu-link scroll-mt-[10px] ${
                 activeId === "opinion"
                   ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                   : "text-gray-700 border-gray-300"

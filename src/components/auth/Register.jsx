@@ -15,6 +15,7 @@ export default function Register() {
     password: "",
     section: "",
     designation: "",
+    phone: "",
   });
 
   const handleChange = (e) => {
@@ -56,24 +57,12 @@ export default function Register() {
             required
             className="px-4 py-2 border rounded-lg w-full"
           />
-
           <input
-            type="text"
-            name="dnothiId"
-            placeholder="ডি নথি আইডি"
-            value={formData.dnothiId}
+            type="number"
+            name="phone"
+            placeholder="মোবাইল নম্বর"
+            value={formData.phone}
             onChange={handleChange}
-            required
-            className="px-4 py-2 border rounded-lg w-full"
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="পাসওয়ার্ড"
-            value={formData.password}
-            onChange={handleChange}
-            required
             className="px-4 py-2 border rounded-lg w-full"
           />
 
@@ -95,6 +84,26 @@ export default function Register() {
             className="px-4 py-2 border rounded-lg w-full"
           />
 
+          <input
+            type="text"
+            name="dnothiId"
+            placeholder="ডি নথি আইডি"
+            value={formData.dnothiId}
+            onChange={handleChange}
+            required
+            className="px-4 py-2 border rounded-lg w-full"
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="পাসওয়ার্ড"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="px-4 py-2 border rounded-lg w-full"
+          />
+
           <button
             type="submit"
             className="bg-[#004080] rounded-lg w-full text-white btn btn-primary btn-square"
@@ -106,10 +115,7 @@ export default function Register() {
 
         <div className="mt-4 text-sm text-center">
           Already have an account?
-          <Link
-            to="/login"
-            className="ml-2 hover:underline btn text -[#004080]"
-          >
+          <Link to="/login" className="ml-2 text-[#004080] hover:underline btn">
             Sign In
           </Link>
         </div>

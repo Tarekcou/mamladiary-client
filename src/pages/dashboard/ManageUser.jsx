@@ -8,7 +8,9 @@ import {
 import axiosPublic from "../../axios/axiosPublic";
 import Swal from "sweetalert2";
 import { MdDelete } from "react-icons/md";
+import { AuthContext } from "../../provider/AuthProvider";
 const ManageUser = () => {
+  const { signOut } = useContext(AuthContext);
   const {
     refetch,
     isPending,
@@ -61,13 +63,48 @@ const ManageUser = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await axiosPublic.patch(`/users/role/${user._id}`, {
-          role,
+          isAdmin: role === "Admin",
         });
         // console.log(res.data);
         if (res.data.modifiedCount > 0) {
           Swal.fire({
             title: `Want to make him ${role}!`,
             text: `${user.name}  is now ${role}`,
+            icon: "success",
+          });
+          if (role !== "Admin") {
+            signOut(); // Sign out if the user is demoted to User
+          }
+          refetch();
+        }
+      }
+    });
+  };
+  const handlePublishUser = (user) => {
+    Swal.fire({
+      title: `Are you sure you want to ${
+        user.isPublished ? "UnPublish" : "publish"
+      }  ${user.name} profile?`,
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, ${
+        user.isPublished ? "UnPublish" : "publish"
+      } it!`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await axiosPublic.patch(`/publishUsers/${user._id}`, {
+          isPublished: !user.isPublished,
+        });
+        // console.log(res.data);
+        if (res.data.modifiedCount > 0) {
+          Swal.fire({
+            title: `${user.isPublished ? "UnPublish" : "publish"}`,
+            text: `${user.name} has been ${
+              user.isPublished ? "UnPublished" : "publish"
+            }`,
             icon: "success",
           });
           refetch();
@@ -77,7 +114,7 @@ const ManageUser = () => {
   };
 
   return (
-    <div className="p-2 w-full">
+    <div className="p-6 w-full">
       <h1 className="font-bold text-2xl">সকল ব্যবহারকারী </h1>
 
       <div className="w-full overflow-x-auto">
@@ -119,7 +156,7 @@ const ManageUser = () => {
                     <div className="font-bold text-green-600">
                       <select
                         id="role"
-                        value={user?.role}
+                        value={user?.isAdmin ? "Admin" : "User"}
                         onChange={(e) => handleMakeAdmin(user, e.target.value)}
                         className="w-full select-bordered select"
                       >
@@ -134,6 +171,12 @@ const ManageUser = () => {
                   <td className="w-1/7">
                     <button onClick={() => handleUserDelete(user._id)}>
                       <MdDelete className="text-red-500 text-2xl cursor-pointer" />
+                    </button>
+                    <button
+                      className="bg-green-600 ml-2 text-white btn btn-sm"
+                      onClick={() => handlePublishUser(user)}
+                    >
+                      {user?.isPublished ? "UnPublish" : "Publish"}
                     </button>
                   </td>
                 </tr>
