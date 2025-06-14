@@ -93,7 +93,7 @@ const mamlaStatus = [
   "রিমান্ডে প্রেরণ",
   "আংশিক মঞ্জুর",
 ];
-const MamlaEditForm = ({ editedMamla: mamla }) => {
+const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
   const [formData, setFormData] = useState({
     mamlaName: "",
     mamlaNo: "",
@@ -169,6 +169,7 @@ const MamlaEditForm = ({ editedMamla: mamla }) => {
         completionDate: "",
         phoneNumbers: "",
       });
+      closeModal?.(); // ✅ Close modal if function is passed
     },
     onError: (error) => {
       console.error("Update failed:", error);

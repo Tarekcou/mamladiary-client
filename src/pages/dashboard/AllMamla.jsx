@@ -97,46 +97,88 @@ const AllMamla = () => {
   };
 
   const handleMessage = (mamla) => {
-    const phoneNo = "+88" + mamla.phoneNumbers?.badi?.[0];
-    console.log(phoneNo);
+    const message = `অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব), চট্টগ্রাম আদালতে চলমান ${mamla.mamlaName} (${mamla.mamlaNo} নং) মামলার পরবর্তী কার্যক্রম ${mamla.nextDate} তারিখে অনুষ্ঠিত হবে।`;
+
     Swal.fire({
-      title: "আপনি মেসেজ প্রেরন করতে চান?",
-      text: `আপনার প্রেরিত মেসেজঃ ${mamla.mamlaName} মামলার জন্য পরবর্তী তারিখ ${mamla.nextDate}।`,
+      title: "আপনি মেসেজ প্রেরণ করতে চান?",
+      html: `
+  <div style="text-align: left;">
+    <b>প্রেরিত মেসেজঃ</b>
+    <textarea id="editable-message"
+      style="
+        display: block;
+        margin-top: 8px;
+        padding: 8px;
+        width: 100%;
+        font-size: 14px;
+        line-height: 1.4;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        min-height: 120px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+      "
+    >${message}</textarea>
+  </div>
+`,
+
+      showCloseButton: true,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "হ্যাঁ প্রেরণ করুন !",
+      confirmButtonText: "হ্যাঁ, প্রেরণ করুন!",
+      preConfirm: () => {
+        const editedMessage = document.getElementById("editable-message").value;
+        if (!editedMessage) {
+          Swal.showValidationMessage("মেসেজ ফাঁকা রাখা যাবে না!");
+          return false;
+        }
+        return editedMessage;
+      },
     }).then((result) => {
-      if (result.isConfirmed) {
-        axiosPublic
-          .post(
-            `/message`,
+      if (result.isConfirmed && result.value) {
+        const editedMessage = result.value;
 
-            {
-              // from: "অবিক(রাজস্ব)", // max 11 characters, no spaces
-              // to: "+88" + mamla.phoneNumbers?.badi?.[0],
-              to: "88" + mamla.phoneNumbers?.badi?.[0],
-              //  phone: mamla.phoneNumbers?.badi?.[0] || mamla.phoneNumbers?.bibadi?.[0],
-              message: `${mamla.mamlaName} মামলার জন্য পরবর্তী তারিখ ${mamla.nextDate}।`,
-            }
-          )
+        axiosPublic
+          .post("/message", {
+            to: [
+              ...(mamla.phoneNumbers?.badi || []),
+              ...(mamla.phoneNumbers?.bibadi || []),
+            ]
+              .map((num) => "88" + num)
+              .filter(Boolean)
+              .join(","),
+            message: editedMessage,
+          })
           .then((res) => {
-            console.log(res);
-            if (res.data.success) {
+            if (res.data.result?.response_code == 202) {
               Swal.fire({
                 title: "সফলতা!",
                 text: "আপনার মেসেজ সফলভাবে প্রেরণ করা হয়েছে।",
                 icon: "success",
               });
               refetch();
+            } else if (res.data.response_code == 107) {
+              Swal.fire({
+                title: "সতর্কতা!",
+                text: "আপনার পর্যাপ্ত ব্যালেন্স নেই।",
+                icon: "warning",
+              });
+            } else {
+              Swal.fire({
+                title: "ত্রুটি!",
+                text: "মেসেজ প্রেরণে সমস্যা হয়েছে।",
+                icon: "error",
+              });
             }
           });
       }
     });
   };
 
-  if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
+  if (isLoading) return <p className="mt-10 text-center">লোডিং...</p>;
 
   return (
     <div className="p-4 overflow-x-auto">
@@ -341,7 +383,10 @@ const AllMamla = () => {
               ✕
             </button>
           </form>
-          <MamlaEditForm editedMamla={editedMamla} />
+          <MamlaEditForm
+            editedMamla={editedMamla}
+            closeModal={() => document.getElementById("my_modal_3")?.close()}
+          />
         </div>
       </dialog>
     </div>

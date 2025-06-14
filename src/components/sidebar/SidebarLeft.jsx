@@ -45,8 +45,8 @@ export default function SidebarLeft() {
               to="/history"
               className={({ isActive }) =>
                 isActive
-                  ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-bold text-start"
-                  : "text-gray-700 btn btn-sm w-full border-gray-300 font-bold text-start"
+                  ? "text-blue-800 btn-outline border-2 btn btn-md lg:btn-sm w-full  btn-outline-offset-4 font-bold text-start"
+                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300 font-bold text-start"
               }
             >
               <div className="flex items-center gap-2 w-full h-full">
@@ -60,8 +60,8 @@ export default function SidebarLeft() {
               href="#"
               className={({ isActive }) =>
                 isActive
-                  ? "text-blue-800 btn-outline btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-sm w-full border-gray-300"
+                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
               }
             >
               <div className="flex items-center gap-2 w-full h-full">
@@ -72,9 +72,9 @@ export default function SidebarLeft() {
             <div className="hidden md:block space-y-1">
               <NavLink
                 to={"/#calendar"}
-                className={`btn btn-sm w-full menu-link scroll-mt-[100px]  ${
+                className={`btn btn-sm w-full menu-link scroll-mt-[40px]  ${
                   activeId === "calendar"
-                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                     : "text-gray-700 border-gray-300"
                 }`}
               >
@@ -87,9 +87,9 @@ export default function SidebarLeft() {
 
               <NavLink
                 to={"/#rules"}
-                className={`btn btn-sm w-full menu-link scroll-mt-[100px] ${
+                className={`btn btn-sm w-full menu-link -scroll-mt-[10px] ${
                   activeId === "rules"
-                    ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                    ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                     : "text-gray-700 border-gray-300"
                 }`}
               >
@@ -117,7 +117,7 @@ export default function SidebarLeft() {
               to={"/#complain"}
               className={`btn btn-sm w-full   menu-link scroll-mt-[100px] ${
                 activeId === "complain"
-                  ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                  ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                   : "text-gray-700 border-gray-300"
               }`}
             >
@@ -132,7 +132,7 @@ export default function SidebarLeft() {
               to="/#opinion"
               className={`btn btn-sm w-full menu-link scroll-mt-[100px] ${
                 activeId === "opinion"
-                  ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                  ? "text-blue-800 btn-outline border-2 btn-outline-offset-4 font-semibold"
                   : "text-gray-700 border-gray-300"
               }`}
             >
@@ -162,7 +162,7 @@ export default function SidebarLeft() {
               to="/#contacts"
               className={`btn btn-sm w-full menu-link scroll-mt-[100px] ${
                 activeId === "contacts"
-                  ? "text-blue-800 btn-outline btn-outline-offset-4 font-semibold"
+                  ? "text-blue-800 btn-outline btn-outline-offset-4 border-2 font-semibold"
                   : "text-gray-700 border-gray-300"
               }`}
             >

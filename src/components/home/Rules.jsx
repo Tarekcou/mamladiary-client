@@ -37,7 +37,7 @@ const Rules = () => {
   return (
     <motion.div
       id="rules"
-      style={{ scrollMarginTop: "80px" }}
+      style={{ scrollMarginTop: "100px" }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}

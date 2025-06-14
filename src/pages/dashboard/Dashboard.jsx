@@ -117,11 +117,11 @@ const Dashboard = () => {
       </p>
     );
   return (
-    <div className="px-4 max-w-[100vw] overflow-x-hidden text-center">
+    <div className="mb-10 px-4 max-w-[100vw] overflow-x-hidden text-center">
       <h1 className="p-10 font-bold text-2xl">ড্যাশবোর্ডে আপনাকে স্বাগতম</h1>
 
       {/* District-wise Chart */}
-      <div className="bg-white shadow-md mb-6 p-4 rounded">
+      <div className="bg-gray-50 shadow-md mb-6 p-4 rounded">
         <h2 className="mb-4 font-semibold text-xl">জেলা ভিত্তিক মামলার তথ্য</h2>
         <div style={{ overflowX: "auto" }}>
           <div
@@ -155,7 +155,7 @@ const Dashboard = () => {
       </div>
 
       {/* Monthly Chart */}
-      <div className="bg-white shadow p-4 rounded-md">
+      <div className="bg-gray-50 shadow p-4 rounded-md">
         <h2 className="mb-3 font-semibold text-lg">
           মাস ভিত্তিক মামলার নিষ্পত্তির সংখ্যা
         </h2>
