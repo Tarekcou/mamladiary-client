@@ -3,18 +3,18 @@ import axiosPublic from "../../axios/axiosPublic";
 import { useEffect, useState } from "react";
 
 const Contact = () => {
-  // const contacts = [
-  //   {
-  //     name: "সাখাওয়াত হোসেন",
-  //     title: "অফিস সহকারী কাম-কম্পিউটার মুদ্রাক্ষরিক (বেঞ্চ সহকারী)",
-  //     phone: "০১৭১৪৮৫৪৬৩৪",
-  //   },
-  //   {
-  //     name: "মোঃ সাঈদুল হক নোমান",
-  //     title: "অফিস সহকারী কাম-কম্পিউটার মুদ্রাক্ষরিক (বেঞ্চ সহকারী)",
-  //     phone: "০১৮৬০৭৩১৫৩",
-  //   },
-  // ];
+  const contactsDemo = [
+    {
+      name: "সাখাওয়াত হোসেন",
+      title: "অফিস সহকারী কাম-কম্পিউটার মুদ্রাক্ষরিক (বেঞ্চ সহকারী)",
+      phone: "০১৭১৪৮৫৪৬৩৪",
+    },
+    {
+      name: "মোঃ সাঈদুল হক নোমান",
+      title: "অফিস সহকারী কাম-কম্পিউটার মুদ্রাক্ষরিক (বেঞ্চ সহকারী)",
+      phone: "০১৮৬০৭৩১৫৩",
+    },
+  ];
   const [contacts, setContacts] = useState([]);
   useEffect(() => {
     axiosPublic
@@ -55,7 +55,7 @@ const Contact = () => {
     >
       <div className="bg-gray-100">
         {/* <h2 className="mb-4 font-semibold text-gray-800 text-xl">যোগাযোগ</h2> */}
-        <div className="flex md:flex-row flex-col justify-around items-center gap-6">
+        <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
           {contacts.map((person, index) => (
             <motion.div
               key={index}
