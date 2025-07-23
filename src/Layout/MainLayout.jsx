@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Header from "../components/common/Header";
 import SidebarLeft from "../components/sidebar/SidebarLeft";
 import Footer from "../components/common/Footer";
 import { Outlet, useLocation } from "react-router";
-import DashboardSidebar from "../pages/dashboard/DashboardSidebar";
 import bgimage from "../assets/bg-image.jpg";
 import Opinion from "../components/home/Opinion";
+import Navbar from "../components/common/Navbar";
+import Hero from "../components/common/Hero";
 
 const MainLayout = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -31,7 +31,9 @@ const MainLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
   return (
     <div className="flex flex-col shadow-xl mx-auto w-full md:w-10/12 min-h-screen">
-      <Header />
+      
+      <Hero />
+      <Navbar />
 
       <div className="relative flex flex-grow">
         <div
@@ -44,7 +46,9 @@ const MainLayout = () => {
             width: `${sidebarWidth}px`,
           }}
         >
-          {path.includes("dashboard") ? <DashboardSidebar /> : <SidebarLeft />}
+          <SidebarLeft />
+
+          {/* {path.includes("dashboard") ? <DashboardSidebar /> : <SidebarLeft />} */}
         </div>
 
         {isSticky && (

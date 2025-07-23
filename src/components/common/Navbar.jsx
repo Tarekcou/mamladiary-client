@@ -1,25 +1,36 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import banner from "../../assets/banner.jpg";
 import menuImage from "../../assets/menuImage.jpg";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../../provider/AuthProvider";
 import SidebarLeft from "../sidebar/SidebarLeft";
-import DashboardSidebar from "../../pages/dashboard/DashboardSidebar";
+import DashboardSidebar from "../../pages/DivCom/SidebarDivCom";
 import bgimage from "../../assets/bg-image.jpg";
 import { FaHome } from "react-icons/fa";
-import Carousel from "./Carousel";
+import Carousel from "./Hero";
 import { MdDashboard } from "react-icons/md";
 import { RiBookletLine } from "react-icons/ri";
 
-export default function Header() {
+export default function Navbar() {
   const { t, i18n } = useTranslation();
   const [isSticky, setIsSticky] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
   const navRef = useRef(null);
   const navigate = useNavigate();
-  const { signIn, resigter, isSignedIn, signOut, isAdmin } =
-    useContext(AuthContext);
+   const { officeType } = useParams();
+
+  const {
+  isSignedIn,
+  signOut,
+  isDivComLogin,
+  isAcLandLogin,
+  isAdcLogin,
+  user,
+  isNagorikLogin,
+} = useContext(AuthContext);
+
+    // console.log(isAcLandLogin,isAdcLogin,isNagorikLogin)
 
   const location = useLocation();
   const path = location.pathname;
@@ -50,8 +61,21 @@ export default function Header() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const handleSignIn = () => {};
+  const handleSignIn = () => {
+  document.getElementById('my_modal_2').showModal();
+};
 
+//login 
+const handleOfficeLogin = (officeType) => {
+  // Optional: save officeType to context or localStorage if needed
+  // console.log("Selected office:", officeType);
+  document.getElementById('my_modal_2').close();
+ navigate(`/login/${officeType}`);
+}
+ 
+
+
+//log out
   const handleLogout = () => {
     signOut();
     navigate("/");
@@ -72,7 +96,7 @@ export default function Header() {
             <p>{t("home")}</p>
           </div>
         </NavLink>
-
+          {path.includes("dashboard")?"":
         <NavLink
           to="/causelist"
           className={({ isActive }) =>
@@ -87,23 +111,24 @@ export default function Header() {
             <p>{t("cause list")}</p>
           </div>
         </NavLink>
+        }
 
-        {isAdmin && (
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive
-                ? "btn-neutral btn lg:btn-sm  underline-offset-4 font-semibold bg-[#004080]"
-                : " btn lg:btn-sm border-gray-300"
-            }
-          >
-            <div className="flex justify-center items-center gap-2">
-              <MdDashboard />
+       {(isDivComLogin || isAdcLogin || isAcLandLogin) && (
+  <NavLink
+    to="/dashboard"
+    className={({ isActive }) =>
+      isActive
+        ? "btn-neutral btn lg:btn-sm underline-offset-4 font-semibold bg-[#004080] text-white"
+        : "btn lg:btn-sm border border-gray-300"
+    }
+  >
+    <div className="flex justify-center items-center gap-2">
+      <MdDashboard />
+      <p>{t("dashboard")}</p>
+    </div>
+  </NavLink>
+)}
 
-              <p>{t("dashboard")}</p>
-            </div>
-          </NavLink>
-        )}
       </div>
     </>
   );
@@ -111,28 +136,87 @@ export default function Header() {
     <>
       <div className="space-x-2">
         {isSignedIn ? (
+          <div className="flex justify-center items-center gap-3">
+          <h1>{user?.office}</h1>
+   
           <button
             onClick={handleLogout}
             className={"btn btn-sm border-gray-300 text-red-600"}
           >
             {t("sign out")}
           </button>
+                 </div>
         ) : (
-          <NavLink
-            to={"/login"}
-            onClick={handleSignIn}
+          <>
+           <NavLink
+            to={"/login/nagorik"}
+              isActive={() => location.pathname === "/login/nagorik"}
+
+            
+           onClick={() => handleOfficeLogin("nagorik")}
             className={({ isActive }) =>
               isActive
-                ? "text-white btn-neutral btn btn-sm  underline-offset-4 font-semibold"
-                : "btn btn-sm border-gray-300"
+                ? " btn btn-sm  underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
+                : "btn btn-sm  underline-offset-4 font-semibold btn-outline "
             }
           >
-            {t("sign in")}
+            নাগরিক লগিন
           </NavLink>
+          <NavLink
+          to={`/login/${officeType}`}
+      onClick={handleSignIn}
+     isActive={() =>
+    location.pathname !== "/login/nagorik" &&
+    location.pathname.startsWith("/login")
+  }
+        className={({ isActive }) =>
+              isActive
+                ? " btn btn-sm  underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
+                : "btn btn-sm  underline-offset-4 font-semibold btn-outline "
+            }         >
+      দাপ্তরিক লগিন
+        </NavLink>
+
+          <NavLink
+            to={"/register"}
+            // onClick={handleSignIn}
+            className={({ isActive }) =>
+               isActive
+                ? " btn btn-sm  underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
+                : "btn btn-sm  underline-offset-4 font-semibold btn-outline "
+            }
+          >
+            রেজিস্টার
+          </NavLink>
+
+            <dialog id="my_modal_2" className="modal">
+  <div className="modal-box flex flex-col gap-2 w-full">
+    <h3 className="text-lg font-bold mb-2">অফিস নির্বাচন করুন</h3>
+    <button className="btn btn-outline" onClick={() => handleOfficeLogin("DivCom")}>
+      বিভাগীয় কমিশনার অফিস
+    </button>
+    <button className="btn btn-outline" onClick={() => handleOfficeLogin("DC")}>
+      জেলা প্রশাসকের কার্যালয়
+    </button>
+    <button className="btn btn-outline" onClick={() => handleOfficeLogin("Acland")}>
+      ভূমি অফিস
+    </button>
+  </div>
+  <form method="dialog" className="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+
+          
+          </>
+         
+         
+        
         )}
-        <button onClick={toggleLanguage} className="btn btn-sm">
+        {/* <button onClick={toggleLanguage} className="btn btn-sm">
           {i18n.language === "en" ? "English" : "বাংলা"}
-        </button>
+        </button> */}
       </div>
     </>
   );
@@ -141,7 +225,7 @@ export default function Header() {
   return (
     <header className="z-50 relative shadow-sm w-full">
       {/* Carousel replacing the static banner */}
-      <Carousel />
+      {/* <Carousel /> */}
 
       {/* Dynamic Spacer */}
       {isSticky && (

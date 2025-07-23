@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import axiosPublic from "../../axios/axiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import AdcMamlaEditForm from "./AdcMamlaEditForm";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
+import axiosPublic from "../../../axios/axiosPublic";
 
 const AdcMamla = () => {
   // const [adcMamlaList, setAdcMamlaList] = useState([]);

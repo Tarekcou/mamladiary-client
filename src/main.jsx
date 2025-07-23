@@ -6,25 +6,20 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 import MainLayout from "./Layout/MainLayout.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import AuthProvider from "./provider/AuthProvider.jsx";
 import PrivateRouter from "./routes.jsx/PrivateRouter.jsx";
 
-import MamlaUploadForm from "./pages/dashboard/MamlaUploadForm.jsx";
-import AllMamla from "./pages/dashboard/AllMamla.jsx";
-import AdcMamlaUploadForm from "./pages/dashboard/AdcMamlaUploadForm.jsx";
-import ManageUser from "./pages/dashboard/ManageUser.jsx";
+import MamlaUploadForm from "./pages/DivCom/mamlas/MamlaUploadForm.jsx";
 import { Toaster, toast } from "sonner";
-import AdcMamla from "./pages/dashboard/AdcMamla.jsx";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
-import ComplainDetails from "./pages/dashboard/ComplainDetails.jsx";
-import FeedbackDetails from "./pages/dashboard/FeedbackDetails.jsx";
+import ComplainDetails from "./pages/DivCom/ComplainDetails.jsx";
+import FeedbackDetails from "./pages/DivCom/FeedbackDetails.jsx";
 import CitizenCharter from "./components/sidebar/CitizenCharter.jsx";
 import History from "./components/sidebar/History.jsx";
 import Gallery from "./components/sidebar/Gallery.jsx";
-import CauseListDashboard from "./pages/dashboard/CauseListDashboard.jsx";
-import MonthlyReport from "./pages/dashboard/MonthlyReport/MonthlyReport.jsx";
+import CauseListDashboard from "./pages/DivCom/CauseListDashboard.jsx";
+import MonthlyReport from "./pages/DivCom/MonthlyReport/MonthlyReport.jsx";
 import CauseList from "./components/home/CauseList.jsx";
 import Home from "./components/home/Home.jsx";
 import Complain from "./components/home/Complain.jsx";
@@ -32,117 +27,81 @@ import Opinion from "./components/home/Opinion.jsx";
 import { Contact } from "lucide-react";
 import Calendar from "./components/home/Calendar.jsx";
 import Rules from "./components/home/Rules.jsx";
+import ManageDivComUser from "./pages/DivCom/users/ManageDivComUser.jsx";
+import ManageAdcUser from "./pages/DivCom/users/ManageAdcUser.jsx";
+import ManageACLandUser from "./pages/DivCom/users/ManageACLandUser.jsx";
+import NagorikDashboard from "./pages/Nagorik/NagorikDashboard.jsx";
+import AcLandDashboard from "./pages/AcLand/AcLandDashboard.jsx";
+import DashboardLayout from "./Layout/DashboardLayout.jsx";
+import AdcDashboard from "./pages/Adc/AdcDashboard.jsx";
+import DivComDashboard from "./pages/DivCom/DivComDashboard.jsx";
+import NewOrderAcLand from "./pages/AcLand/NewOrder.jsx";
+import AddUsers from "./pages/DivCom/users/AddUsers.jsx";
+import AllMamla from "./pages/DivCom/mamlas/AllMamla.jsx";
+import AdcMamlaUploadForm from "./pages/DivCom/mamlas/AdcMamlaUploadForm.jsx";
+import AdcMamla from "./pages/DivCom/mamlas/AdcMamla.jsx";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
-ReactDOM.createRoot(root).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
-      <AuthProvider>
+      {/* Router context is available here */}
+      <AuthProvider> {/* ✅ This now has Router context */}
         <Routes>
+          {/* MAIN LAYOUT ROUTES */}
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/causelist" element={<CauseList />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login/:officeType" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/citizenCharter" element={<CitizenCharter />} />
+            <Route path="/rules" element={<Rules />} />
+            <Route path="/complain" element={<Complain />} />
+            <Route path="/opinion" element={<Opinion />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/contacts" element={<Contact />} />
+          </Route>
 
-            {/* dashboard */}
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRouter>
-                  <Dashboard />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/mamlaUpload"
-              element={
-                <PrivateRouter>
-                  <MamlaUploadForm />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/allMamla"
-              element={
-                <PrivateRouter>
-                  <AllMamla />
-                </PrivateRouter>
-              }
-            ></Route>
+          {/* DASHBOARD ROUTES */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRouter>
+                <DashboardLayout />
+              </PrivateRouter>
+            }
+          >
+            <Route path="divCom" element={<DivComDashboard />} />
+              <Route path="mamlaUpload" element={<MamlaUploadForm />} />
+              <Route path="allMamla" element={<AllMamla />} />
+              <Route path="allAdcMamla" element={<AdcMamla />} />
+              <Route path="adcMamlaUpload" element={<AdcMamlaUploadForm />} />
+              <Route path="addUsers" element={<AddUsers />} />
+              <Route path="divComUsers" element={<ManageDivComUser />} />
+              <Route path="adcUsers" element={<ManageAdcUser />} />
+              <Route path="acLandUsers" element={<ManageACLandUser />} />
+              <Route path="causeList" element={<CauseListDashboard />} />
+              <Route path="complain" element={<ComplainDetails />} />
+              <Route path="feedback" element={<FeedbackDetails />} />
+              <Route path="monthlyReport" element={<MonthlyReport />} />
+     
 
-            <Route
-              path="/dashboard/allAdcMamla"
-              element={
-                <PrivateRouter>
-                  <AdcMamla />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/adcMamlaUpload"
-              element={
-                <PrivateRouter>
-                  <AdcMamlaUploadForm />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/allUsers"
-              element={
-                <PrivateRouter>
-                  <ManageUser />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/causeList"
-              element={
-                <PrivateRouter>
-                  <CauseListDashboard />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/complain"
-              element={
-                <PrivateRouter>
-                  <ComplainDetails />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/feedback"
-              element={
-                <PrivateRouter>
-                  <FeedbackDetails />
-                </PrivateRouter>
-              }
-            ></Route>
-            <Route
-              path="/dashboard/monthlyReport"
-              element={
-                <PrivateRouter>
-                  <MonthlyReport />
-                </PrivateRouter>
-              }
-            ></Route>
-
-            {/* SIdebar  */}
-
-            <Route path="/history" element={<History />}></Route>
-            <Route path="/calendar" element={<Calendar />}></Route>
-            <Route path="/citizenCharter" element={<CitizenCharter />}></Route>
-            <Route path="/rules" element={<Rules />}></Route>
-            <Route path="/complain" element={<Complain />}></Route>
-            <Route path="/opinion" element={<Opinion />}></Route>
-            <Route path="/gallery" element={<Gallery />}></Route>
-            <Route path="/contacts" element={<Contact />}></Route>
+            {/* OTHER DASHBOARD ROLES */}
+            <Route path="nagorik" element={<NagorikDashboard />} />
+            <Route path="dcOffice" element={<AdcDashboard />} />
+            <Route path="Acland" element={<AcLandDashboard />} />
+            <Route path="Acland/newOrder" element={<NewOrderAcLand />} />
           </Route>
         </Routes>
+        <Toaster richColors position="top-right" />
       </AuthProvider>
     </BrowserRouter>
-    <Toaster richColors position="top-right" />
   </QueryClientProvider>
 );
+
+
+
+

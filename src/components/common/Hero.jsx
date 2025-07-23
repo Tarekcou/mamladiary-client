@@ -29,7 +29,7 @@ const bannerSlides = [
   },
 ];
 
-const Carousel = () => {
+const Hero = () => {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -108,4 +108,4 @@ const Carousel = () => {
   );
 };
 
-export default Carousel;
+export default Hero;

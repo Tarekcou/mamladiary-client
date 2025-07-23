@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axiosPublic from "../../axios/axiosPublic";
+import axiosPublic from "../../../axios/axiosPublic";
 import { toast } from "sonner";
 import { X } from "lucide-react"; // For close icon, optional
 const mamlaNames = [
@@ -86,18 +86,18 @@ export default function MamlaUploadForm() {
   const [badiPhones, setBadiPhones] = useState([]);
   const [bibadiPhones, setBibadiPhones] = useState([]);
 
-  const toBanglaNumber = (number) => {
-    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-    return number
-      .toString()
-      .split("")
-      .map((d) => banglaDigits[d])
-      .join("");
-  };
-  const localDate = new Date();
-  const today = `${localDate.getFullYear()}-${String(
-    localDate.getMonth() + 1
-  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+    const toBanglaNumber = (number) => {
+      const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+      return number
+        .toString()
+        .split("")
+        .map((d) => banglaDigits[d])
+        .join("");
+    };
+    const localDate = new Date();
+    const today = `${localDate.getFullYear()}-${String(
+      localDate.getMonth() + 1
+    ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
 
   // Phone no
   const addBadiPhone = () => {

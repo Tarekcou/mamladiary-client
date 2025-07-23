@@ -1,14 +1,16 @@
 import React from "react";
 import { Link, NavLink } from "react-router";
 
-const DashboardSidebar = () => {
+const SidebarDivCom = () => {
+    const storedType = localStorage.getItem("userType");
+
   return (
     <div className="bg-gray-100 px-2 pb-10 h-full">
       <div className="w-full">
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">
           <Link
-            to={"/dashboard"}
+            to={`/dashboard/${storedType}`}
             className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
           >
             ড্যাশবোর্ড
@@ -75,16 +77,46 @@ const DashboardSidebar = () => {
             অন্যান্য
           </h2> */}
           {/* Users Management */}
-
+            <h1 className="font-semibold text-gray-700 text-sm">ব্যবহারকারী</h1>
           <NavLink
-            to="/dashboard/allUsers"
+            to="/dashboard/addUsers"
             className={({ isActive }) =>
               isActive
                 ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            সকল ব্যবহারকারী
+            ইউজার যুক্ত করুন 
+          </NavLink>
+          <NavLink
+            to="/dashboard/divComUsers"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+            }
+          >
+            কমিশনার অফিস ইউজার 
+          </NavLink>
+          <NavLink
+            to="/dashboard/adcUsers"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+            }
+          >
+            এডিসি ইউজার 
+          </NavLink>
+          <NavLink
+            to="/dashboard/acLandUsers"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+            }
+          >
+            এসিল্যান্ড ইউজার 
           </NavLink>
           <NavLink
             to="/dashboard/causeList"
@@ -132,4 +164,4 @@ const DashboardSidebar = () => {
   );
 };
 
-export default DashboardSidebar;
+export default SidebarDivCom;

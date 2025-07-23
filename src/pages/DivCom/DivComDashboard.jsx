@@ -15,35 +15,11 @@ import {
 } from "recharts";
 import axiosPublic from "../../axios/axiosPublic";
 import { AuthContext } from "../../provider/AuthProvider";
+import { districts } from "../../data/districts";
+import { monthNames } from "../../data/months";
 
-const districts = [
-  "চট্টগ্রাম",
-  "কক্সবাজার",
-  "কুমিল্লা",
-  "ব্রাহ্মণবাড়িয়া",
-  "চাঁদপুর",
-  "ফেনী",
-  "লক্ষ্মীপুর",
-  "নোয়াখালী",
-  "খাগড়াছড়ি",
-  "রাঙ্গামাটি",
-  "বান্দরবান",
-];
 
-const monthNames = [
-  "জানুয়ারি",
-  "ফেব্রুয়ারি",
-  "মার্চ",
-  "এপ্রিল",
-  "মে",
-  "জুন",
-  "জুলাই",
-  "আগস্ট",
-  "সেপ্টেম্বর",
-  "অক্টোবর",
-  "নভেম্বর",
-  "ডিসেম্বর",
-];
+
 
 const toBanglaNumber = (num) => {
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
@@ -53,7 +29,7 @@ const toBanglaNumber = (num) => {
     .join("");
 };
 
-const Dashboard = () => {
+const DivComDashboard = () => {
   const [cases, setCases] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState("");
@@ -62,7 +38,7 @@ const Dashboard = () => {
     axiosPublic
       .get("/allMamla")
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setLoading(false);
         setCases(res.data);
       })
@@ -195,4 +171,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DivComDashboard;

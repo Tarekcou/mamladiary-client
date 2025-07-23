@@ -6,9 +6,9 @@ import React, {
   useState,
 } from "react";
 import axiosPublic from "../axios/axiosPublic";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -16,80 +16,107 @@ const AuthProvider = ({ children }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const [isAdmin, setAdmin] = useState(false);
+  const [isDivComLogin, setDivComLogin] = useState(false);
+  const [isAdcLogin, setAdcLogin] = useState(false);
+  const [isAcLandLogin, setAcLandLogin] = useState(false);
+  const [isNagorikLogin, setNagorikLogin] = useState(false);
   const [isButtonSpin, setButtonSpin] = useState(false);
 
-  // signin
-  const signIn = async (formData) => {
-    setButtonSpin(true);
-    setLoading(true);
+ const signIn = async (formData, loginStatus) => {
+  setButtonSpin(true);
+  setLoading(true);
+  console.log(loginStatus)
+  try {
+    let res;
+    // const role=loginStatus=="divCom"?"DivCom":loginStatus=="dcOffice"?"DC":"acLand"
+    if (loginStatus === "nagorik") {
+      res = await axiosPublic.post("/nagorikLogin", formData);
+    } else {
+      res = await axiosPublic.post("/users/login", formData, {
+  params: { loginStatus },
+});
 
-    // ✅ Wait for the admin check before proceeding
-    console.log(formData);
-    const isUserAdmin = await checkAdmin(formData.dnothiId);
-    console.log(isUserAdmin);
-    if (!isUserAdmin) {
-      toast.warning("অনুগ্রহপূর্বক এডমিন এর সাথে যোগাযোগ করুন");
-      setButtonSpin(false);
-      setLoading(false);
+    } 
 
-      return;
+    if (res?.data.status === "success") {
+      toast.success("লগ ইন সফল হয়েছে!");
+
+      setIsSignedIn(true);
+      setUser(res.data.user);
+
+      // Save user + type
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("userType", loginStatus);
+
+      setUserFlags(loginStatus); // set booleans
+
+      navigation(`/dashboard/${loginStatus}`);
     }
+  } catch (error) {
+    toast.warning(error?.response?.data?.message || "লগ ইন ব্যর্থ হয়েছে!");
+    console.error("Login error:", error);
+  } finally {
+    setButtonSpin(false);
+    setLoading(false);
+  }
+};
+const setUserFlags = (type) => {
+  setDivComLogin(false);
+  setAdcLogin(false);
+  setAcLandLogin(false);
+  setNagorikLogin(false);
 
-    try {
-      const res = await axiosPublic.post("/login", formData);
+  localStorage.removeItem("isDivCom");
+  localStorage.removeItem("isAdc");
+  localStorage.removeItem("isAcLand");
+  localStorage.removeItem("isNagorik");
 
-      if (res.status === 200) {
-        toast.success("লগ ইন সফল হয়েছে!");
-        setIsSignedIn(true);
-        setUser(res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+  if (type === "nagorik") {
+    setNagorikLogin(true);
+    localStorage.setItem("isNagorik", true);
+  } else if (type === "DivCom") {
+    setDivComLogin(true);
+    localStorage.setItem("isDivCom", true);
+  } else if (type === "DC") {
+    setAdcLogin(true);
+    localStorage.setItem("isAdc", true);
+  } else if (type === "Acland") {
+    setAcLandLogin(true);
+    localStorage.setItem("isAcLand", true);
+  }
+};
 
-        // ✅ Admin already checked, so no need to check again here
-        navigation("/dashboard");
-
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.warning("লগ ইন ব্যর্থ হয়েছে!");
-    } finally {
-      setButtonSpin(false);
-      setLoading(false);
-    }
-  };
 
   // signout
   const signOut = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("isAdmin");
-
-    setUser(null);
-    setIsSignedIn(false);
-    setAdmin(false); // ✅ Reset isAdmin
-    setLoading(false);
-
-    toast.info("সাইন আউট !");
-    navigation("/"); // optionally redirect to home or login
-  };
+  localStorage.clear();
+  setUser(null);
+  setIsSignedIn(false);
+  setDivComLogin(false);
+  setAdcLogin(false);
+  setAcLandLogin(false);
+  setNagorikLogin(false);
+  toast.info("সাইন আউট !");
+  navigation("/");
+};
 
   // register
   const resigter = (formData) => {
-    const res = axiosPublic.post("/register", formData);
+    const res = axiosPublic.post("/nagorikRegister", formData);
     setLoading(true);
     setButtonSpin(true);
     res
       .then((response) => {
         if (response.data.insertedId) {
           toast.success(
-            "রেজিস্ট্রেশন সফল হয়েছে, আইডি ভেরিফাই করতে এডমিনের সাথে যোগাযোগ করুন"
+            "রেজিস্ট্রেশন সফল হয়েছে,  ভেরিফাই করতে এডমিনের সাথে যোগাযোগ করুন"
           );
-          navigation("/");
+          // navigation("/");
           setLoading(false);
           setButtonSpin(false);
         }
         if (response.data.message === "user already exist") {
-          toast.warning("এই আইডি দিয়ে আগে থেকেই রেজিস্টার্ড, লগইন করুন");
+          toast.warning("এই আইডি আগে থেকেই রেজিস্টার্ড, লগইন করুন");
           navigation("/login");
           setLoading(false);
           setButtonSpin(false);
@@ -105,39 +132,29 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setIsSignedIn(true);
-      checkAdmin(parsedUser.dnothiId);
-      setLoading(false);
-    } else {
-      setLoading(false);
-      navigation("/");
-    }
-  }, []);
+  setLoading(true);
+  const storedUser = localStorage.getItem("user");
+  const storedType = localStorage.getItem("userType");
 
-  const checkAdmin = async (dnothiId) => {
-    console.log("Checking admin status for DNothi ID:", dnothiId);
-    try {
-      const res = await axiosPublic.get(`/users/${dnothiId}`);
-      console.log("Admin check response:", res.data);
-      if (res.data?.isAdmin) {
-        setAdmin(true);
-        localStorage.setItem("isAdmin", true);
-        return true;
-      } else {
-        setAdmin(false);
-        localStorage.removeItem("isAdmin");
-        return false;
-      }
-    } catch (error) {
-      console.error("Error checking admin:", error);
-      return false;
-    }
-  };
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));
+    setIsSignedIn(true);
+    setUserFlags(storedType); // Restore user-type flags
+  }
+
+  setLoading(false);
+}, []);
+
+  const checkUser=()=>{
+     if(isNagorikLogin){
+          localStorage.setItem("isNagorik",true)
+        }
+        else if(isAcLandLogin) localStorage.setItem("isAcLand",true)
+        else if(isAdcLogin) localStorage.setItem("isAdc",true)
+        else if(isDivComLogin) localStorage.setItem("isDivCom",true)
+        
+  }
+
 
   const authData = {
     signIn,
@@ -149,7 +166,11 @@ const AuthProvider = ({ children }) => {
     user,
     isLoading,
     setLoading,
-    isAdmin,
+    // isAdmin,
+    isDivComLogin,
+    isAcLandLogin,
+    isAdcLogin,
+    isNagorikLogin,
     isButtonSpin,
     setButtonSpin,
   };

@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import axiosPublic from "../../axios/axiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import MamlaEditForm from "./MamlaEditForm";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever, MdMessage } from "react-icons/md";
 import Swal from "sweetalert2";
+import axiosPublic from "../../../axios/axiosPublic";
 
 const AllMamla = () => {
   // const [mamlaList, setMamlaList] = useState([]);
