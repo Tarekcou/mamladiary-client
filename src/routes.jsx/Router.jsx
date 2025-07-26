@@ -1,8 +1,5 @@
 // router.jsx
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import DashboardLayout from "../Layout/DashboardLayout";
 import MainLayout from "../Layout/MainLayout";
@@ -35,7 +32,7 @@ import ComplainDetails from "../pages/dashboard/ComplainDetails";
 import FeedbackDetails from "../pages/dashboard/FeedbackDetails";
 import MonthlyReport from "../pages/dashboard/MonthlyReport/MonthlyReport";
 import NagorikDashboard from "../pages/Nagorik/NagorikDashboard";
-import AdcDashboard from "../pages/Adc/AdcDashboard";
+import AdcDashboard from "../pages/adc/AdcDashboard";
 import AcLandDashboard from "../pages/AcLand/AcLandDashboard";
 
 const router = createBrowserRouter([

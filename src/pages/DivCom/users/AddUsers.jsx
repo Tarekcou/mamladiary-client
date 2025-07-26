@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { aclandOptions } from "../../../data/aclandOptions";
 import useCrud from "../../../hooks/userCrud";
 
-const roles = ["Acland", "DC", "DivCom"];
+const roles = ["acLand", "adc", "divCom"];
 
 const AddUsers = () => {
   const [role, setRole] = useState("");
@@ -11,13 +11,14 @@ const AddUsers = () => {
   const [officeName, setOfficeName] = useState("");
   const formRef = useRef(null);
 
-  const { createItem, refetch } = useCrud("/users", "users");
+  const { createItem, refetch, items } = useCrud("/users", "users", role);
 
   const handleSubmitUser = async (e) => {
     e.preventDefault();
     const form = e.target;
 
-    const selectedDistrict = typeof district === "number" ? aclandOptions[district] : null;
+    const selectedDistrict =
+      typeof district === "number" ? aclandOptions[district] : null;
     const selectedOffice = selectedDistrict?.offices.find(
       (office) => office.en === officeName
     );
@@ -31,12 +32,12 @@ const AddUsers = () => {
       role,
 
       district:
-        (role === "Acland" || role === "DC") && selectedDistrict
+        (role === "acLand" || role === "adc") && selectedDistrict
           ? selectedDistrict.district
           : undefined,
 
       acLand:
-        role === "Acland" && selectedOffice
+        role === "acLand" && selectedOffice
           ? {
               en: selectedOffice.en,
               bn: selectedOffice.bn,
@@ -44,19 +45,19 @@ const AddUsers = () => {
           : undefined,
 
       officeName:
-        role === "Acland" && selectedOffice
+        role === "acLand" && selectedOffice
           ? {
               en: selectedOffice.en,
               bn: selectedOffice.bn,
             }
-          : role === "DC" && selectedDistrict
+          : role === "adc" && selectedDistrict
           ? selectedDistrict.district
           : {
               en: "Divisional Commissioner Office",
               bn: "বিভাগীয় কমিশনারের কার্যালয়",
             },
     };
-
+    console.log(payload);
     await createItem(payload);
 
     form.reset();
@@ -66,45 +67,47 @@ const AddUsers = () => {
   };
 
   return (
-    <div className="w-10/12 md:w-8/12 mx-auto mt-10 shadow-xl p-10">
-      <h3 className="font-bold text-lg md:text-2xl mb-4 text-center">নতুন ব্যবহারকারী</h3>
+    <div className="shadow-xl mx-auto mt-10 p-10 w-10/12 md:w-8/12">
+      <h3 className="mb-4 font-bold text-lg md:text-2xl text-center">
+        নতুন ব্যবহারকারী
+      </h3>
 
       <form ref={formRef} onSubmit={handleSubmitUser} className="space-y-4">
         <input
           name="name"
           placeholder="নাম"
-          className="input input-bordered w-full bg-gray-100"
+          className="bg-gray-100 input-bordered w-full input"
           required
         />
         <input
           type="email"
           name="email"
           placeholder="ইমেইল"
-          className="input input-bordered w-full bg-gray-100"
+          className="bg-gray-100 input-bordered w-full input"
           required
         />
         <input
           name="phone"
           placeholder="মোবাইল"
-          className="input input-bordered w-full bg-gray-100"
+          className="bg-gray-100 input-bordered w-full input"
           required
         />
         <input
           name="designation"
           placeholder="পদবী"
-          className="input input-bordered w-full bg-gray-100"
+          className="bg-gray-100 input-bordered w-full input"
           required
         />
         <input
           name="password"
           placeholder="পাসওয়ার্ড"
-          className="input input-bordered w-full bg-gray-100"
+          className="bg-gray-100 input-bordered w-full input"
           required
         />
 
         <select
           name="role"
-          className="select select-bordered w-full bg-gray-100"
+          className="bg-gray-100 w-full select-bordered select"
           required
           value={role}
           onChange={(e) => {
@@ -123,12 +126,12 @@ const AddUsers = () => {
           ))}
         </select>
 
-        {/* District and Office for Acland */}
-        {role === "Acland" && (
+        {/* District and Office for acLand */}
+        {role === "acLand" && (
           <>
             <select
               name="district"
-              className="select select-bordered w-full bg-gray-100"
+              className="bg-gray-100 w-full select-bordered select"
               required
               value={district ?? ""}
               onChange={(e) => {
@@ -149,7 +152,7 @@ const AddUsers = () => {
 
             <select
               name="officeName"
-              className="select select-bordered w-full bg-gray-100"
+              className="bg-gray-100 w-full select-bordered select"
               required
               disabled={district === null}
               value={officeName}
@@ -168,10 +171,10 @@ const AddUsers = () => {
         )}
 
         {/* Only district for DC */}
-        {role === "DC" && (
+        {role === "adc" && (
           <select
             name="district"
-            className="select select-bordered w-full bg-gray-100"
+            className="bg-gray-100 w-full select-bordered select"
             required
             value={district ?? ""}
             onChange={(e) => {
@@ -191,7 +194,7 @@ const AddUsers = () => {
           </select>
         )}
 
-        <div className="modal-action justify-center gap-3">
+        <div className="justify-center gap-3 modal-action">
           <button type="submit" className="btn btn-primary">
             যুক্ত করুন
           </button>

@@ -3,36 +3,38 @@ import { useQuery } from "@tanstack/react-query";
 import axiosPublic from "../axios/axiosPublic"; // Adjust path as needed
 import Swal from "sweetalert2";
 
-const useCrud = (endpoint, queryKey,role) => {
+const useCrud = (endpoint, queryKey, role) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-    console.log(role)
+  // console.log(endpoint, queryKey, role);
   const {
     data: items = [],
     refetch,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: [queryKey],
+    queryKey: [queryKey, role], // 👈 include role here
     queryFn: async () => {
-const res = await axiosPublic.get(endpoint, {
-  params: { role }
-});
-      console.log(res.data)
+      if (!role) return []; // ⛔ prevent fetch on initial blank role
+      const res = await axiosPublic.get(endpoint, {
+        params: { role },
+      });
       return res.data;
     },
+    enabled: !!role, // 👈 only run query when role is truthy
   });
 
   const createItem = async (payload) => {
     try {
       const res = await axiosPublic.post(endpoint, payload);
+      console.log(res.data);
       if (res.data.insertedId || res.data._id) {
         Swal.fire("Success", "Item added successfully", "success");
         refetch();
       }
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "Failed to create item", "error");
+      Swal.fire("Error", "Failed to create item", error);
     }
   };
 

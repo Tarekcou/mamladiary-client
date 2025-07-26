@@ -22,83 +22,81 @@ const AuthProvider = ({ children }) => {
   const [isNagorikLogin, setNagorikLogin] = useState(false);
   const [isButtonSpin, setButtonSpin] = useState(false);
 
- const signIn = async (formData, loginStatus) => {
-  setButtonSpin(true);
-  setLoading(true);
-  console.log(loginStatus)
-  try {
-    let res;
-    // const role=loginStatus=="divCom"?"DivCom":loginStatus=="dcOffice"?"DC":"acLand"
-    if (loginStatus === "nagorik") {
-      res = await axiosPublic.post("/nagorikLogin", formData);
-    } else {
-      res = await axiosPublic.post("/users/login", formData, {
-  params: { loginStatus },
-});
+  const signIn = async (formData, loginStatus) => {
+    setButtonSpin(true);
+    setLoading(true);
+    console.log(loginStatus);
+    try {
+      let res;
 
-    } 
+      if (loginStatus === "nagorik") {
+        res = await axiosPublic.post("/nagorikLogin", formData);
+      } else {
+        res = await axiosPublic.post("/users/login", formData, {
+          params: { loginStatus },
+        });
+      }
 
-    if (res?.data.status === "success") {
-      toast.success("লগ ইন সফল হয়েছে!");
+      if (res?.data.status === "success") {
+        toast.success("লগ ইন সফল হয়েছে!");
 
-      setIsSignedIn(true);
-      setUser(res.data.user);
+        setIsSignedIn(true);
+        setUser(res.data.user);
 
-      // Save user + type
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      localStorage.setItem("userType", loginStatus);
+        // Save user + type
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("userType", loginStatus);
 
-      setUserFlags(loginStatus); // set booleans
+        setUserFlags(loginStatus); // set booleans
 
-      navigation(`/dashboard/${loginStatus}`);
+        navigation(`/dashboard/${loginStatus}`);
+      }
+    } catch (error) {
+      toast.warning(error?.response?.data?.message || "লগ ইন ব্যর্থ হয়েছে!");
+      console.error("Login error:", error);
+    } finally {
+      setButtonSpin(false);
+      setLoading(false);
     }
-  } catch (error) {
-    toast.warning(error?.response?.data?.message || "লগ ইন ব্যর্থ হয়েছে!");
-    console.error("Login error:", error);
-  } finally {
-    setButtonSpin(false);
-    setLoading(false);
-  }
-};
-const setUserFlags = (type) => {
-  setDivComLogin(false);
-  setAdcLogin(false);
-  setAcLandLogin(false);
-  setNagorikLogin(false);
+  };
+  const setUserFlags = (type) => {
+    setDivComLogin(false);
+    setAdcLogin(false);
+    setAcLandLogin(false);
+    setNagorikLogin(false);
 
-  localStorage.removeItem("isDivCom");
-  localStorage.removeItem("isAdc");
-  localStorage.removeItem("isAcLand");
-  localStorage.removeItem("isNagorik");
+    localStorage.removeItem("isDivCom");
+    localStorage.removeItem("isAdc");
+    localStorage.removeItem("isAcLand");
+    localStorage.removeItem("isNagorik");
 
-  if (type === "nagorik") {
-    setNagorikLogin(true);
-    localStorage.setItem("isNagorik", true);
-  } else if (type === "DivCom") {
-    setDivComLogin(true);
-    localStorage.setItem("isDivCom", true);
-  } else if (type === "DC") {
-    setAdcLogin(true);
-    localStorage.setItem("isAdc", true);
-  } else if (type === "Acland") {
-    setAcLandLogin(true);
-    localStorage.setItem("isAcLand", true);
-  }
-};
-
+    if (type === "nagorik") {
+      setNagorikLogin(true);
+      localStorage.setItem("isNagorik", true);
+    } else if (type === "divCom") {
+      setDivComLogin(true);
+      localStorage.setItem("isDivCom", true);
+    } else if (type === "adc") {
+      setAdcLogin(true);
+      localStorage.setItem("isAdc", true);
+    } else if (type === "acLand") {
+      setAcLandLogin(true);
+      localStorage.setItem("isAcLand", true);
+    }
+  };
 
   // signout
   const signOut = () => {
-  localStorage.clear();
-  setUser(null);
-  setIsSignedIn(false);
-  setDivComLogin(false);
-  setAdcLogin(false);
-  setAcLandLogin(false);
-  setNagorikLogin(false);
-  toast.info("সাইন আউট !");
-  navigation("/");
-};
+    localStorage.clear();
+    setUser(null);
+    setIsSignedIn(false);
+    setDivComLogin(false);
+    setAdcLogin(false);
+    setAcLandLogin(false);
+    setNagorikLogin(false);
+    toast.info("সাইন আউট !");
+    navigation("/");
+  };
 
   // register
   const resigter = (formData) => {
@@ -132,29 +130,26 @@ const setUserFlags = (type) => {
   };
 
   useEffect(() => {
-  setLoading(true);
-  const storedUser = localStorage.getItem("user");
-  const storedType = localStorage.getItem("userType");
+    setLoading(true);
+    const storedUser = localStorage.getItem("user");
+    const storedType = localStorage.getItem("userType");
 
-  if (storedUser) {
-    setUser(JSON.parse(storedUser));
-    setIsSignedIn(true);
-    setUserFlags(storedType); // Restore user-type flags
-  }
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsSignedIn(true);
+      setUserFlags(storedType); // Restore user-type flags
+    }
 
-  setLoading(false);
-}, []);
+    setLoading(false);
+  }, []);
 
-  const checkUser=()=>{
-     if(isNagorikLogin){
-          localStorage.setItem("isNagorik",true)
-        }
-        else if(isAcLandLogin) localStorage.setItem("isAcLand",true)
-        else if(isAdcLogin) localStorage.setItem("isAdc",true)
-        else if(isDivComLogin) localStorage.setItem("isDivCom",true)
-        
-  }
-
+  const checkUser = () => {
+    if (isNagorikLogin) {
+      localStorage.setItem("isNagorik", true);
+    } else if (isAcLandLogin) localStorage.setItem("isAcLand", true);
+    else if (isAdcLogin) localStorage.setItem("isAdc", true);
+    else if (isDivComLogin) localStorage.setItem("isDivCom", true);
+  };
 
   const authData = {
     signIn,

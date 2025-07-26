@@ -2,7 +2,7 @@ import React from "react";
 import { Link, NavLink } from "react-router";
 
 const SidebarDivCom = () => {
-    const storedType = localStorage.getItem("userType");
+  const storedType = localStorage.getItem("userType");
 
   return (
     <div className="bg-gray-100 px-2 pb-10 h-full">
@@ -77,7 +77,7 @@ const SidebarDivCom = () => {
             অন্যান্য
           </h2> */}
           {/* Users Management */}
-            <h1 className="font-semibold text-gray-700 text-sm">ব্যবহারকারী</h1>
+          <h1 className="font-semibold text-gray-700 text-sm">ব্যবহারকারী</h1>
           <NavLink
             to="/dashboard/addUsers"
             className={({ isActive }) =>
@@ -86,7 +86,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            ইউজার যুক্ত করুন 
+            ইউজার যুক্ত করুন
           </NavLink>
           <NavLink
             to="/dashboard/divComUsers"
@@ -96,7 +96,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            কমিশনার অফিস ইউজার 
+            কমিশনার অফিস ইউজার
           </NavLink>
           <NavLink
             to="/dashboard/adcUsers"
@@ -106,7 +106,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            এডিসি ইউজার 
+            এডিসি ইউজার
           </NavLink>
           <NavLink
             to="/dashboard/acLandUsers"
@@ -116,7 +116,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            এসিল্যান্ড ইউজার 
+            এসিল্যান্ড ইউজার
           </NavLink>
           <NavLink
             to="/dashboard/causeList"
@@ -157,6 +157,16 @@ const SidebarDivCom = () => {
             }
           >
             মাসিক রিপোর্ট
+          </NavLink>
+          <NavLink
+            to="/dashboard/divCom/allCases"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+            }
+          >
+            আগত মামলা
           </NavLink>
         </ul>
       </div>{" "}

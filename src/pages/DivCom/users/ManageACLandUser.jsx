@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { aclandOptions } from "../../../data/aclandOptions";
 import useCrud from "../../../hooks/userCrud";
 
-const roles = ["acland", "dc", "divcom", "nagorik"];
+const roles = ["acland", "adc", "divCom", "nagorik"];
 
 const ManageAdcUser = () => {
   const [section, setSection] = useState("");
@@ -23,7 +23,7 @@ const ManageAdcUser = () => {
     editingItem,
     handleEdit,
     resetEdit,
-  } = useCrud ("/users", "users","Acland");
+  } = useCrud("/users", "users", "acLand");
 
   const resetForm = () => {
     resetEdit();
@@ -38,7 +38,8 @@ const ManageAdcUser = () => {
     const form = e.target;
 
     const selectedDistrict = aclandOptions[districtIndex];
-    const selectedOffice = selectedDistrict?.offices.find(o => o.en === officeName) || null;
+    const selectedOffice =
+      selectedDistrict?.offices.find((o) => o.en === officeName) || null;
 
     const payload = {
       name: form.name.value,
@@ -81,7 +82,7 @@ const ManageAdcUser = () => {
     <div className="p-6 w-full">
       <div className="flex justify-between mb-4">
         <h1 className="font-bold text-2xl">সকল ব্যবহারকারী ({users.length})</h1>
-        {/* <button className="btn btn-outline" onClick={() => document.getElementById("my_modal_5").showModal()}>
+        {/* <button className="btn-outline btn" onClick={() => document.getElementById("my_modal_5").showModal()}>
           <MdAdd /> নতুন যুক্ত করুন
         </button> */}
       </div>
@@ -116,11 +117,17 @@ const ManageAdcUser = () => {
                 <td>{user.officeName?.bn || "-"}</td>
                 <td className="space-y-2">
                   <div className="flex justify-center gap-2">
-                    <FaEdit onClick={() => handleUserEdit(user)} className="text-blue-600 text-xl cursor-pointer" />
-                    <MdDelete onClick={() => deleteItem(user._id)} className="text-red-500 text-xl cursor-pointer" />
+                    <FaEdit
+                      onClick={() => handleUserEdit(user)}
+                      className="text-blue-600 text-xl cursor-pointer"
+                    />
+                    <MdDelete
+                      onClick={() => deleteItem(user._id)}
+                      className="text-red-500 text-xl cursor-pointer"
+                    />
                   </div>
                   <button
-                    className="btn btn-xs btn-success mt-1"
+                    className="mt-1 btn btn-xs btn-success"
                     onClick={() => publishItem(user._id, user.isPublished)}
                   >
                     {user.isPublished ? "Unpublish" : "Publish"}
@@ -133,22 +140,60 @@ const ManageAdcUser = () => {
       </div>
 
       {/* MODAL */}
-      <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+      <dialog id="my_modal_5" className="modal-bottom modal sm:modal-middle">
         <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">
+          <h3 className="mb-4 font-bold text-lg">
             {isEditMode ? "ইউজার আপডেট করুন" : "নতুন ইউজার যুক্ত করুন"}
           </h3>
           <form onSubmit={handleSubmitUser} className="space-y-4">
-            <input name="name" required defaultValue={editingItem?.name || ""} placeholder="নাম" className="input input-bordered w-full" />
-            <input name="email" type="email" required defaultValue={editingItem?.email || ""} placeholder="ইমেইল" className="input input-bordered w-full" />
-            <input name="phone" required defaultValue={editingItem?.phone || ""} placeholder="মোবাইল" className="input input-bordered w-full" />
-            <input name="designation" required defaultValue={editingItem?.designation || ""} placeholder="পদবী" className="input input-bordered w-full" />
-            <input name="password" required defaultValue={editingItem?.password || ""} placeholder="পাসওয়ার্ড" className="input input-bordered w-full" />
-            <input name="role" disabled required defaultValue={role || ""} placeholder="রোল" className="input input-bordered w-full" />
+            <input
+              name="name"
+              required
+              defaultValue={editingItem?.name || ""}
+              placeholder="নাম"
+              className="input-bordered w-full input"
+            />
+            <input
+              name="email"
+              type="email"
+              required
+              defaultValue={editingItem?.email || ""}
+              placeholder="ইমেইল"
+              className="input-bordered w-full input"
+            />
+            <input
+              name="phone"
+              required
+              defaultValue={editingItem?.phone || ""}
+              placeholder="মোবাইল"
+              className="input-bordered w-full input"
+            />
+            <input
+              name="designation"
+              required
+              defaultValue={editingItem?.designation || ""}
+              placeholder="পদবী"
+              className="input-bordered w-full input"
+            />
+            <input
+              name="password"
+              required
+              defaultValue={editingItem?.password || ""}
+              placeholder="পাসওয়ার্ড"
+              className="input-bordered w-full input"
+            />
+            <input
+              name="role"
+              disabled
+              required
+              defaultValue={role || ""}
+              placeholder="রোল"
+              className="input-bordered w-full input"
+            />
 
             {/* You can add district and office dropdowns here if needed */}
 
-            <div className="modal-action justify-between">
+            <div className="justify-between modal-action">
               <button type="submit" className="btn btn-primary">
                 {isEditMode ? "আপডেট করুন" : "যুক্ত করুন"}
               </button>

@@ -15,8 +15,8 @@ export const aclandOptions = [
       { bn: "রাউজান", en: "Raozan" },
       { bn: "হাটহাজারী", en: "Hathazari" },
       { bn: "ফটিকছড়ি", en: "Fatikchhari" },
-      { bn: "সাতকানিয়া", en: "Satkania" }
-    ]
+      { bn: "সাতকানিয়া", en: "Satkania" },
+    ],
   },
   {
     district: { bn: "কক্সবাজার", en: "Cox's Bazar" },
@@ -28,8 +28,8 @@ export const aclandOptions = [
       { bn: "পেকুয়া", en: "Pekua" },
       { bn: "চকরিয়া", en: "Chakaria" },
       { bn: "রামু", en: "Ramu" },
-      { bn: "কুতুবদিয়া", en: "Kutubdia" }
-    ]
+      { bn: "কুতুবদিয়া", en: "Kutubdia" },
+    ],
   },
   {
     district: { bn: "বান্দরবান", en: "Bandarban" },
@@ -40,8 +40,8 @@ export const aclandOptions = [
       { bn: "লামা", en: "Lama" },
       { bn: "আলীকদম", en: "Alikadam" },
       { bn: "রোয়াংছড়ি", en: "Rowangchhari" },
-      { bn: "নাইক্ষ্যংছড়ি", en: "Naikhongchhari" }
-    ]
+      { bn: "নাইক্ষ্যংছড়ি", en: "Naikhongchhari" },
+    ],
   },
   {
     district: { bn: "রাঙ্গামাটি", en: "Rangamati" },
@@ -53,8 +53,8 @@ export const aclandOptions = [
       { bn: "বরকল", en: "Barkal" },
       { bn: "জুরাছড়ি", en: "Juraichhari" },
       { bn: "বিলাইছড়ি", en: "Bilaichhari" },
-      { bn: "লংগদু", en: "Langadu" }
-    ]
+      { bn: "লংগদু", en: "Langadu" },
+    ],
   },
   {
     district: { bn: "খাগড়াছড়ি", en: "Khagrachhari" },
@@ -67,8 +67,8 @@ export const aclandOptions = [
       { bn: "পানছড়ি", en: "Panchhari" },
       { bn: "লক্ষীছড়ি", en: "Laxmichhari" },
       { bn: "রামগড়", en: "Ramgarh" },
-      { bn: "গুইমারা", en: "Guimara" }
-    ]
+      { bn: "গুইমারা", en: "Guimara" },
+    ],
   },
   {
     district: { bn: "নোয়াখালী", en: "Noakhali" },
@@ -81,8 +81,8 @@ export const aclandOptions = [
       { bn: "কোম্পানীগঞ্জ", en: "Companiganj" },
       { bn: "সেনবাগ", en: "Senbagh" },
       { bn: "কবিরহাট", en: "Kabirhat" },
-      { bn: "হাতিয়া", en: "Hatiya" }
-    ]
+      { bn: "হাতিয়া", en: "Hatiya" },
+    ],
   },
   {
     district: { bn: "ফেনী", en: "Feni" },
@@ -91,8 +91,8 @@ export const aclandOptions = [
       { bn: "পরশুরাম", en: "Parshuram" },
       { bn: "ছাগলনাইয়া", en: "Chhagalnaiya" },
       { bn: "দাগনভূঞা", en: "Daganbhuiyan" },
-      { bn: "সোনাগাজী", en: "Sonagazi" }
-    ]
+      { bn: "সোনাগাজী", en: "Sonagazi" },
+    ],
   },
   {
     district: { bn: "লক্ষ্মীপুর", en: "Lakshmipur" },
@@ -101,8 +101,8 @@ export const aclandOptions = [
       { bn: "রায়পুর", en: "Raipur" },
       { bn: "রামগঞ্জ", en: "Ramganj" },
       { bn: "রামগতি", en: "Ramgati" },
-      { bn: "কমলনগর", en: "Komolnagar" }
-    ]
+      { bn: "কমলনগর", en: "Komolnagar" },
+    ],
   },
   {
     district: { bn: "ব্রাহ্মণবাড়িয়া", en: "Brahmanbaria" },
@@ -114,8 +114,8 @@ export const aclandOptions = [
       { bn: "সরাইল", en: "Sarail" },
       { bn: "কসবা", en: "Kasba" },
       { bn: "নবীনগর", en: "Nabinagar" },
-      { bn: "বিজয়নগর", en: "Bijoynagar" }
-    ]
+      { bn: "বিজয়নগর", en: "Bijoynagar" },
+    ],
   },
   {
     district: { bn: "কুমিল্লা", en: "Cumilla" },
@@ -132,8 +132,8 @@ export const aclandOptions = [
       { bn: "মেঘনা", en: "Meghna" },
       { bn: "নাঙ্গলকোট", en: "Nangalkot" },
       { bn: "বরুড়া", en: "Barura" },
-      { bn: "তিতাস", en: "Titas" }
-    ]
+      { bn: "তিতাস", en: "Titas" },
+    ],
   },
   {
     district: { bn: "চাঁদপুর", en: "Chandpur" },
@@ -144,99 +144,90 @@ export const aclandOptions = [
       { bn: "মতলব দক্ষিণ", en: "Matlab Dakshin" },
       { bn: "শাহরাস্তি", en: "Shahrasti" },
       { bn: "হাজীগঞ্জ", en: "Hajiganj" },
-      { bn: "কচুয়া", en: "Kachua" }
-    ]
-  }
+      { bn: "কচুয়া", en: "Kachua" },
+    ],
+  },
 ];
-
 
 const caseSchema = {
   _id: 123,
   rootCaseId: "unique-root-tracking-id", // fixed across all stages
-  initiatedBy: {
+  acLand: {
     userId: 456,
     role: "acland",
-    office: "লাকসাম"
+    officeName: { bn: "লাকসাম", en: "Laksam" },
+    district: { bn: "কুমিল্লা", en: "Cumilla" },
   },
   applicants: [
     {
       name: "মো. আলী",
       phone: "01xxxx",
-      address: "ঠিকানা"
-    }
+      address: "ঠিকানা",
+    },
   ],
-  currentStage: "divcom",  // or dc/acland
-  status: "approved",  // or pending, returned, rejected
+  currentStage: "divCom", // or dc/acland
+  status: "approved", // or pending, returned, rejected
 
   caseStages: [
     {
       role: "acland",
-      mamlaName: "নামজারি মামলা",  // ✅ Moved inside each stage
+      mamlaName: "নামজারি মামলা", // ✅ Moved inside each stage
       mamlaNo: "123/24",
       year: 2024,
       district: "কুমিল্লা",
-      office: "লাকসাম",
+      officeName: "লাকসাম",
       remarks: "মামলা গৃহীত",
       documents: [
         { label: "source khotiyan", url: "uploads/doc1.pdf" },
-        { label: "created khotiyan", url: "uploads/doc2.pdf" }
+        { label: "created khotiyan", url: "uploads/doc2.pdf" },
       ],
-     orderSheets : [
-  {
-    order: "আদেশ লিখিত হয়েছে...",
-    date: "2025-07-21T08:00:00Z",
-    activities: [
-      "জেলা প্রশাসকের সুপারিশ গ্রহণ",
-      "প্রয়োজনীয় কাগজপত্র সংযুক্ত"
-    ]
-  },
-  {
-    order: "উপরের আদেশ বাস্তবায়ন...",
-    date: "2025-07-23T08:00:00Z",
-    activities: [
-      "অফিস আদেশ জারি",
-      "ফাইল নথিভুক্ত"
-    ]
-  }
-        ],
+      orderSheets: [
+        {
+          order: "আদেশ লিখিত হয়েছে...",
+          date: "2025-07-21T08:00:00Z",
+          activities: [
+            "জেলা প্রশাসকের সুপারিশ গ্রহণ",
+            "প্রয়োজনীয় কাগজপত্র সংযুক্ত",
+          ],
+        },
+        {
+          order: "উপরের আদেশ বাস্তবায়ন...",
+          date: "2025-07-23T08:00:00Z",
+          activities: ["অফিস আদেশ জারি", "ফাইল নথিভুক্ত"],
+        },
+      ],
 
-      submittedAt: '2025-07-21T08:00:00Z"'
+      submittedAt: '2025-07-21T08:00:00Z"',
     },
     {
-      role: "dc",
+      role: "adc",
       mamlaName: "জমির বিরোধ মামলা",
       mamlaNo: "45/24",
       year: 2024,
       district: "কুমিল্লা",
-      office: "জেলা প্রশাসক, কুমিল্লা",
+      officeName: "জেলা প্রশাসক, কুমিল্লা",
       remarks: "আদেশ প্রদান করা হলো...",
-       orderSheets : [
-  {
-    order: "আদেশ লিখিত হয়েছে...",
-    date: "2025-07-21T08:00:00Z",
-    activities: [
-      "জেলা প্রশাসকের সুপারিশ গ্রহণ",
-      "প্রয়োজনীয় কাগজপত্র সংযুক্ত"
-    ]
-  },
-  {
-    order: "উপরের আদেশ বাস্তবায়ন...",
-    date: "2025-07-23T08:00:00Z",
-    activities: [
-      "অফিস আদেশ জারি",
-      "ফাইল নথিভুক্ত"
-    ]
-  }
-        ],
-      submittedAt: '2025-07-21T08:00:00Z"'
+      orderSheets: [
+        {
+          orderDetails: "আদেশ লিখিত হয়েছে...",
+          date: "2025-07-21T08:00:00Z",
+          actionTaken: "জেলা প্রশাসকের সুপারিশ গ্রহণ",
+        },
+        {
+          order: "উপরের আদেশ বাস্তবায়ন...",
+          date: "2025-07-23T08:00:00Z",
+          actionTaken: "অফিস আদেশ জারি",
+        },
+      ],
+      submittedAt: '2025-07-21T08:00:00Z"',
     },
     {
-      role: "divcom",
+      role: "divCom",
       mamlaName: "নামজারি আপিল মামলা",
       mamlaNo: "78/24",
       year: 2024,
       district: "চট্টগ্রাম",
-      office: "বিভাগীয় কমিশনার, চট্টগ্রাম",
+      officeName: "বিভাগীয় কমিশনার, চট্টগ্রাম",
       remarks: "চূড়ান্ত অনুমোদন প্রদান করা হলো।",
       previousDate: "2025-07-10",
       nextDate: "2025-08-01",
@@ -246,53 +237,44 @@ const caseSchema = {
       activities: "ডেপুটি কমিশনার এর আদেশ অনুযায়ী সিদ্ধান্ত।",
       plaintiff: "মোঃ আব্দুল হালিম",
       defendant: "মোঃ করিমুল্লাহ",
-      orderSheets : [
-  {
-    order: "আদেশ লিখিত হয়েছে...",
-    date: "2025-07-21T08:00:00Z",
-    activities: [
-      "জেলা প্রশাসকের সুপারিশ গ্রহণ",
-      "প্রয়োজনীয় কাগজপত্র সংযুক্ত"
-    ]
-  },
-  {
-    order: "উপরের আদেশ বাস্তবায়ন...",
-    date: "2025-07-23T08:00:00Z",
-    activities: [
-      "অফিস আদেশ জারি",
-      "ফাইল নথিভুক্ত"
-    ]
-  }
-        ],
-      submittedAt: '2025-07-21T08:00:00Z"'
-    }
+      orderSheets: [
+        {
+          order: "আদেশ লিখিত হয়েছে...",
+          date: "2025-07-21T08:00:00Z",
+          activities: [
+            "জেলা প্রশাসকের সুপারিশ গ্রহণ",
+            "প্রয়োজনীয় কাগজপত্র সংযুক্ত",
+          ],
+        },
+        {
+          order: "উপরের আদেশ বাস্তবায়ন...",
+          date: "2025-07-23T08:00:00Z",
+          activities: ["অফিস আদেশ জারি", "ফাইল নথিভুক্ত"],
+        },
+      ],
+      submittedAt: '2025-07-21T08:00:00Z"',
+    },
   ],
 
-  createdAt:"2025-07-21T08:00:00Z",
+  createdAt: "2025-07-21T08:00:00Z",
   updatedAt: "2025-07-21T08:00:00Z",
 
   logs: [
     {
-      by: "dc",
-      action: "forwarded to divcom",
-      date: "2025-07-22T11:00:00Z"
-    }
-  ]
-}
+      by: "adc",
+      action: "forwarded to divCom",
+      date: "2025-07-22T11:00:00Z",
+    },
+  ],
+};
 
-
-
-
-
-const userSchema={
-  "_id": 3344,
-  "name": "মোঃ তারেক",
-  "email": "tarek@example.com",
-  "role": "acland",                       // acland | dc | divcom | nagorik
-  "officeName": "লাকসাম",               // Office name in Bangla
-  "passwordHash": "...",                 // Hashed password
-  "createdAt": "2025-07-13T08:00:00Z",
-  "permissions": ["create_order", "view_order", "forward_order"]
-}
-
-
+const userSchema = {
+  _id: 3344,
+  name: "মোঃ তারেক",
+  email: "tarek@example.com",
+  role: "acland", // acland | dc | divcom | nagorik
+  officeName: "লাকসাম", // Office name in Bangla
+  passwordHash: "...", // Hashed password
+  createdAt: "2025-07-13T08:00:00Z",
+  permissions: ["create_order", "view_order", "forward_order"],
+};
