@@ -1,42 +1,95 @@
-import React, { useContext, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CaseDetailsAcland from "./CaseDetailsAcland";
+import CaseDetailsSenior from "../Adc/CaseDetailsSenior";
 import { AuthContext } from "../../provider/AuthProvider";
 import { Plus, Edit } from "lucide-react";
-import CaseDetailsSenior from "../Adc/CaseDetailsSenior";
+import { useQuery } from "@tanstack/react-query";
+import axiosPublic from "../../axios/axiosPublic";
 
 const CaseDetails = () => {
-  const { state } = useLocation();
   const { user } = useContext(AuthContext);
+  const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const caseData = state?.caseData;
-  if (!caseData) {
+  // Get tab from URL query param only
+  const urlParams = new URLSearchParams(location.search);
+  const tabFromQuery = urlParams.get("tab");
+
+  // React Query to get case data
+  const {
+    data: caseData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["caseData", id],
+    queryFn: async () => {
+      const response = await axiosPublic.get(`/cases/${id}`);
+      return response.data;
+    },
+    enabled: !!id,
+  });
+
+  // Roles list for tabs
+  const roleStageMap = caseData?.caseStages?.[0] || {};
+  const stageRoles = Object.keys(roleStageMap);
+
+  // Validate tab from query param, fallback to first role
+  const validTab =
+    tabFromQuery && stageRoles.includes(tabFromQuery)
+      ? tabFromQuery
+      : stageRoles[0] || "";
+
+  const [activeTab, setActiveTab] = useState(validTab);
+
+  // When activeTab changes, update URL query param (replace to avoid history clutter)
+  useEffect(() => {
+    if (!activeTab) return;
+
+    const params = new URLSearchParams(location.search);
+    if (params.get("tab") !== activeTab) {
+      params.set("tab", activeTab);
+      navigate(
+        {
+          pathname: location.pathname,
+          search: params.toString(),
+        },
+        { replace: true }
+      );
+    }
+  }, [activeTab, navigate, location.pathname, location.search]);
+
+  const activeStage = roleStageMap[activeTab] || {};
+
+  if (isLoading) return <div className="p-6 text-center">লোড হচ্ছে...</div>;
+  if (isError)
+    return (
+      <div className="p-6 text-red-500 text-center">
+        ডেটা লোড ব্যর্থ: {error.message}
+      </div>
+    );
+  if (!caseData)
     return (
       <div className="p-6 text-red-500 text-center">
         কোন তথ্য পাওয়া যায়নি।
       </div>
     );
-  }
-
-  const roleStageMap = caseData.caseStages[0] || {};
-  const stageRoles = Object.keys(roleStageMap);
-  const [activeTab, setActiveTab] = useState(stageRoles[0]);
-  const activeStage = roleStageMap[activeTab];
 
   const handleAddOrder = () => {
-    navigate(
-      `/dashboard/${caseData.currentStage.stage}/cases/newOrder/${caseData._id}`
-    );
+    navigate(`/dashboard/${activeTab}/cases/newOrder/${caseData._id}`, {
+      state: { caseData, mode: "add" },
+    });
   };
 
   return (
-    <div className="bg-white shadow mx-auto p-6 border border-gray-300 w-full">
+    <div className="bg-white shadow mx-auto p-6 border border-gray-300 w-full max-w-5xl">
       <h1 className="mb-6 font-bold text-2xl text-center underline">
         মামলার বিস্তারিত
       </h1>
 
-      {/* Navigation Tabs */}
+      {/* Tabs */}
       <div className="flex justify-between items-center mb-6">
         <div className="space-x-2">
           {stageRoles.map((role) => (
@@ -69,15 +122,11 @@ const CaseDetails = () => {
                 activeTab === "acLand"
                   ? navigate(
                       `/dashboard/${activeTab}/cases/edit/${caseData._id}`,
-                      {
-                        state: { caseData },
-                      }
+                      { state: { caseData } }
                     )
                   : navigate(
                       `/dashboard/${activeTab}/cases/order/edit/${caseData._id}`,
-                      {
-                        state: { caseData },
-                      }
+                      { state: { caseData } }
                     )
               }
             >
@@ -87,7 +136,7 @@ const CaseDetails = () => {
         )}
       </div>
 
-      {/* Render Correct Layout */}
+      {/* Content */}
       {activeTab === "acLand" ? (
         <CaseDetailsAcland
           rootCaseId={caseData.rootCaseId}

@@ -237,14 +237,12 @@ const AllCases = () => {
                   <td>{cas.currentStage?.status || "-"}</td>
 
                   {/* Action Buttons */}
-                  <td className="flex flex-wrap justify-center gap-1">
+                  <td className="flex flex-wrap justify-center items-center gap-1 h-full">
                     {/* View Button - Always shown */}
                     <button
                       className="btn btn-sm btn-info"
                       onClick={() =>
-                        navigate(`/dashboard/${user.role}/cases/${cas._id}`, {
-                          state: { caseData: cas },
-                        })
+                        navigate(`/dashboard/${user.role}/cases/${cas._id}`)
                       }
                     >
                       <FcViewDetails className="w-6 text-xl" />
@@ -260,7 +258,9 @@ const AllCases = () => {
                             onClick={() =>
                               navigate(
                                 `/dashboard/${user.role}/cases/newOrder/${cas._id}`,
-                                { state: { caseData: cas } }
+                                {
+                                  state: { caseData: cas, mode: "add" }, // <-- edit mode flag
+                                }
                               )
                             }
                           >
@@ -268,33 +268,38 @@ const AllCases = () => {
                           </button>
                         )}
                         {user.role == "acLand" && (
+                          <>
+                            <button
+                              className="btn btn-sm btn-warning"
+                              onClick={() =>
+                                navigate(
+                                  `/dashboard/${user.role}/cases/edit/${cas._id}`,
+                                  {
+                                    state: { caseData: cas },
+                                  }
+                                )
+                              }
+                            >
+                              <Edit className="w-6" />
+                            </button>
+
+                            <button
+                              className="btn btn-sm btn-success"
+                              onClick={() => handleDelete(cas._id)}
+                            >
+                              <DeleteIcon className="w-6 text-red-900" />
+                            </button>
+                          </>
+                        )}
+                        {/* Send to Senior Office Button */}
+                        {user.role !== "divCom" && (
                           <button
-                            className="btn btn-sm btn-warning"
-                            onClick={() =>
-                              navigate(
-                                `/dashboard/${user.role}/cases/edit/${cas._id}`,
-                                {
-                                  state: { caseData: cas },
-                                }
-                              )
-                            }
+                            className="btn btn-sm btn-success"
+                            onClick={() => handleSeniorOfficeSend(cas)}
                           >
-                            <Edit className="w-6" />
+                            <Send className="w-6" />
                           </button>
                         )}
-
-                        <button
-                          className="btn btn-sm btn-success"
-                          onClick={() => handleSeniorOfficeSend(cas)}
-                        >
-                          <Send className="w-6" />
-                        </button>
-                        <button
-                          className="btn btn-sm btn-success"
-                          onClick={() => handleDelete(cas._id)}
-                        >
-                          <DeleteIcon className="w-6 text-red-900" />
-                        </button>
                       </>
                     )}
                   </td>

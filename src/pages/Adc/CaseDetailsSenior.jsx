@@ -1,108 +1,196 @@
-import React from "react";
+import React, { useRef } from "react";
 
-const CaseDetailsSenior = ({ rootCaseId, activeStage }) => {
+const CaseDetailsSenior = ({ rootCaseId, activeStage, headerText }) => {
   const orders = activeStage.orderSheets || [];
-  const rowsPerPage = 10;
+  const rowsPerPage = 20;
+  const printDateTime = new Date().toLocaleString();
 
-  // Split into pages
-  const pages = [];
-  for (let i = 0; i < orders.length; i += rowsPerPage) {
-    pages.push(orders.slice(i, i + rowsPerPage));
-  }
+  const componentRef = useRef();
 
   return (
-    <div className="border border-gray-300 print-container">
-      {/* Header */}
+    <>
+      <style>{`
+        #printable-area {
+          width: 210mm;
+          height: 297mm;
+          
+          background: white;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+        }
 
-      {pages.map((pageOrders, pageIndex) => (
-        <div
-          className="p-6 page"
-          key={pageIndex}
-          style={{
-            pageBreakAfter: pageIndex < pages.length - 1 ? "always" : "auto",
-          }}
-        >
-          <div className="mb-4 text-center">
-            <h2 className="font-bold text-lg">আদেশপত্র </h2>
-            {/* <p>(১৯১৭ সালের রেকর্ড ম্যানুয়েল ১২২ নম্ব ধারা)</p> */}
-          </div>
+        /* Header */
+        .print-header {
+          display: flex;
+          justify-content: space-between;
+          font-size: 14px;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
 
-          {/* Case Header Table */}
-          <table className="table bg-base-100 mb-4 border border-base-content/5 rounded-box w-full text-sm">
-            <tbody>
-              <tr>
-                <td className="p-2 w-1/4 font-semibold">Tracking ID</td>
-                <td className="p-2" colSpan={3}>
-                  {rootCaseId}
-                </td>
-              </tr>
+        /* Case info table */
+        .case-info {
+          border: 1px solid #000;
+          border-collapse: collapse;
+          width: 100%;
+          margin-bottom: 8px;
+        }
+        .case-info td {
+          border: 1px solid #000;
+          padding: 4px;
+          font-size: 12px;
+        }
 
-              <tr>
-                <td className="p-2 font-semibold">মামলার নাম</td>
-                <td className="p-2">{activeStage.mamlaName || "N/A"}</td>
+        /* Orders table */
+       .orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Needed for colgroup widths to apply */
+  border: 1px solid #000;
+  height: 100%; /* Fill page height */
+}
 
-                <td className="p-2 font-semibold">মামলার নং</td>
-                <td className="p-2">{activeStage.mamlaNo || "N/A"}</td>
-              </tr>
+.orders-table th,
+.orders-table td {
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  padding: 6px;
+  font-size: 12px;
+  word-break: break-word;
+}
 
-              <tr>
-                <td className="p-2 font-semibold">বছর</td>
-                <td className="p-2">{activeStage.year || "N/A"}</td>
-                <td className="p-2 font-semibold">জেলা</td>
-                <td className="p-2">{activeStage.district?.bn || "N/A"}</td>
-              </tr>
-            </tbody>
-          </table>
+.orders-table th:first-child,
+.orders-table td:first-child {
+  border-left: none;
+}
 
-          {/* Ordersheet Table */}
-          <table className="table bg-base-100 border border-base-content/5 rounded-box w-full text-sm border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 border-gray-300 border-r w-1/5">
-                  আদেশের ক্রমিক নং ও তারিখ
-                </th>
-                <th className="p-2 border-gray-300 border-r w-3/5">
-                  আদেশ ও অফিসারের সাক্ষর
-                </th>
-                <th className="p-2 w-1/5">আদেশের উপর গৃহীত ব্যবস্থা</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pageOrders.map((sheet, i) => (
-                <tr key={i} className="pb-30 align-top">
-                  <td className="p-2 pb-30 border-gray-300 border-r border-b">
-                    {sheet.date || "N/A"}
-                  </td>
-                  <td className="p-2 pb-30 border-gray-300 border-r border-b whitespace-pre-wrap">
-                    {sheet.order || "N/A"}
-                    {/* <div className="mt-4 border-t border-dotted h-10"></div> */}
-                  </td>
-                  <td className="p-2 pb-30 border-gray-300 border-b whitespace-pre-wrap">
-                    {sheet.actionTaken || "N/A"}
-                  </td>
-                </tr>
-              ))}
+.orders-table th:last-child,
+.orders-table td:last-child {
+  border-right: none;
+}
 
-              {/* Fill empty rows to keep table height consistent */}
-              {Array.from({ length: rowsPerPage - pageOrders.length }).map(
-                (_, j) => (
-                  <tr key={`empty-${j}`}>
-                    <td className="p-2 border-gray-300 border-r">&nbsp;</td>
-                    <td className="p-2 border-gray-300 border-r">&nbsp;</td>
-                    <td className="p-2">&nbsp;</td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
+.orders-table thead th {
+  background: #f3f4f6;
+  border-bottom: 1px solid #000;
+}
 
-          {/* Footer / Page Number */}
-          <div className="mt-4 text-xs text-center">
-            পৃষ্ঠা {pageIndex + 1} এর {pages.length}
-          </div>
+.orders-table tbody tr:last-child td {
+  border-bottom: 1px solid #000; /* Bottom border */
+}
+  .orders-table th:nth-child(1),
+.orders-table td:nth-child(1) {
+  width: 20%;
+}
+.orders-table th:nth-child(2),
+.orders-table td:nth-child(2) {
+  width: 60%;
+}
+.orders-table th:nth-child(3),
+.orders-table td:nth-child(3) {
+  width: 20%;
+}
+
+
+
+        /* Fill empty space */
+        .empty-row td {
+          border: none;
+          padding: 0;
+          height: auto;
+        }
+
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+            .orders-table thead {
+    display: table-row-group; /* not table-header-group */
+  }
+          #printable-area, #printable-area * {
+            visibility: visible;
+          }
+          #printable-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+          button {
+            display: none;
+          }
+        }
+      `}</style>
+
+      <button className="mb-4 btn btn-primary" onClick={() => window.print()}>
+        PDF ডাউনলোড (Print)
+      </button>
+
+      <div id="printable-area" ref={componentRef}>
+        {/* Header */}
+        <div className="print-header">
+          <span>{headerText || activeStage.officeName?.bn}</span>
+          <span>প্রিন্টের সময়: {printDateTime}</span>
         </div>
-      ))}
-    </div>
+
+        {/* Case Info */}
+        <table className="case-info">
+          <tbody>
+            <tr>
+              <td>Tracking ID</td>
+              <td colSpan={3}>{rootCaseId}</td>
+            </tr>
+            <tr>
+              <td>মামলার নাম</td>
+              <td>{activeStage.mamlaName || "N/A"}</td>
+              <td>মামলার নং</td>
+              <td>{activeStage.mamlaNo || "N/A"}</td>
+            </tr>
+            <tr>
+              <td>বছর</td>
+              <td>{activeStage.year || "N/A"}</td>
+              <td>জেলা</td>
+              <td>{activeStage.district?.bn || "N/A"}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Orders Table */}
+        <table className="orders-table">
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "60%" }} />
+            <col style={{ width: "20%" }} />
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th>আদেশের ক্রমিক নং ও তারিখ</th>
+              <th>আদেশ ও অফিসারের সাক্ষর</th>
+              <th>আদেশের উপর গৃহীত ব্যবস্থা</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((sheet, i) => (
+              <tr key={i}>
+                <td>{sheet.date || ""}</td>
+                <td>{sheet.order || ""}</td>
+                <td>{sheet.actionTaken || ""}</td>
+              </tr>
+            ))}
+
+            {/* Fill empty rows */}
+            {Array.from({ length: rowsPerPage - orders.length }).map((_, i) => (
+              <tr key={`empty-${i}`}>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 

@@ -12,6 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 const AddAdcOrder = () => {
   const { state } = useLocation();
   const caseData = state?.caseData;
+  const mode = state?.mode || "edit";
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -19,25 +20,27 @@ const AddAdcOrder = () => {
   const today = new Date().toISOString().split("T")[0];
   const queryClient = useQueryClient();
 
-  // ✅ Find existing stage data for current role
-  const existingOfficeUser = caseData?.caseStages.find((entry) =>
-    Object.keys(entry).includes(user.role)
-  );
-  const existingData = existingOfficeUser
-    ? existingOfficeUser[user.role]
-    : null;
+  const existingData =
+    caseData?.caseStages?.[0]?.[user.role] ||
+    caseData?.caseStages?.[0]?.[caseData.currentStage.stage] ||
+    {};
+
+  const fixedFields = {
+    mamlaName: existingData.mamlaName || "",
+    mamlaNo: existingData.mamlaNo || "",
+    year: existingData.year || new Date().getFullYear(),
+    district: existingData.district || user.district,
+  };
+  // console.log(existingData);
 
   // ✅ Initialize form data with ALL existing orders (or one blank)
   const [formData, setFormData] = useState({
     userId: user._id,
     role: user.role,
-    mamlaName: existingData?.mamlaName || "",
-    mamlaNo: existingData?.mamlaNo || "",
-    year: existingData?.year || new Date().getFullYear(),
-    district: user.district,
+    ...fixedFields,
     officeName: user.officeName,
     orderSheets:
-      existingData?.orderSheets?.length > 0
+      mode === "edit" && existingData?.orderSheets?.length > 0
         ? [...existingData.orderSheets]
         : [
             {
@@ -47,7 +50,7 @@ const AddAdcOrder = () => {
               remarks: "",
             },
           ],
-    remarks: existingData?.remarks || "",
+    remarks: mode === "edit" ? existingData.remarks || "" : "",
   });
 
   // ✅ Input handlers
@@ -102,19 +105,31 @@ const AddAdcOrder = () => {
     const previousRoleStage = previousStages[caseStageKey] || {};
 
     // ✅ Full overwrite of orderSheets with current state
-    const newStage = {
-      ...previousRoleStage,
-      userId: user._id,
-      role: user.role,
-      mamlaName: formData.mamlaName,
-      mamlaNo: formData.mamlaNo,
-      year: formData.year,
-      district: user.district,
-      officeName: user.officeName,
-      orderSheets: [...formData.orderSheets],
-      remarks: formData.remarks,
-      submittedAt,
-    };
+    let newStage;
+    if (mode === "add") {
+      newStage = {
+        ...existingData,
+        userId: user._id,
+        role: user.role,
+        mamlaName: formData.mamlaName,
+        mamlaNo: formData.mamlaNo,
+        year: formData.year,
+        district: formData.district,
+        officeName: user.officeName,
+        orderSheets: [
+          ...(existingData.orderSheets || []),
+          ...formData.orderSheets,
+        ], // append
+        remarks: formData.remarks,
+        submittedAt: submittedAt,
+      };
+    } else {
+      // edit mode
+      newStage = {
+        ...formData,
+        submittedAt: new Date().toISOString(),
+      };
+    }
 
     const updatedCaseStages = {
       ...previousStages,
@@ -134,8 +149,12 @@ const AddAdcOrder = () => {
       if (res.data.modifiedCount > 0) {
         toast.success("আপডেট সফল হয়েছে!");
         // ✅ Invalidate cached data
+        queryClient.invalidateQueries(["allCases"]);
+
         queryClient.invalidateQueries(["caseDetails", caseData._id]);
-        navigate(-1);
+        navigate(`/dashboard/${user.role}/cases/${caseData._id}`, {
+          state: user.role,
+        });
       }
     } catch (err) {
       console.error("Update failed:", err);
@@ -155,8 +174,8 @@ const AddAdcOrder = () => {
             <input
               name="district"
               type="text"
-              value={caseData?.currentStage?.district?.bn || ""}
-              readOnly
+              value={formData.district?.bn || ""}
+              readOnly={mode === "add"} // <--
               className="bg-gray-100 input-bordered w-full input"
             />
           </label>
@@ -167,6 +186,7 @@ const AddAdcOrder = () => {
               name="mamlaName"
               value={formData.mamlaName}
               onChange={handleChange}
+              readOnly={mode === "add"} // <--
               className="bg-gray-100 mt-1 w-full select-bordered select"
               required
             >
@@ -186,6 +206,7 @@ const AddAdcOrder = () => {
               type="number"
               value={formData.mamlaNo}
               onChange={handleChange}
+              readOnly={mode === "add"} // <--
               className="bg-gray-100 input-bordered w-full input"
               required
             />
@@ -195,8 +216,9 @@ const AddAdcOrder = () => {
             সাল:
             <select
               name="year"
-              value={formData.year}
+              value={toBanglaNumber(formData.year)}
               onChange={handleChange}
+              readOnly={mode === "add"} // <--
               className="bg-gray-100 input-bordered w-full input"
             >
               {Array.from({ length: 50 }, (_, i) => {
@@ -282,7 +304,7 @@ const AddAdcOrder = () => {
 
         {/* Submit */}
         <button type="submit" className="mt-4 w-full btn btn-primary">
-          আপডেট করুন
+          {mode == "edit" ? "আপডেট করুন" : "নতুন আদেশ যুক্ত করুন"}
         </button>
       </form>
     </div>

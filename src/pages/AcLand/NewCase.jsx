@@ -11,6 +11,7 @@ import { mamlaNames } from "../../data/mamlaNames";
 const NewCase = () => {
   const { state } = useLocation();
   const caseData = state?.caseData;
+  const refetch = state?.refetch;
   const { user } = useContext(AuthContext);
   const isEditMode = !!caseData;
   const navigate = useNavigate();
@@ -170,6 +171,7 @@ const NewCase = () => {
         );
         if (res.status === 200) {
           toast.success("মামলার তথ্য হালনাগাদ হয়েছে!");
+          refetch();
           navigate(`/dashboard/acLand/allCases`);
         }
       } else {
