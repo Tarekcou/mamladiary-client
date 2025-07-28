@@ -8,8 +8,8 @@ const CaseDetailsAcland = ({ rootCaseId, activeStage, applicants }) => {
       <style>{`
         /* Shared screen + print styling */
         #printable-area {
-          width: 210mm;
-          min-height: 297mm;
+          min-width: 210mm;
+          min-height: 285mm;
           padding: 5mm;
           background: white;
           box-sizing: border-box;
@@ -64,6 +64,9 @@ const CaseDetailsAcland = ({ rootCaseId, activeStage, applicants }) => {
       </button>
 
       <div id="printable-area">
+        <div>
+          <h1 className="text-xl">{activeStage.officeName.bn}</h1>
+        </div>
         {/* Tracking ID */}
         <div className="gap-4 grid grid-cols-3 mb-4">
           <div className="font-semibold">Tracking ID:</div>

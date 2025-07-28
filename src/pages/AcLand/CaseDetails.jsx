@@ -35,7 +35,7 @@ const CaseDetails = () => {
   // Roles list for tabs
   const roleStageMap = caseData?.caseStages?.[0] || {};
   const stageRoles = Object.keys(roleStageMap);
-
+  console.log()
   // Validate tab from query param, fallback to first role
   const validTab =
     tabFromQuery && stageRoles.includes(tabFromQuery)
@@ -108,7 +108,7 @@ const CaseDetails = () => {
         </div>
 
         {/* Edit & Add buttons */}
-        {activeTab === user.role && (
+        {(activeTab === user.role && activeTab== caseData.currentStage.stage) && (
           <div className="flex gap-2">
             <button
               onClick={handleAddOrder}

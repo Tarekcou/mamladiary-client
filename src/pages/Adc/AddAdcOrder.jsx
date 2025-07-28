@@ -106,6 +106,7 @@ const AddAdcOrder = () => {
 
     // ✅ Full overwrite of orderSheets with current state
     let newStage;
+
     if (mode === "add") {
       newStage = {
         ...existingData,
@@ -139,12 +140,13 @@ const AddAdcOrder = () => {
     const updatedPayload = {
       caseStages: [updatedCaseStages],
     };
-
+    console.log(mode,updatedPayload)
     try {
       const res = await axiosPublic.patch(
         `/cases/${caseData._id}?district=${user.district.en}`,
         updatedPayload
       );
+      console.log(res.data)
 
       if (res.data.modifiedCount > 0) {
         toast.success("আপডেট সফল হয়েছে!");

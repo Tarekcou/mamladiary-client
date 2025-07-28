@@ -11,7 +11,7 @@ const CaseDetailsSenior = ({ rootCaseId, activeStage, headerText }) => {
     <>
       <style>{`
         #printable-area {
-          width: 210mm;
+          width: 240mm;
           height: 297mm;
           
           background: white;

@@ -38,11 +38,9 @@ const DashboardLayout = () => {
 
       <div className="relative flex flex-grow">
         <div
-          className={`hidden lg:block   ${
-            isSticky
-              ? "fixed top-16 scroll-py-10 z-40 shadow-md h-full"
-              : "relative  mt-1 shadow-md"
-          }`}
+          className={`hidden lg:block  
+         
+          `}
           style={{
             width: `${sidebarWidth}px`,
           }}
@@ -60,7 +58,7 @@ const DashboardLayout = () => {
           {/* {path.includes("dashboard") ? <DashboardSidebar /> : <SidebarLeft />} */}
         </div>
 
-        {isSticky && (
+        {/* {isSticky && (
           <div
             className="hidden lg:block"
             style={{
@@ -68,7 +66,7 @@ const DashboardLayout = () => {
               height: "calc(100vh - 64px)", // Adjust for header height
             }}
           />
-        )}
+        )} */}
 
         {/* for mobile device navbar menu take space */}
         {/* <div className="md:hidden sm:h-[600px]"></div> */}
