@@ -9,7 +9,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./provider/AuthProvider.jsx";
 import PrivateRouter from "./routes.jsx/PrivateRouter.jsx";
 
-import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
 import { Toaster, toast } from "sonner";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
@@ -35,7 +34,7 @@ import AcLandDashboard from "./pages/AcLand/AcLandDashboard.jsx";
 import DashboardLayout from "./Layout/DashboardLayout.jsx";
 import AdcDashboard from "./pages/adc/AdcDashboard.jsx";
 import DivComDashboard from "./pages/divCom/DivComDashboard.jsx";
-import AddUsers from "./pages/divCom/users/AddUsers.jsx";
+
 import AllMamla from "./pages/divCom/mamlas/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
@@ -43,6 +42,8 @@ import NewCase from "./pages/AcLand/NewCase.jsx";
 import AllCases from "./pages/AcLand/AllCases.jsx";
 import CaseDetails from "./pages/AcLand/CaseDetails.jsx";
 import AddAdcOrder from "./pages/Adc/AddAdcOrder.jsx";
+import MamlaUploadForm from "./pages/DivCom/mamlas/MamlaUploadForm.jsx";
+import AddUsers from "./pages/DivCom/users/AddUsers.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
