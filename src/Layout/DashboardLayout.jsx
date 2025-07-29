@@ -4,9 +4,9 @@ import Footer from "../components/common/Footer";
 import { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
 import SidebarNagorik from "../pages/Nagorik/SidebarNagorik";
-import SidebarAdc from "../pages/adc/SidebarAdc";
 import SidebarAcLand from "../pages/AcLand/SidebarAcLand";
 import SidebarDivCom from "../pages/divCom/SidebarDivCom";
+import SidebarAdc from "../pages/adc/SidebarAdc";
 
 const DashboardLayout = () => {
   const [isSticky, setIsSticky] = useState(false);
