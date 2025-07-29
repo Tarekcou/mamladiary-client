@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CaseDetailsAcland from "./CaseDetailsAcland";
-import CaseDetailsSenior from "../Adc/CaseDetailsSenior";
 import { AuthContext } from "../../provider/AuthProvider";
 import { Plus, Edit } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axiosPublic from "../../axios/axiosPublic";
+import CaseDetailsUpper from "../Adc/CaseDetailsUpper";
 
 const CaseDetails = () => {
   const { user } = useContext(AuthContext);
@@ -144,7 +144,7 @@ const CaseDetails = () => {
           applicants={caseData.applicants}
         />
       ) : (
-        <CaseDetailsSenior
+        <CaseDetailsUpper
           rootCaseId={caseData.rootCaseId}
           activeStage={activeStage}
         />

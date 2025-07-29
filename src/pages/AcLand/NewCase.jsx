@@ -16,13 +16,15 @@ const NewCase = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const initialApplicants = [{ name: "", phone: "", address: "" }];
+  const initialBadi = [{ badiName: "", badiPhone: "", badiAddress: "" }];
+  const initialBibadi = [{ bibadiName: "", bibadiPhone: "", bibadiAddress: "" }];
   const initialDocuments = [{ label: "", url: "" }];
   const initialOrderSheets = [{ date: "", order: "", actionTaken: "" }];
 
   const initialFormData = (user) => ({
     rootCaseId: Math.floor(10000 + Math.random() * 90000).toString(),
-    applicants: [],
+    badi: [],
+    bibadi:[],
     currentStage: {
       stage: user.role,
       status: `${user.officeName.bn} ভূমি অফিস`,
@@ -60,7 +62,8 @@ const NewCase = () => {
   });
 
   const [formData, setFormData] = useState(initialFormData(user));
-  const [applicants, setApplicants] = useState(initialApplicants);
+  const [badi, setBadi] = useState(initialBadi);
+  const [bibadi, setBibadi] = useState(initialBibadi);
   const [documents, setDocuments] = useState(initialDocuments);
   const [orderSheets, setOrderSheets] = useState(initialOrderSheets);
   const [selectedCaseName, setSelectedCaseName] = useState("");
@@ -91,7 +94,8 @@ const NewCase = () => {
         return updated;
       });
 
-      setApplicants(caseData.applicants || initialApplicants);
+      setBadi(caseData.badi || initialBadi);
+      setBibadi(caseData.bibadi || initialBibadi);
       setDocuments(existingStage.documents || initialDocuments);
       setOrderSheets(existingStage.orderSheets || initialOrderSheets);
       setSelectedCaseName(existingStage.mamlaName || "");
@@ -110,10 +114,15 @@ const NewCase = () => {
     });
   };
 
-  const handleApplicantChange = (index, field, value) => {
-    const updated = [...applicants];
+  const handleBadiChange = (index, field, value) => {
+    const updated = [...badi];
     updated[index][field] = value;
-    setApplicants(updated);
+    setBadi(updated);
+  };
+  const handleBibadiChange = (index, field, value) => {
+    const updated = [...bibadi];
+    updated[index][field] = value;
+    setBibadi(updated);
   };
 
   const handleDocumentChange = (index, field, value) => {
@@ -158,7 +167,8 @@ const NewCase = () => {
 
     const payload = {
       ...formData,
-      applicants,
+      badi,
+      bibadi,
       caseStages: [{ ...previousStages, [roleKey]: newStage }],
     };
 
@@ -177,7 +187,8 @@ const NewCase = () => {
         if (res.data.insertedId) {
           toast.success("মামলা সফলভাবে জমা হয়েছে!");
           setFormData(initialFormData(user));
-          setApplicants(initialApplicants);
+          setBadi(initialBadi);
+          setBibadi(initialBibadi);
           setDocuments(initialDocuments);
           setOrderSheets(initialOrderSheets);
           setSelectedCaseName("");
@@ -198,36 +209,36 @@ const NewCase = () => {
         {isEditMode ? "মামলা সম্পাদনা করুন" : "নতুন মামলা শুরু করুন"}
       </h2>
 
-      {/* Applicants */}
+      {/* Applicants বাদি */}
       <div>
         <h3 className="mb-2 font-semibold">আবেদনকারীগণ</h3>
-        {applicants.map((app, idx) => (
+        {badi.map((app, idx) => (
           <div key={idx} className="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
             <input
               type="text"
-              value={app.name}
-              placeholder="নাম"
+              value={app.badiName}
+              placeholder="বাদি"
               className="input-bordered input"
               onChange={(e) =>
-                handleApplicantChange(idx, "name", e.target.value)
+                handleBadiChange(idx, "name", e.target.value)
               }
             />
             <input
               type="text"
-              value={app.phone}
+              value={app.badiPhone}
               placeholder="ফোন"
               className="input-bordered input"
               onChange={(e) =>
-                handleApplicantChange(idx, "phone", e.target.value)
+                handleBadiChange(idx, "phone", e.target.value)
               }
             />
             <input
               type="text"
-              value={app.address}
+              value={app.badiAddress}
               placeholder="ঠিকানা"
               className="input-bordered input"
               onChange={(e) =>
-                handleApplicantChange(idx, "address", e.target.value)
+                handleBadiChange(idx, "address", e.target.value)
               }
             />
           </div>
@@ -236,10 +247,53 @@ const NewCase = () => {
           type="button"
           className="mb-4 btn-outline btn btn-sm"
           onClick={() =>
-            setApplicants([...applicants, { name: "", phone: "", address: "" }])
+            setBadi([...badi, { badiName: "", badiPhone: "", badiAddress: "" }])
           }
         >
-          <Plus /> আবেদনকারী
+          <Plus /> বাদি 
+        </button>
+      </div>
+      <div>
+        {/* <h3 className="mb-2 font-semibold">আবেদনকারীগণ</h3> */}
+        {bibadi.map((app, idx) => (
+          <div key={idx} className="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
+            <input
+              type="text"
+              value={app.bibadiName}
+              placeholder="বিবাদি"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBibadiChange(idx, "name", e.target.value)
+              }
+            />
+            <input
+              type="text"
+              value={app.bibadiPhone}
+              placeholder="ফোন"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBibadiChange(idx, "phone", e.target.value)
+              }
+            />
+            <input
+              type="text"
+              value={app.bibadiAddress}
+              placeholder="ঠিকানা"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBibadiChange(idx, "address", e.target.value)
+              }
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          className="mb-4 btn-outline btn btn-sm"
+          onClick={() =>
+            setBibadi([...bibadi, { bibadiName: "", bibadiPhone: "", bibadiAddress: "" }])
+          }
+        >
+          <Plus /> বিবাদি
         </button>
       </div>
 

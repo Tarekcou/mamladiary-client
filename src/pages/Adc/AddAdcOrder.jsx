@@ -8,6 +8,7 @@ import { mamlaNames } from "../../data/mamlaNames";
 import axiosPublic from "../../axios/axiosPublic";
 import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
 
 const AddAdcOrder = () => {
   const { state } = useLocation();
@@ -25,19 +26,28 @@ const AddAdcOrder = () => {
     caseData?.caseStages?.[0]?.[caseData.currentStage.stage] ||
     {};
 
-  const fixedFields = {
+  // Initialize applicants state from existingData or empty
+  const [badi, setBadi] = useState(
+    existingData?.badi && existingData.badi.length > 0
+      ? existingData.badi
+      : [{ badiName: "", badiPhone: "", badiAddress: "" }]
+  );
+  const [bibadi, setBibadi] = useState(
+    existingData?.bibadi && existingData.bibadi.length > 0
+      ? existingData.bibadi
+      : [{ bibadiName: "", bibadiPhone: "", bibadiAddress: "" }]
+  );
+
+  // Initialize formData and set applicants from state
+  const [formData, setFormData] = useState({
+    userId: user._id,
+    role: user.role,
+    badi:badi,
+    bibadi:bibadi,
     mamlaName: existingData.mamlaName || "",
     mamlaNo: existingData.mamlaNo || "",
     year: existingData.year || new Date().getFullYear(),
     district: existingData.district || user.district,
-  };
-  // console.log(existingData);
-
-  // ✅ Initialize form data with ALL existing orders (or one blank)
-  const [formData, setFormData] = useState({
-    userId: user._id,
-    role: user.role,
-    ...fixedFields,
     officeName: user.officeName,
     orderSheets:
       mode === "edit" && existingData?.orderSheets?.length > 0
@@ -45,6 +55,9 @@ const AddAdcOrder = () => {
         : [
             {
               date: today,
+              formNo:"",
+              orderNo: "",
+              
               order: "",
               actionTaken: "",
               remarks: "",
@@ -53,7 +66,25 @@ const AddAdcOrder = () => {
     remarks: mode === "edit" ? existingData.remarks || "" : "",
   });
 
-  // ✅ Input handlers
+  // Sync formData.applicants whenever applicants state changes
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, badi,bibadi }));
+  }, [badi,bibadi]);
+
+  // Applicant inputs change handler
+ const handleBadiChange = (index, field, value) => {
+    const updated = [...badi];
+    updated[index][field] = value;
+    setBadi(updated);
+  };
+  const handleBibadiChange = (index, field, value) => {
+    const updated = [...bibadi];
+    updated[index][field] = value;
+    setBibadi(updated);
+  };
+
+  // The rest of your handlers (handleChange, handleOrderChange, addOrder, removeOrder)...
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -72,7 +103,7 @@ const AddAdcOrder = () => {
       ...prev,
       orderSheets: [
         ...prev.orderSheets,
-        { date: today, order: "", actionTaken: "", remarks: "" },
+        { date: today,formNo:"",orderNo:"", order: "", actionTaken: "", remarks: "" },
       ],
     }));
   };
@@ -84,6 +115,8 @@ const AddAdcOrder = () => {
       return { ...prev, orderSheets: updated };
     });
   };
+
+  // Submit logic unchanged, formData.applicants will be up to date
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,7 +137,6 @@ const AddAdcOrder = () => {
     const previousStages = caseData?.caseStages?.[0] || {};
     const previousRoleStage = previousStages[caseStageKey] || {};
 
-    // ✅ Full overwrite of orderSheets with current state
     let newStage;
 
     if (mode === "add") {
@@ -117,18 +149,16 @@ const AddAdcOrder = () => {
         year: formData.year,
         district: formData.district,
         officeName: user.officeName,
-        orderSheets: [
-          ...(existingData.orderSheets || []),
-          ...formData.orderSheets,
-        ], // append
+        orderSheets: [...(existingData.orderSheets || []), ...formData.orderSheets],
+        badi: formData.badi,
+        bibadi: formData.bibadi,
         remarks: formData.remarks,
-        submittedAt: submittedAt,
+        submittedAt,
       };
     } else {
-      // edit mode
       newStage = {
         ...formData,
-        submittedAt: new Date().toISOString(),
+        submittedAt,
       };
     }
 
@@ -140,19 +170,16 @@ const AddAdcOrder = () => {
     const updatedPayload = {
       caseStages: [updatedCaseStages],
     };
-    console.log(mode,updatedPayload)
+
     try {
       const res = await axiosPublic.patch(
         `/cases/${caseData._id}?district=${user.district.en}`,
         updatedPayload
       );
-      console.log(res.data)
 
       if (res.data.modifiedCount > 0) {
         toast.success("আপডেট সফল হয়েছে!");
-        // ✅ Invalidate cached data
         queryClient.invalidateQueries(["allCases"]);
-
         queryClient.invalidateQueries(["caseDetails", caseData._id]);
         navigate(`/dashboard/${user.role}/cases/${caseData._id}`, {
           state: user.role,
@@ -168,7 +195,96 @@ const AddAdcOrder = () => {
     <div className="bg-base-200 shadow mx-auto p-6 rounded max-w-2xl">
       <h2 className="mb-4 font-semibold text-xl">আদেশপত্র ব্যবস্থাপনা</h2>
 
+
+         {/* Applicants বাদি */}
+      <div>
+        <h3 className="mb-2 font-semibold">আবেদনকারীগণ</h3>
+        {badi.map((app, idx) => (
+          <div key={idx} className="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
+            <input
+              type="text"
+              value={app.badiName}
+              placeholder="বাদি"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBadiChange(idx, "badiName", e.target.value)
+              }
+            />
+            <input
+              type="text"
+              value={app.badiPhone}
+              placeholder="ফোন"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBadiChange(idx, "badiPhone", e.target.value)
+              }
+            />
+            <input
+              type="text"
+              value={app.badiAddress}
+              placeholder="ঠিকানা"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBadiChange(idx, "badiAddress", e.target.value)
+              }
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          className="mb-4 btn-outline btn btn-sm"
+          onClick={() =>
+            setBadi([...badi, { badiName: "", badiPhone: "", badiAddress: "" }])
+          }
+        >
+          <Plus /> বাদি 
+        </button>
+      </div>
+      <div>
+        {/* <h3 className="mb-2 font-semibold">আবেদনকারীগণ</h3> */}
+        {bibadi.map((app, idx) => (
+          <div key={idx} className="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
+            <input
+              type="text"
+              value={app.bibadiName}
+              placeholder="বিবাদি"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBibadiChange(idx, "bibadiName", e.target.value)
+              }
+            />
+            <input
+              type="text"
+              value={app.bibadiPhone}
+              placeholder="ফোন"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBibadiChange(idx, "bibadiPhone", e.target.value)
+              }
+            />
+            <input
+              type="text"
+              value={app.bibadiAddress}
+              placeholder="ঠিকানা"
+              className="input-bordered input"
+              onChange={(e) =>
+                handleBibadiChange(idx, "bibadiAddress", e.target.value)
+              }
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          className="mb-4 btn-outline btn btn-sm"
+          onClick={() =>
+            setBibadi([...bibadi, { bibadiName: "", bibadiPhone: "", bibadiAddress: "" }])
+          }
+        >
+          <Plus /> বিবাদি
+        </button>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
+        
         {/* District & Mamla Info */}
         <div className="gap-4 grid grid-cols-2">
           <label>
@@ -240,12 +356,31 @@ const AddAdcOrder = () => {
           <h3 className="mb-2 font-semibold">আদেশপত্রসমূহ</h3>
           {formData.orderSheets.map((order, idx) => (
             <div key={idx} className="bg-white mb-4 p-3 border rounded-md">
+              <div>
               <input
                 type="date"
                 value={order.date}
                 onChange={(e) => handleOrderChange(idx, "date", e.target.value)}
                 className="mb-2 input-bordered w-full input"
               />
+              <input
+                type="number"
+                placeholder="আদেশ নম্বর"
+                value={order.orderNo}
+                onChange={(e) => handleOrderChange(idx, "orderNo", e.target.value)}
+                className="mb-2 input-bordered w-full input"
+              />
+              <input
+                type="text"
+                placeholder="ফর্ম নম্বর"
+                value={order.formNo}
+                onChange={(e) => handleOrderChange(idx, "formNo", e.target.value)}
+                className="mb-2 input-bordered w-full input"
+              />
+            
+
+              </div>
+              
               <textarea
                 rows="5"
                 value={order.order}

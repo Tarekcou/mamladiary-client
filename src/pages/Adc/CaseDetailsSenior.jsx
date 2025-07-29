@@ -1,168 +1,150 @@
 import React, { useRef } from "react";
+import { toBanglaNumber } from "../../utils/toBanglaNumber";
 
 const CaseDetailsSenior = ({ rootCaseId, activeStage, headerText }) => {
   const orders = activeStage.orderSheets || [];
-  const rowsPerPage = 20;
+  const rowsPerPage = 10; // Tune this number as per page size and spacing
   const printDateTime = new Date().toLocaleString();
-
   const componentRef = useRef();
 
   return (
     <>
       <style>{`
-        #printable-area {
-          width: 240mm;
-          height: 297mm;
-          
-          background: white;
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-        }
+  @media print {
+    @page {
+      margin-top: 0;
+    }
 
-        /* Header */
-        .print-header {
-          display: flex;
-          justify-content: space-between;
-          font-size: 14px;
-          font-weight: 600;
-          margin-bottom: 8px;
-        }
+    body * {
+      visibility: hidden;
+    }
+    #printable-area, #printable-area * {
+      visibility: visible;
+    }
+    #printable-area {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding-top: 8px !important;
+      width: 200mm;
+      height: 260mm;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+    }
 
-        /* Case info table */
-        .case-info {
-          border: 1px solid #000;
-          border-collapse: collapse;
-          width: 100%;
-          margin-bottom: 8px;
-        }
-        .case-info td {
-          border: 1px solid #000;
-          padding: 4px;
-          font-size: 12px;
-        }
+    button {
+      display: none;
+    }
 
-        /* Orders table */
-       .orders-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* Needed for colgroup widths to apply */
-  border: 1px solid #000;
-  height: 100%; /* Fill page height */
-}
+    .orders-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      flex-grow: 1;
+      border: 1px solid #000;
+    }
 
-.orders-table th,
-.orders-table td {
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  padding: 6px;
-  font-size: 12px;
-  word-break: break-word;
-}
+    .orders-table th {
+      background: #f3f4f6;
+      font-weight: bold;
+      padding: 6px;
+      font-size: 12px;
+      border: 1px solid #000;
+    }
 
-.orders-table th:first-child,
-.orders-table td:first-child {
-  border-left: none;
-}
+    .orders-table td {
+      border-left: 1px solid #000;
+      border-right: 1px solid #000;
+      padding: 6px;
+      font-size: 12px;
+      word-break: break-word;
+    }
 
-.orders-table th:last-child,
-.orders-table td:last-child {
-  border-right: none;
-}
+    .orders-table th:nth-child(1),
+    .orders-table td:nth-child(1) {
+      width: 20%;
+    }
+    .orders-table th:nth-child(2),
+    .orders-table td:nth-child(2) {
+      width: 60%;
+    }
+    .orders-table th:nth-child(3),
+    .orders-table td:nth-child(3) {
+      width: 20%;
+    }
 
-.orders-table thead th {
-  background: #f3f4f6;
-  border-bottom: 1px solid #000;
-}
+    .orders-table tbody {
+      height: 100%;
+    }
 
-.orders-table tbody tr:last-child td {
-  border-bottom: 1px solid #000; /* Bottom border */
-}
-  .orders-table th:nth-child(1),
-.orders-table td:nth-child(1) {
-  width: 20%;
-}
-.orders-table th:nth-child(2),
-.orders-table td:nth-child(2) {
-  width: 60%;
-}
-.orders-table th:nth-child(3),
-.orders-table td:nth-child(3) {
-  width: 20%;
-}
-
-
-
-        /* Fill empty space */
-        .empty-row td {
-          border: none;
-          padding: 0;
-          height: auto;
-        }
-
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-            .orders-table thead {
-    display: table-row-group; /* not table-header-group */
+    .orders-table tr {
+      height: calc((100% - 30px) / 10);
+    }
   }
-          #printable-area, #printable-area * {
-            visibility: visible;
-          }
-          #printable-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-          }
-          button {
-            display: none;
-          }
-        }
-      `}</style>
+`}</style>
 
-      <button className="mb-4 btn btn-primary" onClick={() => window.print()}>
-        PDF ডাউনলোড (Print)
-      </button>
 
-      <div id="printable-area" ref={componentRef}>
-        {/* Header */}
-        <div className="print-header">
-          <span>{headerText || activeStage.officeName?.bn}</span>
-          <span>প্রিন্টের সময়: {printDateTime}</span>
+
+      <button className="mb-4 btn btn-primary print:hidden" onClick={() => window.print()}>
+  PDF ডাউনলোড (Print)
+</button>
+
+       <div  className=""       style={{ marginTop: 0 }}
+            id="printable-area" ref={componentRef}>
+        {/* Case Header Info */}
+        <div className="text-[16px] text-black case-info">
+          <div className="flex justify-between mb-1">
+            <div>বাংলাদেশ ফরম নং - {activeStage?.formNo}</div>
+            <div className="text-right">
+              মোঃ আব্দুল আউয়াল গং<br />
+              বনাম<br />
+              আবুল হোসেন
+            </div>
+          </div>
+
+          <h1 className="text-center font-bold text-lg mb-1">আদেশপত্র</h1>
+          <p className="text-center mb-2">
+            (১৯৯১ সালের ভূমি রেকর্ড ও জরিপ আদেশ ১৯২ নং বিধি অনুযায়ী)
+          </p>
+
+          <div className="space-y-2">
+            <div className="flex w-full gap-2 justify-between">
+              <div className="flex gap-1 w-1/2 items-center whitespace-nowrap">
+                <h1 className="font-semibold inline">আদেশপত্র তারিখ</h1>
+                <div className="flex-1 border-b border-dotted border-black"></div>
+              </div>
+              <div className="flex items-center w-1/2 gap-2">
+                <label className="font-semibold">হইতে</label>
+                <div className="border-b border-dotted border-black w-full"></div>
+                <label className="font-semibold">পর্যন্ত</label>
+              </div>
+            </div>
+
+            <div className="flex w-full gap-2 justify-between">
+              <div className="flex gap-1 w-2/5 items-center whitespace-nowrap">
+                <h1 className="font-semibold inline">জেলা</h1>
+                <div className="flex-1 border-b border-dotted border-black"></div>
+              </div>
+              <div className="flex items-center w-3/5 gap-2">
+                <label className="font-semibold">২০০</label>
+                <div className="border-b border-dotted border-black w-full"></div>
+                <label className="font-semibold">সালের</label>
+                <div className="border-b border-dotted border-black w-full"></div>
+                <label className="font-semibold">পর্যন্ত</label>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            মামলার ধরন: {activeStage.mamlaName} <span>মামলার নংঃ </span>
+            {toBanglaNumber(activeStage?.mamlaNo + " ")}/{toBanglaNumber(activeStage?.year)} ({activeStage.district.bn})
+          </div>
         </div>
 
-        {/* Case Info */}
-        <table className="case-info">
-          <tbody>
-            <tr>
-              <td>Tracking ID</td>
-              <td colSpan={3}>{rootCaseId}</td>
-            </tr>
-            <tr>
-              <td>মামলার নাম</td>
-              <td>{activeStage.mamlaName || "N/A"}</td>
-              <td>মামলার নং</td>
-              <td>{activeStage.mamlaNo || "N/A"}</td>
-            </tr>
-            <tr>
-              <td>বছর</td>
-              <td>{activeStage.year || "N/A"}</td>
-              <td>জেলা</td>
-              <td>{activeStage.district?.bn || "N/A"}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {/* Orders Table */}
+        {/* Order Table */}
         <table className="orders-table">
-          <colgroup>
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "60%" }} />
-            <col style={{ width: "20%" }} />
-          </colgroup>
-
           <thead>
             <tr>
               <th>আদেশের ক্রমিক নং ও তারিখ</th>
@@ -171,22 +153,15 @@ const CaseDetailsSenior = ({ rootCaseId, activeStage, headerText }) => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((sheet, i) => (
-              <tr key={i}>
-                <td>{sheet.date || ""}</td>
-                <td>{sheet.order || ""}</td>
-                <td>{sheet.actionTaken || ""}</td>
-              </tr>
-            ))}
-
-            {/* Fill empty rows */}
-            {Array.from({ length: rowsPerPage - orders.length }).map((_, i) => (
-              <tr key={`empty-${i}`}>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-            ))}
+            {[...orders, ...Array(rowsPerPage - orders.length).fill({})].map(
+              (sheet, i) => (
+                <tr key={i}>
+                  <td>{sheet.date || ""}</td>
+                  <td>{sheet.order || ""}</td>
+                  <td>{sheet.actionTaken || ""}</td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>

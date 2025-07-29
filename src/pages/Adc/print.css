@@ -1,0 +1,52 @@
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+.a4-paper {
+  width: 210mm;
+  height: 297mm;
+  padding: 20mm;
+  margin: auto;
+  background: white;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.case-info p {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.orders-table th,
+.orders-table td {
+  border: 1px solid #000;
+  vertical-align: top;
+  padding: 8px;
+  text-align: left;
+}
+
+.signature {
+  margin-top: 40px;
+}
+
+.remarks-section {
+  margin-top: 20px;
+  border-top: 1px solid #000;
+  padding-top: 10px;
+}
