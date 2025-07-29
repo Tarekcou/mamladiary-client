@@ -16,15 +16,14 @@ const NewCase = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const initialBadi = [{ badiName: "", badiPhone: "", badiAddress: "" }];
-  const initialBibadi = [{ bibadiName: "", bibadiPhone: "", bibadiAddress: "" }];
+  const initialBadi = [{ name: "", phone: "", address: "" }];
+  const initialBibadi = [{ name: "", phone: "", address: "" }];
   const initialDocuments = [{ label: "", url: "" }];
   const initialOrderSheets = [{ date: "", order: "", actionTaken: "" }];
 
   const initialFormData = (user) => ({
     rootCaseId: Math.floor(10000 + Math.random() * 90000).toString(),
-    badi: [],
-    bibadi:[],
+
     currentStage: {
       stage: user.role,
       status: `${user.officeName.bn} ভূমি অফিস`,
@@ -47,6 +46,8 @@ const NewCase = () => {
         [user.role]: {
           userId: user._id,
           role: user.role,
+          badi: [],
+          bibadi: [],
           mamlaName: "",
           mamlaNo: "",
           year: "",
@@ -151,6 +152,8 @@ const NewCase = () => {
       ...previousRoleStage,
       userId: user._id,
       role: user.role,
+      badi,
+      bibadi,
       mamlaName: formData.caseInitiate[0].mamlaName,
       mamlaNo: formData.caseInitiate[0].mamlaNo,
       year: formData.caseInitiate[0].year,
@@ -167,8 +170,7 @@ const NewCase = () => {
 
     const payload = {
       ...formData,
-      badi,
-      bibadi,
+
       caseStages: [{ ...previousStages, [roleKey]: newStage }],
     };
 
@@ -216,30 +218,24 @@ const NewCase = () => {
           <div key={idx} className="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
             <input
               type="text"
-              value={app.badiName}
+              value={app.name}
               placeholder="বাদি"
               className="input-bordered input"
-              onChange={(e) =>
-                handleBadiChange(idx, "name", e.target.value)
-              }
+              onChange={(e) => handleBadiChange(idx, "name", e.target.value)}
             />
             <input
               type="text"
-              value={app.badiPhone}
+              value={app.phone}
               placeholder="ফোন"
               className="input-bordered input"
-              onChange={(e) =>
-                handleBadiChange(idx, "phone", e.target.value)
-              }
+              onChange={(e) => handleBadiChange(idx, "phone", e.target.value)}
             />
             <input
               type="text"
-              value={app.badiAddress}
+              value={app.adress}
               placeholder="ঠিকানা"
               className="input-bordered input"
-              onChange={(e) =>
-                handleBadiChange(idx, "address", e.target.value)
-              }
+              onChange={(e) => handleBadiChange(idx, "address", e.target.value)}
             />
           </div>
         ))}
@@ -247,10 +243,10 @@ const NewCase = () => {
           type="button"
           className="mb-4 btn-outline btn btn-sm"
           onClick={() =>
-            setBadi([...badi, { badiName: "", badiPhone: "", badiAddress: "" }])
+            setBadi([...badi, { name: "", phone: "", address: "" }])
           }
         >
-          <Plus /> বাদি 
+          <Plus /> বাদি
         </button>
       </div>
       <div>
@@ -259,25 +255,21 @@ const NewCase = () => {
           <div key={idx} className="gap-2 grid grid-cols-1 md:grid-cols-3 mb-4">
             <input
               type="text"
-              value={app.bibadiName}
+              value={app.name}
               placeholder="বিবাদি"
               className="input-bordered input"
-              onChange={(e) =>
-                handleBibadiChange(idx, "name", e.target.value)
-              }
+              onChange={(e) => handleBibadiChange(idx, "name", e.target.value)}
             />
             <input
               type="text"
-              value={app.bibadiPhone}
+              value={app.phone}
               placeholder="ফোন"
               className="input-bordered input"
-              onChange={(e) =>
-                handleBibadiChange(idx, "phone", e.target.value)
-              }
+              onChange={(e) => handleBibadiChange(idx, "phone", e.target.value)}
             />
             <input
               type="text"
-              value={app.bibadiAddress}
+              value={app.address}
               placeholder="ঠিকানা"
               className="input-bordered input"
               onChange={(e) =>
@@ -290,7 +282,10 @@ const NewCase = () => {
           type="button"
           className="mb-4 btn-outline btn btn-sm"
           onClick={() =>
-            setBibadi([...bibadi, { bibadiName: "", bibadiPhone: "", bibadiAddress: "" }])
+            setBibadi([
+              ...bibadi,
+              { bibadiName: "", bibadiPhone: "", bibadiAddress: "" },
+            ])
           }
         >
           <Plus /> বিবাদি

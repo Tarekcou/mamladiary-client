@@ -26,7 +26,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-
+    console.log("Submitting login form", formData);
     const { emailOrphone, password } = formData;
     let loginPayload = { password };
 
@@ -70,7 +70,7 @@ export default function Login() {
         <LoginLottie />
       </div>
 
-      <div className="flex-1 bg-gray-100 shadow-2xl p-5 rounded-2xl">
+      <div className="flex-1 bg-gray-100 shadow-2xl p-5 rounded-2xl !w-full">
         <h2 className="mb-6 font-bold text-2xl text-center">
           {officeType === "divCom"
             ? "কমিশনার অফিস লগইন"
@@ -81,7 +81,7 @@ export default function Login() {
             : "নাগরিক লগইন "}
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 w-full">
           <input
             type="text"
             name="emailOrphone"

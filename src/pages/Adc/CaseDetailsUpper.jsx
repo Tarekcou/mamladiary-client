@@ -5,7 +5,7 @@ const CaseDetailsUpper = ({ rootCaseId, activeStage }) => {
   const orders = activeStage.orderSheets || [];
   const rowsPerPage = 3; // fits A4 height on screen
   const componentRef = useRef();
-  console.log(activeStage)
+  console.log(activeStage);
 
   const pages = [];
   for (let i = 0; i < orders.length; i += rowsPerPage) {
@@ -13,44 +13,47 @@ const CaseDetailsUpper = ({ rootCaseId, activeStage }) => {
   }
 
   const renderCaseHeader = () => (
-    <div className="text-black case-info text-[14px] mb-4">
+    <div className="mb-4 text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
-        <div>বাংলাদেশ ফরম নং - {activeStage?.formNo}</div>
+        <div>বাংলাদেশ ফরম নং - {activeStage?.orderSheets[0].formNo}</div>
         <div className="text-right">
-          {activeStage?.badi[0].badiName}<br />
-          বনাম<br />
-          {activeStage?.bibadi[0].bibadiName}<br />
+          {activeStage?.badi[0].badiName}
+          <br />
+          বনাম
+          <br />
+          {activeStage?.bibadi[0].bibadiName}
+          <br />
         </div>
       </div>
 
-      <h1 className="text-center font-bold text-lg mb-1">আদেশপত্র</h1>
-      <p className="text-center mb-2">
+      <h1 className="mb-1 font-bold text-lg text-center">আদেশপত্র</h1>
+      <p className="mb-2 text-center">
         (১৯৯১ সালের ভূমি রেকর্ড ও জরিপ আদেশ ১৯২ নং বিধি অনুযায়ী)
       </p>
 
       <div className="space-y-2">
-        <div className="flex w-full gap-2 justify-between">
-          <div className="flex gap-1 w-1/2 items-center whitespace-nowrap">
-            <h1 className="font-semibold inline">আদেশপত্র তারিখ</h1>
-            <div className="flex-1 border-b border-dotted border-black"></div>
+        <div className="flex justify-between gap-2 w-full">
+          <div className="flex items-center gap-1 w-1/2 whitespace-nowrap">
+            <h1 className="inline font-semibold">আদেশপত্র তারিখ</h1>
+            <div className="flex-1 border-b border-black border-dotted"></div>
           </div>
-          <div className="flex items-center w-1/2 gap-2">
+          <div className="flex items-center gap-2 w-1/2">
             <label className="font-semibold">হইতে</label>
-            <div className="border-b border-dotted border-black w-full"></div>
+            <div className="border-b border-black border-dotted w-full"></div>
             <label className="font-semibold">পর্যন্ত</label>
           </div>
         </div>
 
-        <div className="flex w-full gap-2 justify-between">
-          <div className="flex gap-1 w-2/5 items-center whitespace-nowrap">
-            <h1 className="font-semibold inline">জেলা</h1>
-            <div className="flex-1 border-b border-dotted border-black"></div>
+        <div className="flex justify-between gap-2 w-full">
+          <div className="flex items-center gap-1 w-2/5 whitespace-nowrap">
+            <h1 className="inline font-semibold">জেলা</h1>
+            <div className="flex-1 border-b border-black border-dotted"></div>
           </div>
-          <div className="flex items-center w-3/5 gap-2">
+          <div className="flex items-center gap-2 w-3/5">
             <label className="font-semibold">২০০</label>
-            <div className="border-b border-dotted border-black w-full"></div>
+            <div className="border-b border-black border-dotted w-full"></div>
             <label className="font-semibold">সালের</label>
-            <div className="border-b border-dotted border-black w-full"></div>
+            <div className="border-b border-black border-dotted w-full"></div>
             <label className="font-semibold">পর্যন্ত</label>
           </div>
         </div>
@@ -58,7 +61,8 @@ const CaseDetailsUpper = ({ rootCaseId, activeStage }) => {
 
       <div className="my-4">
         মামলার ধরন: {activeStage.mamlaName} মামলার নংঃ{" "}
-        {activeStage?.mamlaNo + " "}/({activeStage?.year}) ({activeStage.district?.bn})
+        {activeStage?.mamlaNo + " "}/({activeStage?.year}) (
+        {activeStage.district?.bn})
       </div>
     </div>
   );
@@ -107,53 +111,56 @@ const CaseDetailsUpper = ({ rootCaseId, activeStage }) => {
         PDF ডাউনলোড (Print)
       </button>
 
-    <div id="printable-area" ref={componentRef}>
-      {pages.map((pageOrders, pageIndex) => (
-        <div
-          key={pageIndex}
-          className="w-[210mm] h-[297mm] p-5 bg-white mb-10 mx-auto "
-        >
-          {renderCaseHeader()}
+      <div id="printable-area" ref={componentRef}>
+        {pages.map((pageOrders, pageIndex) => (
+          <div
+            key={pageIndex}
+            className="bg-white mx-auto mb-10 p-5 w-[210mm] h-[297mm]"
+          >
+            {renderCaseHeader()}
 
-          <table className="table-fixed w-full min-h-[200mm] border text-center text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="border p-2 w-1/5 break-words">
-                  আদেশের ক্রমিক নং ও তারিখ
-                </th>
-                <th className="border p-2 w-1/2 break-words">
-                  আদেশ ও অফিসারের সাক্ষর
-                </th>
-                <th className="border p-2 w-2/5 break-words">
-                  আদেশের উপর গৃহীত ব্যবস্থা
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...pageOrders, ...Array(rowsPerPage - pageOrders.length).fill({})].map((sheet, i) => (
-                <tr key={i}>
-                  <td className="border-r p-3 break-words whitespace-pre-wrap w-1/5">
-                    {sheet.date || ""}
-                  </td>
-                  <td className="border-r p-3 break-words whitespace-pre-wrap w-3/5">
-                    {sheet.order || ""}
-                  </td>
-                  <td className="border-r p-3 break-words whitespace-pre-wrap w-2/5">
-                    {sheet.actionTaken || ""}
-                  </td>
+            <table className="border w-full min-h-[200mm] text-sm text-center table-fixed">
+              <thead>
+                <tr className="border-b">
+                  <th className="p-2 border w-2/12 break-words">
+                    আদেশের ক্রমিক নং ও তারিখ
+                  </th>
+                  <th className="p-2 border w-7/12 break-words">
+                    আদেশ ও অফিসারের সাক্ষর
+                  </th>
+                  <th className="p-2 border w-3/12 break-words">
+                    আদেশের উপর গৃহীত ব্যবস্থা
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-
-            </tfoot>
-          </table>
-                          {/* <div className="divider"></div> */}
-
-        </div>
-      ))}
-    </div>
-
+              </thead>
+              <tbody className="">
+                {[
+                  ...pageOrders,
+                  ...Array(rowsPerPage - pageOrders.length).fill({}),
+                ].map((sheet, i) => (
+                  <tr className="h-auto" key={i}>
+                    <td className="p-3 border-r break-words whitespace-pre-wrap">
+                      <h1 className="">
+                        {sheet.date || "  "} <br />
+                      </h1>
+                      {sheet.date && <div className="m-0 divider"></div>}
+                      <h1>{sheet.orderNo || ""}</h1>
+                    </td>
+                    <td className="p-3 border-r break-words whitespace-pre-wrap">
+                      {sheet.order || ""}
+                    </td>
+                    <td className="p-3 border-r break-words whitespace-pre-wrap">
+                      {sheet.actionTaken || ""}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              {/* <tfoot></tfoot> */}
+            </table>
+            {/* <div className="divider"></div> */}
+          </div>
+        ))}
+      </div>
     </>
   );
 };

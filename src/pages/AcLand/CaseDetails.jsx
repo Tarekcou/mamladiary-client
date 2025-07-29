@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, use } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CaseDetailsAcland from "./CaseDetailsAcland";
 import { AuthContext } from "../../provider/AuthProvider";
@@ -16,6 +16,7 @@ const CaseDetails = () => {
   // Get tab from URL query param only
   const urlParams = new URLSearchParams(location.search);
   const tabFromQuery = urlParams.get("tab");
+  console.log(tabFromQuery);
 
   // React Query to get case data
   const {
@@ -35,12 +36,12 @@ const CaseDetails = () => {
   // Roles list for tabs
   const roleStageMap = caseData?.caseStages?.[0] || {};
   const stageRoles = Object.keys(roleStageMap);
-  console.log()
+  console.log();
   // Validate tab from query param, fallback to first role
   const validTab =
     tabFromQuery && stageRoles.includes(tabFromQuery)
       ? tabFromQuery
-      : stageRoles[0] || "";
+      : stageRoles[0] || user.role;
 
   const [activeTab, setActiveTab] = useState(validTab);
 
@@ -92,48 +93,51 @@ const CaseDetails = () => {
       {/* Tabs */}
       <div className="flex justify-between items-center mb-6">
         <div className="space-x-2">
-          {stageRoles.map((role) => (
-            <button
-              key={role}
-              onClick={() => setActiveTab(role)}
-              className={`tab ${
-                activeTab === role
-                  ? "tab-active btn bg-blue-600 text-white"
-                  : "bg-gray-200 btn"
-              }`}
-            >
-              {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
-            </button>
-          ))}
+          {stageRoles
+            // .slice(0, stageRoles.indexOf(user.role) + 1) // 👈 Only show tabs up to user's role
+            .map((role) => (
+              <button
+                key={role}
+                onClick={() => setActiveTab(role)}
+                className={`tab ${
+                  activeTab === role
+                    ? "tab-active btn bg-blue-600 text-white"
+                    : "bg-gray-200 btn"
+                }`}
+              >
+                {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
+              </button>
+            ))}
         </div>
 
         {/* Edit & Add buttons */}
-        {(activeTab === user.role && activeTab== caseData.currentStage.stage) && (
-          <div className="flex gap-2">
-            <button
-              onClick={handleAddOrder}
-              className="flex bg-green-600 hover:bg-green-700 text-white btn"
-            >
-              <Plus /> নতুন অর্ডার
-            </button>
-            <button
-              className="btn btn-warning"
-              onClick={() =>
-                activeTab === "acLand"
-                  ? navigate(
-                      `/dashboard/${activeTab}/cases/edit/${caseData._id}`,
-                      { state: { caseData } }
-                    )
-                  : navigate(
-                      `/dashboard/${activeTab}/cases/order/edit/${caseData._id}`,
-                      { state: { caseData } }
-                    )
-              }
-            >
-              <Edit className="w-6" />
-            </button>
-          </div>
-        )}
+        {activeTab === user.role &&
+          activeTab == caseData.currentStage.stage && (
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddOrder}
+                className="flex bg-green-600 hover:bg-green-700 text-white btn"
+              >
+                <Plus /> নতুন অর্ডার
+              </button>
+              <button
+                className="btn btn-warning"
+                onClick={() =>
+                  activeTab === "acLand"
+                    ? navigate(
+                        `/dashboard/${activeTab}/cases/edit/${caseData._id}`,
+                        { state: { caseData } }
+                      )
+                    : navigate(
+                        `/dashboard/${activeTab}/cases/order/edit/${caseData._id}`,
+                        { state: { caseData } }
+                      )
+                }
+              >
+                <Edit className="w-6" />
+              </button>
+            </div>
+          )}
       </div>
 
       {/* Content */}

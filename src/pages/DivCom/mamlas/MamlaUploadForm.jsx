@@ -2,81 +2,8 @@ import { useState } from "react";
 import axiosPublic from "../../../axios/axiosPublic";
 import { toast } from "sonner";
 import { X } from "lucide-react"; // For close icon, optional
-const mamlaNames = [
-  "সার্টিফিকেট আপিল",
-  "নামজারি আপিল",
-  "নামজারি রিভিশন",
-  "পিটিশন",
-  "বিবিধ সংশোধনী রিভিশন",
-  "মিচ আপিল",
-  "উচ্ছেদ আপিল",
-  "মিচ রিভিশন",
-  "নামজারি জমাভাগ আপিল",
-  "নামজারি জমাখারিজ আপিল",
-  "নামজারি রিভিউ আপিল",
-  "নামজারি জমাভাগ রিভিশন",
-  "হোল্ডিং আপিল",
-  "বিবিধ আপিল",
-  "সার্টিফিকেট রিভিশন",
-  "ভিপি আপিল",
-  "নামজরি রিভিশন",
-  "নামজারি মিচ আপিল",
-  "বন্দোবস্তি রিভিশন",
-  "রিভিশন মিচ আপিল",
-  "নামজারি জমাখারিজ রিভিশন",
-  "মিচ এল আপিল",
-  "নামজারি বিবিধ আপিল",
-  "অবমূল্যায়ন আপিল",
-  "বিবিধ রিভিশন",
-  "নামজারি জমাঃ আপিল",
-  "বিবিধ রেকড সংশোধনী আপিল",
-  "বন্দোবস্তি আপিল",
-  "নামজারি রিভিউ",
-  "জমাভাগ রিভিশন",
-  "নামজারি মিচ রিভিশন",
-  "বিবিধ নামজারি আপিল",
-  "ভি.পি আপিল",
-  "বাজার ফান্ড মিচ আপিল",
-  "এল এ মিচ আপিল",
-  "বাজার ফান্ড বন্দোবস্ত আপিল",
-  "জোত: পূনবহাল রিভিশন",
-  "মিউটেশন রিভিশন",
-  "মিউটেশন আপিল",
-  "জমাখারিজ রিভিশন",
-  "বন্দোবস্তি মামলা",
-  "জলমহাল আপিল",
-  "বন্দোবস্ত রিভিশন",
-  "চান্দিনা পেরিফেরি মিচ রিভিশন",
-  "সায়রাত আপিল",
-  "এস.এ. মিচ রিভিশন",
-  "নামজারি ও জমাখারিজ আপিল",
-  "জমাখারিজ আপিল",
-  "নামজারি আপিল রিভিশন",
-  "আপিল",
-  "নামজারি জমাভাগ মিচ রিভিশন",
-  "নামজারি ও জমাভাগ রিভিশন",
-  "বিবিধ মিচ আপিল",
-  "সাটির্ফিকেট রিভিশন",
-  "নামজারি রিভিউ মিচ মামলা",
-  "সিভিল আপিল",
-  "রিভিউ পিটিশন",
-  "রিভিউ মিচ মামলা",
-  "রিভিশন",
-];
-
-const districts = [
-  "চট্টগ্রাম",
-  "কক্সবাজার",
-  "কুমিল্লা",
-  "ব্রাহ্মণবাড়িয়া",
-  "চাঁদপুর",
-  "ফেনী",
-  "লক্ষ্মীপুর",
-  "নোয়াখালী",
-  "খাগড়াছড়ি",
-  "রাঙ্গামাটি",
-  "বান্দরবান",
-];
+import { mamlaNames } from "../../../data/mamlaNames";
+import { districts } from "../../../data/districts";
 
 export default function MamlaUploadForm() {
   const [loading, setLoading] = useState(false);
@@ -86,18 +13,18 @@ export default function MamlaUploadForm() {
   const [badiPhones, setBadiPhones] = useState([]);
   const [bibadiPhones, setBibadiPhones] = useState([]);
 
-    const toBanglaNumber = (number) => {
-      const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-      return number
-        .toString()
-        .split("")
-        .map((d) => banglaDigits[d])
-        .join("");
-    };
-    const localDate = new Date();
-    const today = `${localDate.getFullYear()}-${String(
-      localDate.getMonth() + 1
-    ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+  const toBanglaNumber = (number) => {
+    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+    return number
+      .toString()
+      .split("")
+      .map((d) => banglaDigits[d])
+      .join("");
+  };
+  const localDate = new Date();
+  const today = `${localDate.getFullYear()}-${String(
+    localDate.getMonth() + 1
+  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
 
   // Phone no
   const addBadiPhone = () => {

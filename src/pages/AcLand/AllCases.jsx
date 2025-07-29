@@ -49,9 +49,7 @@ const AllCases = () => {
             officeName: user.officeName.en,
             district: user.district.en,
           };
-      console.log(params);
       const res = await axiosPublic.get("/cases", { params });
-      console.log("Fetched cases:", res.data);
       return res.data;
     },
   });
@@ -187,8 +185,16 @@ const AllCases = () => {
                 <tr className="text-center align-top">
                   <td>{index + 1}</td>
                   <td>{cas.rootCaseId}</td>
-                  <td>{cas.applicants.map((a) => a.name).join(", ")}</td>
-                  <td>{cas.applicants.map((a) => a.phone).join(", ")}</td>
+                  <td>
+                    {(Object.values(cas.caseStages?.[0] || {})[0]?.badi || [])
+                      .map((a) => a.name || "-")
+                      .join(", ")}
+                  </td>
+                  <td>
+                    {(Object.values(cas.caseStages?.[0] || {})[0]?.badi || [])
+                      .map((a) => a.phone || "-")
+                      .join(", ")}
+                  </td>
 
                   {/* Nested Table for Office Wise Users */}
                   <td className="p-0">

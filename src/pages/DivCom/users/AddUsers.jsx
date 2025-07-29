@@ -36,14 +36,6 @@ const AddUsers = () => {
           ? selectedDistrict.district
           : undefined,
 
-      acLand:
-        role === "acLand" && selectedOffice
-          ? {
-              en: selectedOffice.en,
-              bn: selectedOffice.bn,
-            }
-          : undefined,
-
       officeName:
         role === "acLand" && selectedOffice
           ? {
@@ -137,7 +129,6 @@ const AddUsers = () => {
               onChange={(e) => {
                 const value = e.target.value;
                 setDistrict(value === "" ? null : Number(value));
-                setOfficeName("");
               }}
             >
               <option value="" disabled>

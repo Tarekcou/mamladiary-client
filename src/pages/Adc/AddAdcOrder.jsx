@@ -14,6 +14,7 @@ const AddAdcOrder = () => {
   const { state } = useLocation();
   const caseData = state?.caseData;
   const mode = state?.mode || "edit";
+  console.log("AddAdcOrder mode:", mode);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -42,8 +43,8 @@ const AddAdcOrder = () => {
   const [formData, setFormData] = useState({
     userId: user._id,
     role: user.role,
-    badi:badi,
-    bibadi:bibadi,
+    badi: badi,
+    bibadi: bibadi,
     mamlaName: existingData.mamlaName || "",
     mamlaNo: existingData.mamlaNo || "",
     year: existingData.year || new Date().getFullYear(),
@@ -55,9 +56,9 @@ const AddAdcOrder = () => {
         : [
             {
               date: today,
-              formNo:"",
+              formNo: "",
               orderNo: "",
-              
+
               order: "",
               actionTaken: "",
               remarks: "",
@@ -68,11 +69,11 @@ const AddAdcOrder = () => {
 
   // Sync formData.applicants whenever applicants state changes
   useEffect(() => {
-    setFormData((prev) => ({ ...prev, badi,bibadi }));
-  }, [badi,bibadi]);
+    setFormData((prev) => ({ ...prev, badi, bibadi }));
+  }, [badi, bibadi]);
 
   // Applicant inputs change handler
- const handleBadiChange = (index, field, value) => {
+  const handleBadiChange = (index, field, value) => {
     const updated = [...badi];
     updated[index][field] = value;
     setBadi(updated);
@@ -103,7 +104,14 @@ const AddAdcOrder = () => {
       ...prev,
       orderSheets: [
         ...prev.orderSheets,
-        { date: today,formNo:"",orderNo:"", order: "", actionTaken: "", remarks: "" },
+        {
+          date: today,
+          formNo: "",
+          orderNo: "",
+          order: "",
+          actionTaken: "",
+          remarks: "",
+        },
       ],
     }));
   };
@@ -149,7 +157,10 @@ const AddAdcOrder = () => {
         year: formData.year,
         district: formData.district,
         officeName: user.officeName,
-        orderSheets: [...(existingData.orderSheets || []), ...formData.orderSheets],
+        orderSheets: [
+          ...(existingData.orderSheets || []),
+          ...formData.orderSheets,
+        ],
         badi: formData.badi,
         bibadi: formData.bibadi,
         remarks: formData.remarks,
@@ -195,8 +206,7 @@ const AddAdcOrder = () => {
     <div className="bg-base-200 shadow mx-auto p-6 rounded max-w-2xl">
       <h2 className="mb-4 font-semibold text-xl">আদেশপত্র ব্যবস্থাপনা</h2>
 
-
-         {/* Applicants বাদি */}
+      {/* Applicants বাদি */}
       <div>
         <h3 className="mb-2 font-semibold">আবেদনকারীগণ</h3>
         {badi.map((app, idx) => (
@@ -237,7 +247,7 @@ const AddAdcOrder = () => {
             setBadi([...badi, { badiName: "", badiPhone: "", badiAddress: "" }])
           }
         >
-          <Plus /> বাদি 
+          <Plus /> বাদি
         </button>
       </div>
       <div>
@@ -277,14 +287,16 @@ const AddAdcOrder = () => {
           type="button"
           className="mb-4 btn-outline btn btn-sm"
           onClick={() =>
-            setBibadi([...bibadi, { bibadiName: "", bibadiPhone: "", bibadiAddress: "" }])
+            setBibadi([
+              ...bibadi,
+              { bibadiName: "", bibadiPhone: "", bibadiAddress: "" },
+            ])
           }
         >
           <Plus /> বিবাদি
         </button>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-        
         {/* District & Mamla Info */}
         <div className="gap-4 grid grid-cols-2">
           <label>
@@ -304,7 +316,7 @@ const AddAdcOrder = () => {
               name="mamlaName"
               value={formData.mamlaName}
               onChange={handleChange}
-              readOnly={mode === "add"} // <--
+              readOnly={mode === "edit"} // <--
               className="bg-gray-100 mt-1 w-full select-bordered select"
               required
             >
@@ -324,7 +336,7 @@ const AddAdcOrder = () => {
               type="number"
               value={formData.mamlaNo}
               onChange={handleChange}
-              readOnly={mode === "add"} // <--
+              readOnly={mode === "edit"} // <--
               className="bg-gray-100 input-bordered w-full input"
               required
             />
@@ -336,7 +348,7 @@ const AddAdcOrder = () => {
               name="year"
               value={toBanglaNumber(formData.year)}
               onChange={handleChange}
-              readOnly={mode === "add"} // <--
+              readOnly={mode === "edit"} // <--
               className="bg-gray-100 input-bordered w-full input"
             >
               {Array.from({ length: 50 }, (_, i) => {
@@ -357,30 +369,34 @@ const AddAdcOrder = () => {
           {formData.orderSheets.map((order, idx) => (
             <div key={idx} className="bg-white mb-4 p-3 border rounded-md">
               <div>
-              <input
-                type="date"
-                value={order.date}
-                onChange={(e) => handleOrderChange(idx, "date", e.target.value)}
-                className="mb-2 input-bordered w-full input"
-              />
-              <input
-                type="number"
-                placeholder="আদেশ নম্বর"
-                value={order.orderNo}
-                onChange={(e) => handleOrderChange(idx, "orderNo", e.target.value)}
-                className="mb-2 input-bordered w-full input"
-              />
-              <input
-                type="text"
-                placeholder="ফর্ম নম্বর"
-                value={order.formNo}
-                onChange={(e) => handleOrderChange(idx, "formNo", e.target.value)}
-                className="mb-2 input-bordered w-full input"
-              />
-            
-
+                <input
+                  type="date"
+                  value={order.date}
+                  onChange={(e) =>
+                    handleOrderChange(idx, "date", e.target.value)
+                  }
+                  className="mb-2 input-bordered w-full input"
+                />
+                <input
+                  type="number"
+                  placeholder="আদেশ নম্বর"
+                  value={order.orderNo}
+                  onChange={(e) =>
+                    handleOrderChange(idx, "orderNo", e.target.value)
+                  }
+                  className="mb-2 input-bordered w-full input"
+                />
+                <input
+                  type="text"
+                  placeholder="ফর্ম নম্বর"
+                  value={order.formNo}
+                  onChange={(e) =>
+                    handleOrderChange(idx, "formNo", e.target.value)
+                  }
+                  className="mb-2 input-bordered w-full input"
+                />
               </div>
-              
+
               <textarea
                 rows="5"
                 value={order.order}

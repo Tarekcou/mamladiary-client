@@ -143,7 +143,7 @@ export default function Navbar() {
       <div className="space-x-2">
         {isSignedIn ? (
           <div className="flex justify-center items-center gap-3">
-            <h1>{handleOfficeName(user?.officeName.bn, "", user.role)}</h1>
+            <h1>{handleOfficeName(user?.officeName?.bn, "", user.role)}</h1>
 
             <button
               onClick={handleLogout}

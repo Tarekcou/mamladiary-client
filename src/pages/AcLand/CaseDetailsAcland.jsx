@@ -130,31 +130,33 @@ const CaseDetailsAcland = ({ rootCaseId, activeStage, applicants }) => {
         </div>
 
         {/* Orders Table */}
-        <div>
-          <h3 className="section-title">অর্ডার শীট: {orders.length}</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>আদেশের ক্রমিক নং ও তারিখ</th>
-                <th>আদেশ ও অফিসারের সাক্ষর</th>
-                <th>আদেশের উপর গৃহীত ব্যবস্থা</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((sheet, i) => (
-                <tr key={i}>
-                  <td>{sheet.date || "N/A"}</td>
-                  <td className="whitespace-pre-wrap">
-                    {sheet.order || "N/A"}
-                  </td>
-                  <td className="whitespace-pre-wrap">
-                    {sheet.actionTaken || "N/A"}
-                  </td>
+        {orders.length > 0 && (
+          <div>
+            <h3 className="section-title">অর্ডার শীট: {orders.length}</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>আদেশের ক্রমিক নং ও তারিখ</th>
+                  <th>আদেশ ও অফিসারের সাক্ষর</th>
+                  <th>আদেশের উপর গৃহীত ব্যবস্থা</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {orders.map((sheet, i) => (
+                  <tr key={i}>
+                    <td>{sheet.date || "N/A"}</td>
+                    <td className="whitespace-pre-wrap">
+                      {sheet.order || "N/A"}
+                    </td>
+                    <td className="whitespace-pre-wrap">
+                      {sheet.actionTaken || "N/A"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Documents */}
         {activeStage.documents?.length > 0 && (

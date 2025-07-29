@@ -29,13 +29,14 @@ const AuthProvider = ({ children }) => {
     try {
       let res;
 
-      if (loginStatus === "nagorik") {
-        res = await axiosPublic.post("/nagorikLogin", formData);
-      } else {
-        res = await axiosPublic.post("/users/login", formData, {
-          params: { loginStatus },
-        });
-      }
+      // if (loginStatus === "nagorik") {
+      //   res = await axiosPublic.post("/users", formData);
+      // } else {
+      //   res = await axiosPublic.post("/users/login", formData, {
+      //     params: { loginStatus },
+      //   });
+      // }
+      res = await axiosPublic.post("/users/login", formData);
 
       if (res?.data.status === "success") {
         toast.success("লগ ইন সফল হয়েছে!");
@@ -99,34 +100,31 @@ const AuthProvider = ({ children }) => {
   };
 
   // register
-  const resigter = (formData) => {
-    const res = axiosPublic.post("/nagorikRegister", formData);
+  const resigter = async (formData) => {
+    const res = await axiosPublic.post("/users", formData);
+    console.log("resigter res", res, formData);
     setLoading(true);
     setButtonSpin(true);
-    res
-      .then((response) => {
-        if (response.data.insertedId) {
-          toast.success(
-            "রেজিস্ট্রেশন সফল হয়েছে,  ভেরিফাই করতে এডমিনের সাথে যোগাযোগ করুন"
-          );
-          // navigation("/");
-          setLoading(false);
-          setButtonSpin(false);
-        }
-        if (response.data.message === "user already exist") {
-          toast.warning("এই আইডি আগে থেকেই রেজিস্টার্ড, লগইন করুন");
-          navigation("/login");
-          setLoading(false);
-          setButtonSpin(false);
-        }
-      })
-      .catch((error) => {
-        toast.warning("রেজিস্ট্রেশন ব্যার্থ হয়েছে!");
-        setButtonSpin(false);
-        setLoading(false);
 
-        console.error("Error during registration:", error);
-      });
+    try {
+      if (response.data.insertedId) {
+        toast.success(
+          "রেজিস্ট্রেশন সফল হয়েছে,  ভেরিফাই করতে এডমিনের সাথে যোগাযোগ করুন"
+        );
+        setLoading(false);
+        setButtonSpin(false);
+      } else if (response.data.message === "user already exist") {
+        toast.warning("এই আইডি আগে থেকেই রেজিস্টার্ড, লগইন করুন");
+        navigation("/login");
+        setLoading(false);
+        setButtonSpin(false);
+      }
+    } catch (error) {
+      toast.warning("রেজিস্ট্রেশন ব্যার্থ হয়েছে!");
+      setLoading(false);
+      setButtonSpin(false);
+      console.error("Error during registration:", error);
+    }
   };
 
   useEffect(() => {
