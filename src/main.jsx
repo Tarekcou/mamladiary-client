@@ -32,7 +32,7 @@ import ManageACLandUser from "./pages/DivCom/users/ManageACLandUser.jsx";
 import NagorikDashboard from "./pages/Nagorik/NagorikDashboard.jsx";
 import AcLandDashboard from "./pages/AcLand/AcLandDashboard.jsx";
 import DashboardLayout from "./Layout/DashboardLayout.jsx";
-import AdcDashboard from "./pages/adc/AdcDashboard.jsx";
+import AdcDashboard from "./pages/Adc/AdcDashboard.jsx";
 import DivComDashboard from "./pages/DivCom/DivComDashboard.jsx";
 
 import AllMamla from "./pages/DivCom/mamlas/AllMamla.jsx";
