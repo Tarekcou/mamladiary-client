@@ -26,7 +26,7 @@ const AddAdcOrder = () => {
     caseData?.caseStages?.[0]?.[user.role] ||
     caseData?.caseStages?.[0]?.[caseData.currentStage.stage] ||
     {};
-
+  console.log(existingData);
   // Initialize applicants state from existingData or empty
   const [badi, setBadi] = useState(
     existingData?.badi && existingData.badi.length > 0
