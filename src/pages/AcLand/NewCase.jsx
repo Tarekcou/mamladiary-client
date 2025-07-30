@@ -22,7 +22,7 @@ const NewCase = () => {
   const initialOrderSheets = [{ date: "", order: "", actionTaken: "" }];
 
   const initialFormData = (user) => ({
-    rootCaseId: Math.floor(10000 + Math.random() * 90000).toString(),
+    trackingNo: Math.floor(10000 + Math.random() * 90000).toString(),
 
     currentStage: {
       stage: user.role,

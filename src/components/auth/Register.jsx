@@ -1,29 +1,18 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import RegisterLottie from "../lottie/RegisterLottie";
 import { useTranslation } from "react-i18next";
-import { X } from "lucide-react";
-import axios from "axios"; // Assuming you're using axios
 import { toast } from "sonner";
-import { districts } from "../../data/districts";
-import { mamlaNames } from "../../data/mamlaNames";
-import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { aclandOptions } from "../../data/aclandOptions";
 
 export default function Register() {
-  const { resigter, isLoading } = useContext(AuthContext);
+  const { resigter, isLoading, setButtonSpin } = useContext(AuthContext);
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const navigation = useNavigate();
   const { officeType } = useParams();
 
   const [loading, setLoading] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(2025);
-
-  const localDate = new Date();
-  const today = `${localDate.getFullYear()}-${String(
-    localDate.getMonth() + 1
-  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
   const [district, setDistrict] = useState(null);
 
   // Form data
@@ -32,9 +21,14 @@ export default function Register() {
     email: "",
     phone: "",
     designation: "",
-    district: district,
+    district: null,
     password: "",
   });
+
+  // Sync district with formData when selected
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, district }));
+  }, [district]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -42,51 +36,55 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setButtonSpin(true);
+
+    const finalData = {
+      ...formData,
+      role: "nagorik",
+    };
 
     try {
-      setLoading(true);
-
-      // Step 2: Upload mamla data
-      const finalData = {
-        ...formData,
-        district,
-        role: officeType, // Assuming this is the role for citizen registration
-      };
-      resigter(finalData); // This is for user registration
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        district: "",
-        designation: "",
-      });
-    } catch (err) {
-      console.error("Full submission failed:", err);
-      toast.error("রেজিস্ট্রেশন বা মামলা আপলোড ব্যর্থ হয়েছে");
-    } finally {
-      setLoading(false);
+      const result = await resigter(finalData);
+      console.log(result)
+      if (result.insertedId) {
+        toast.success("রেজিস্ট্রেশন সফল হয়েছে,  লগ ইন  করুন");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          password: "",
+          district: null,
+          designation: "",
+        });
+        navigation("/nagorik/login");
+      } else if (result.message === "user already exists") {
+        toast.warning("এই আইডি আগে থেকেই রেজিস্টার্ড, লগইন করুন");
+        navigation("/nagorik/login");
+      } else {
+        toast.error("রেজিস্ট্রেশন ব্যর্থ হয়েছে!",result.message);
+      }
+    } catch (error) {
+      toast.error("সার্ভার ত্রুটি! আবার চেষ্টা করুন");
+      console.error("Registration error:", error);
     }
+
+    setLoading(false);
+    setButtonSpin(false);
   };
 
   return (
-    <div className="flex flex-col justify-between items-center p-5">
-      <div className="">
+    <div className="flex flex-col justify-between items-center md:p-5">
+      <div>
         <RegisterLottie />
       </div>
 
-      <div className="bg-gray-100 shadow-2xl p-10 border-gray-300 rounded-lg w-11/12">
+      <div className="bg-gray-100 shadow-2xl p-5 md:p-30 border-gray-300 rounded-lg w-11/12">
         <h2 className="mb-6 font-bold text-2xl text-center">
           নাগরিক রেজিস্ট্রেশন
         </h2>
 
-        {/* User Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4 w-full">
-          {/* Mamla Upload Form */}
-
-          {/* Advocate info */}
           <div className="flex gap-2">
             <input
               type="text"
@@ -107,8 +105,8 @@ export default function Register() {
               className="px-4 py-2 border rounded-lg w-full"
             />
           </div>
+
           <div className="flex gap-2">
-            {" "}
             <input
               type="number"
               name="phone"
@@ -132,21 +130,22 @@ export default function Register() {
               name="district"
               className="bg-gray-100 w-full select-bordered select"
               required
-              value={district ?? ""}
+              value={district ? JSON.stringify(district) : ""}
               onChange={(e) => {
                 const value = e.target.value;
-                setDistrict(value === "" ? null : value); // Now a string (district.en)
+                setDistrict(value === "" ? null : JSON.parse(value));
               }}
             >
               <option value="" disabled>
                 জেলা নির্বাচন করুন
               </option>
               {aclandOptions.map((districtObj, index) => (
-                <option key={index} value={districtObj.district.en}>
+                <option key={index} value={JSON.stringify(districtObj.district)}>
                   {districtObj.district.bn} ({districtObj.district.en})
                 </option>
               ))}
             </select>
+
             <input
               type="password"
               name="password"
@@ -161,6 +160,7 @@ export default function Register() {
           <button
             type="submit"
             className="bg-[#004080] w-full text-white btn btn-primary"
+            disabled={loading}
           >
             {isLoading ? (
               <span className="loading loading-spinner"></span>
@@ -168,16 +168,6 @@ export default function Register() {
               "নতুন একাউন্ট তৈরি করুন"
             )}
           </button>
-
-          {/* <div className="mt-6 text-center">
-            <button
-              type="submit"
-              className="bg-[#004080] px-6 text-white btn"
-              disabled={loading}
-            >
-              {loading ? "আপলোড হচ্ছে..." : "আপলোড করুন"}
-            </button>
-          </div> */}
         </form>
       </div>
     </div>

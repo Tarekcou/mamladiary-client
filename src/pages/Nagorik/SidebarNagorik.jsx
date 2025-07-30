@@ -14,29 +14,29 @@ const SidebarNagorik = () => {
                    to={"/dashboard"}
                    className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
                  >
-                  এসিল্যান্ড ড্যাশবোর্ড
+                  নাগরিক ড্যাশবোর্ড
                  </Link>
                 
                  <NavLink
-                   to="/dashboard/mamlaUpload"
+                   to="/dashboard/nagorik/caseUpload"
                    className={({ isActive }) =>
                      isActive
                        ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
                        : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
                    }
                  >
-                  <Plus /> নতুন আদেশ
+                  <Plus /> নতুন মামলা 
                  </NavLink>
        
                  <NavLink
-                   to="/dashboard/allMamla"
+                   to="/dashboard/nagorik/mamla"
                    className={({ isActive }) =>
                      isActive
                        ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
                        : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
                    }
                  >
-                   সকল আদেশ
+                   চলমান মামলা
                  </NavLink>
                  <NavLink
                    to="/dashboard/allMamla"

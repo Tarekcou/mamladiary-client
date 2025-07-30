@@ -2,15 +2,58 @@ import React, { useRef } from "react";
 import { toBanglaNumber } from "../../utils/toBanglaNumber";
 
 const CaseDetailsUpper = ({ rootCaseId, activeStage }) => {
-  const orders = activeStage.orderSheets || [];
-  const rowsPerPage = 3; // fits A4 height on screen
-  const componentRef = useRef();
-  console.log(activeStage);
+  // const orders = activeStage.orderSheets || [];
+    const componentRef = useRef();
 
-  const pages = [];
-  for (let i = 0; i < orders.length; i += rowsPerPage) {
-    pages.push(orders.slice(i, i + rowsPerPage));
+  const rowsPerPage = 3; // fits A4 height on screen
+const orders = activeStage.orderSheets || [];
+const maxWordsPerPage = 300;
+
+const pages = [];
+let currentPage = [];
+let currentWordCount = 0;
+
+orders.forEach(order => {
+  const fullText = order?.order || "";
+  const words = fullText.trim().split(/\s+/);
+  let wordIndex = 0;
+
+  while (wordIndex < words.length) {
+    const spaceLeft = maxWordsPerPage - currentWordCount;
+    const remainingWords = words.length - wordIndex;
+
+    if (remainingWords <= spaceLeft) {
+      const chunk = words.slice(wordIndex).join(" ");
+      currentPage.push({ ...order, order: chunk });
+      currentWordCount += remainingWords;
+      wordIndex = words.length;
+    } else {
+      const chunk = words.slice(wordIndex, wordIndex + spaceLeft).join(" ");
+      currentPage.push({ ...order, order: chunk });
+      pages.push(currentPage);
+
+      // Reset for next page
+      currentPage = [];
+      currentWordCount = 0;
+      wordIndex += spaceLeft;
+    }
   }
+});
+
+// Push the last page if not empty
+if (currentPage.length > 0) {
+  pages.push(currentPage);
+}
+
+console.log(pages);
+
+
+  // const pages = [];
+  // for (let i = 0; i < orders.length; i += rowsPerPage) {
+  //   pages.push(orders.slice(i, i + rowsPerPage));
+  // }
+  // Debug: See how your orders are grouped
+
 
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">

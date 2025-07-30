@@ -76,8 +76,13 @@ export default function Navbar() {
   const handleOfficeLogin = (officeType) => {
     // Optional: save officeType to context or localStorage if needed
     // console.log("Selected office:", officeType);
+    console.log(officeType)
     document.getElementById("my_modal_2").close();
-    navigate(`/login/${officeType}`);
+    if(officeType=="nagorik")
+    navigate(`/${officeType}/login`)
+    else
+      navigate(`/login/${officeType}`)
+
   };
 
   //log out
@@ -120,7 +125,7 @@ export default function Navbar() {
           </NavLink>
         )}
 
-        {(isDivComLogin || isAdcLogin || isAcLandLogin) && (
+        {(isDivComLogin || isAdcLogin || isAcLandLogin||isNagorikLogin) && (
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
@@ -143,7 +148,7 @@ export default function Navbar() {
       <div className="space-x-2">
         {isSignedIn ? (
           <div className="flex justify-center items-center gap-3">
-            <h1>{handleOfficeName(user?.officeName?.bn, "", user.role)}</h1>
+            <h1>{handleOfficeName(user?.officeName?.bn, user?.name, user.role)}</h1>
 
             <button
               onClick={handleLogout}
@@ -153,34 +158,39 @@ export default function Navbar() {
             </button>
           </div>
         ) : (
-          <>
-            <NavLink
-              to={"/login/nagorik"}
-              isActive={() => location.pathname === "/login/nagorik"}
-              onClick={() => handleOfficeLogin("nagorik")}
-              className={({ isActive }) =>
-                isActive
-                  ? " btn btn-sm  underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
-                  : "btn btn-sm  underline-offset-4 font-semibold btn-outline "
-              }
-            >
-              নাগরিক লগিন
-            </NavLink>
-            <NavLink
-              to={`/login/${officeType}`}
-              onClick={handleSignIn}
-              isActive={() =>
-                location.pathname !== "/login/nagorik" &&
-                location.pathname.startsWith("/login")
-              }
-              className={({ isActive }) =>
-                isActive
-                  ? " btn btn-sm  underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
-                  : "btn btn-sm  underline-offset-4 font-semibold btn-outline "
-              }
-            >
-              দাপ্তরিক লগিন
-            </NavLink>
+          <div className="space-x-1">
+
+
+<NavLink
+  to="/nagorik/login"
+  onClick={(e) => {
+    e.preventDefault();
+    handleOfficeLogin("nagorik");
+  }}
+  className={({ isActive }) =>
+    isActive
+      ? "btn btn-sm underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
+      : "btn btn-sm underline-offset-4 font-semibold btn-outline"
+  }
+>
+  নাগরিক লগিন
+</NavLink>
+
+<NavLink
+  to="/login/dc" // or a general path
+  onClick={(e) => {
+    e.preventDefault();
+    handleSignIn(); // you can call handleSignIn and navigate inside it
+  }}
+  className={({ isActive }) =>
+    isActive
+      ? "btn btn-sm underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
+      : "btn btn-sm underline-offset-4 font-semibold btn-outline"
+  }
+>
+  দাপ্তরিক লগিন
+</NavLink>
+
 
             <NavLink
               to={"/register"}
@@ -220,7 +230,7 @@ export default function Navbar() {
                 <button>close</button>
               </form>
             </dialog>
-          </>
+          </div>
         )}
         {/* <button onClick={toggleLanguage} className="btn btn-sm">
           {i18n.language === "en" ? "English" : "বাংলা"}

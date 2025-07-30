@@ -25,7 +25,6 @@ const AuthProvider = ({ children }) => {
   const signIn = async (formData, loginStatus) => {
     setButtonSpin(true);
     setLoading(true);
-    console.log(loginStatus);
     try {
       let res;
 
@@ -36,8 +35,12 @@ const AuthProvider = ({ children }) => {
       //     params: { loginStatus },
       //   });
       // }
-      res = await axiosPublic.post("/users/login", formData);
+          console.log(loginStatus,formData);
 
+      res = await axiosPublic.post("/users/login", formData,  {
+        params: { loginStatus }
+      });
+      console.log(res.data)
       if (res?.data.status === "success") {
         toast.success("লগ ইন সফল হয়েছে!");
 
@@ -100,32 +103,16 @@ const AuthProvider = ({ children }) => {
   };
 
   // register
-  const resigter = async (formData) => {
+  // AuthProvider
+const resigter = async (formData) => {
+  try {
     const res = await axiosPublic.post("/users", formData);
-    console.log("resigter res", res, formData);
-    setLoading(true);
-    setButtonSpin(true);
-
-    try {
-      if (response.data.insertedId) {
-        toast.success(
-          "রেজিস্ট্রেশন সফল হয়েছে,  ভেরিফাই করতে এডমিনের সাথে যোগাযোগ করুন"
-        );
-        setLoading(false);
-        setButtonSpin(false);
-      } else if (response.data.message === "user already exist") {
-        toast.warning("এই আইডি আগে থেকেই রেজিস্টার্ড, লগইন করুন");
-        navigation("/login");
-        setLoading(false);
-        setButtonSpin(false);
-      }
-    } catch (error) {
-      toast.warning("রেজিস্ট্রেশন ব্যার্থ হয়েছে!");
-      setLoading(false);
-      setButtonSpin(false);
-      console.error("Error during registration:", error);
-    }
-  };
+    return res.data; // return only response
+  } catch (error) {
+    console.error("Error during registration:", error);
+    return { error: true };
+  }
+};
 
   useEffect(() => {
     setLoading(true);

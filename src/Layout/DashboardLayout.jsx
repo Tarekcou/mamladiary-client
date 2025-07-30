@@ -15,7 +15,7 @@ const DashboardLayout = () => {
   const path = location.pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const storedType = localStorage.getItem("userType");
-
+  console.log(storedType)
   useEffect(() => {
     const handleScroll = () => setIsSticky(window.scrollY > 260);
     const handleResize = () => setScreenWidth(window.innerWidth);

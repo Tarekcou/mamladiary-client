@@ -20,6 +20,8 @@ import Swal from "sweetalert2";
 const AllCases = () => {
   const location = useLocation();
   const isSentCasePage = location.pathname.includes("sendCases");
+  const isNagorikCase=location.pathname.includes("/nagorik/mamla")
+  console.log(isNagorikCase)
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   // console.log("User in AllCases:", user);
@@ -32,8 +34,8 @@ const AllCases = () => {
       "allCases",
       isSentCasePage,
       user.role,
-      user.officeName.en,
-      user.district.en,
+      user?.officeName,
+      user?.district,
     ],
     queryFn: async () => {
       const params = isSentCasePage
