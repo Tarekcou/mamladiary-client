@@ -44,9 +44,13 @@ import AllCases from "./pages/AcLand/AllCases.jsx";
 import NewCase from "./pages/AcLand/NewCase.jsx";
 import AddAdcOrder from "./pages/Adc/AddAdcOrder.jsx";
 import CaseDetails from "./pages/AcLand/CaseDetails.jsx";
+<<<<<<< HEAD
 import MyMamla from "./pages/Nagorik/MyMamla.jsx";
 import DivComAllCases from "./pages/DivCom/cases/DivComAllCases.jsx";
 import CaseDetailsDivCom from "./pages/DivCom/cases/CaseDetailsDivCom.jsx";
+=======
+import NagorikCases from "./pages/Nagorik/NagorikCases.jsx";
+>>>>>>> ffac0d54b5a329bde3683b89e2a675f715dcd993
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
@@ -54,7 +58,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       {/* Router context is available here */}
-      <AuthProvider> {/* ✅ This now has Router context */}
+      <AuthProvider>
+        {" "}
+        {/* ✅ This now has Router context */}
         <Routes>
           {/* MAIN LAYOUT ROUTES */}
           <Route element={<MainLayout />}>
@@ -83,24 +89,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           >
             <Route path="divCom" element={<DivComDashboard />} />
-              <Route path="mamlaUpload" element={<MamlaUploadForm />} />
-              <Route path="allMamla" element={<AllMamla />} />
-              <Route path="allAdcMamla" element={<AdcMamla />} />
-              <Route path="adcMamlaUpload" element={<AdcMamlaUploadForm />} />
-              <Route path="addUsers" element={<AddUsers />} />
-              <Route path="divComUsers" element={<ManageDivComUser />} />
-              <Route path="adcUsers" element={<ManageAdcUser />} />
-              <Route path="acLandUsers" element={<ManageACLandUser />} />
-              <Route path="causeList" element={<CauseListDashboard />} />
-              <Route path="complain" element={<ComplainDetails />} />
-              <Route path="feedback" element={<FeedbackDetails />} />
-              <Route path="monthlyReport" element={<MonthlyReport />} />
+            <Route path="mamlaUpload" element={<MamlaUploadForm />} />
+            <Route path="allMamla" element={<AllMamla />} />
+            <Route path="allAdcMamla" element={<AdcMamla />} />
+            <Route path="adcMamlaUpload" element={<AdcMamlaUploadForm />} />
+            <Route path="addUsers" element={<AddUsers />} />
+            <Route path="divComUsers" element={<ManageDivComUser />} />
+            <Route path="adcUsers" element={<ManageAdcUser />} />
+            <Route path="acLandUsers" element={<ManageACLandUser />} />
+            <Route path="causeList" element={<CauseListDashboard />} />
+            <Route path="complain" element={<ComplainDetails />} />
+            <Route path="feedback" element={<FeedbackDetails />} />
+            <Route path="monthlyReport" element={<MonthlyReport />} />
 
-
-
-              
             {/* OTHER DASHBOARD ROLES */}
             <Route path="nagorik" element={<NagorikDashboard />} />
+<<<<<<< HEAD
              
             <Route path="nagorik/caseUpload" element={<NagorikCaseInfoUpload />} />
             <Route path="nagorik/cases" element={<MyMamla />} />
@@ -108,7 +112,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
 
 
+=======
+>>>>>>> ffac0d54b5a329bde3683b89e2a675f715dcd993
 
+            <Route
+              path="nagorik/caseUpload"
+              element={<NagorikCaseInfoUpload />}
+            />
+            <Route path="nagorik/mamla" element={<NagorikCases />} />
+            <Route
+              path="nagorik/mamla/edit/:id"
+              element={<NagorikCaseInfoUpload />}
+            />
 
             <Route path="divCom/allCases" element={<DivComAllCases />} />
             <Route path="divCom/cases/edit/:id" element={<NewCase />} />
@@ -118,6 +133,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               path="divCom/cases/order/edit/:id"
               element={<AddAdcOrder />}
             />
+            <Route path="divCom/requestCases" element={<NagorikCases />} />
 
             <Route path="adc" element={<AdcDashboard />} />
             <Route path="adc/allCases" element={<AllCases />} />
@@ -135,8 +151,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="acLand/sendCases" element={<AllCases />} />
             <Route path="acLand/cases/:id" element={<CaseDetails />} />
             <Route path="acLand/cases/edit/:id" element={<NewCase />} />
-
-            
           </Route>
         </Routes>
         <Toaster richColors position="top-right" />
@@ -144,7 +158,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   </QueryClientProvider>
 );
-
-
-
-

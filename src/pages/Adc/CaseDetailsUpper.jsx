@@ -3,50 +3,49 @@ import { toBanglaNumber } from "../../utils/toBanglaNumber";
 
 const CaseDetailsUpper = ({ rootCaseId, activeStage }) => {
   // const orders = activeStage.orderSheets || [];
-    const componentRef = useRef();
+  const componentRef = useRef();
 
   const rowsPerPage = 3; // fits A4 height on screen
-const orders = activeStage.orderSheets || [];
-const maxWordsPerPage = 300;
+  const orders = activeStage.orderSheets || [];
+  const maxWordsPerPage = 300;
 
-const pages = [];
-let currentPage = [];
-let currentWordCount = 0;
+  const pages = [];
+  let currentPage = [];
+  let currentWordCount = 0;
 
-orders.forEach(order => {
-  const fullText = order?.order || "";
-  const words = fullText.trim().split(/\s+/);
-  let wordIndex = 0;
+  orders.forEach((order) => {
+    const fullText = order?.order || "";
+    const words = fullText.trim().split(/\s+/);
+    let wordIndex = 0;
 
-  while (wordIndex < words.length) {
-    const spaceLeft = maxWordsPerPage - currentWordCount;
-    const remainingWords = words.length - wordIndex;
+    while (wordIndex < words.length) {
+      const spaceLeft = maxWordsPerPage - currentWordCount;
+      const remainingWords = words.length - wordIndex;
 
-    if (remainingWords <= spaceLeft) {
-      const chunk = words.slice(wordIndex).join(" ");
-      currentPage.push({ ...order, order: chunk });
-      currentWordCount += remainingWords;
-      wordIndex = words.length;
-    } else {
-      const chunk = words.slice(wordIndex, wordIndex + spaceLeft).join(" ");
-      currentPage.push({ ...order, order: chunk });
-      pages.push(currentPage);
+      if (remainingWords <= spaceLeft) {
+        const chunk = words.slice(wordIndex).join(" ");
+        currentPage.push({ ...order, order: chunk });
+        currentWordCount += remainingWords;
+        wordIndex = words.length;
+      } else {
+        const chunk = words.slice(wordIndex, wordIndex + spaceLeft).join(" ");
+        currentPage.push({ ...order, order: chunk });
+        pages.push(currentPage);
 
-      // Reset for next page
-      currentPage = [];
-      currentWordCount = 0;
-      wordIndex += spaceLeft;
+        // Reset for next page
+        currentPage = [];
+        currentWordCount = 0;
+        wordIndex += spaceLeft;
+      }
     }
+  });
+
+  // Push the last page if not empty
+  if (currentPage.length > 0) {
+    pages.push(currentPage);
   }
-});
 
-// Push the last page if not empty
-if (currentPage.length > 0) {
-  pages.push(currentPage);
-}
-
-console.log(pages);
-
+  console.log(pages);
 
   // const pages = [];
   // for (let i = 0; i < orders.length; i += rowsPerPage) {
@@ -54,17 +53,17 @@ console.log(pages);
   // }
   // Debug: See how your orders are grouped
 
-
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
         <div>বাংলাদেশ ফরম নং - {activeStage?.orderSheets[0].formNo}</div>
         <div className="text-right">
-          {activeStage?.badi[0].badiName}
+          {activeStage?.nagorikData?.badi[0].name ||
+            activeStage.badi[0].badiName}{" "}
           <br />
           বনাম
           <br />
-          {activeStage?.bibadi[0].bibadiName}
+          {activeStage?.nagorikData.bibadi[0].name}
           <br />
         </div>
       </div>

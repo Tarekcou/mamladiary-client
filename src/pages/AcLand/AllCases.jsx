@@ -20,8 +20,8 @@ import Swal from "sweetalert2";
 const AllCases = () => {
   const location = useLocation();
   const isSentCasePage = location.pathname.includes("sendCases");
-  const isNagorikCase=location.pathname.includes("/nagorik/mamla")
-  console.log(isNagorikCase)
+  const isNagorikCase = location.pathname.includes("/nagorik/mamla");
+  console.log(isNagorikCase);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   // console.log("User in AllCases:", user);
@@ -33,6 +33,7 @@ const AllCases = () => {
     queryKey: [
       "allCases",
       isSentCasePage,
+      isNagorikCase,
       user.role,
       user?.officeName,
       user?.district,
@@ -44,6 +45,13 @@ const AllCases = () => {
             fromRole: user._id,
             fromOfficeName: user.officeName.en,
             fromDistrict: user.district.en,
+          }
+        : isNagorikCase
+        ? {
+            // For NAGORIK CASES: filter by user's own district
+            id: user._id,
+            // phone: user.phone,
+            // trackingNo: "26000",
           }
         : {
             // For RECEIVED CASES: filter by user's own inbox
