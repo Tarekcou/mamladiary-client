@@ -29,7 +29,7 @@ const SidebarNagorik = () => {
                  </NavLink>
        
                  <NavLink
-                   to="/dashboard/nagorik/mamla"
+                   to="/dashboard/nagorik/cases"
                    className={({ isActive }) =>
                      isActive
                        ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"

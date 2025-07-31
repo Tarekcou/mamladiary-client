@@ -44,6 +44,9 @@ import AllCases from "./pages/AcLand/AllCases.jsx";
 import NewCase from "./pages/AcLand/NewCase.jsx";
 import AddAdcOrder from "./pages/Adc/AddAdcOrder.jsx";
 import CaseDetails from "./pages/AcLand/CaseDetails.jsx";
+import MyMamla from "./pages/Nagorik/MyMamla.jsx";
+import DivComAllCases from "./pages/DivCom/cases/DivComAllCases.jsx";
+import CaseDetailsDivCom from "./pages/DivCom/cases/CaseDetailsDivCom.jsx";
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
 
@@ -100,16 +103,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="nagorik" element={<NagorikDashboard />} />
              
             <Route path="nagorik/caseUpload" element={<NagorikCaseInfoUpload />} />
-            <Route path="nagorik/mamla" element={<AllCases />} />
+            <Route path="nagorik/cases" element={<MyMamla />} />
+            <Route path="nagorik/cases/edit/:id" element={<NagorikCaseInfoUpload />} />
 
 
 
 
 
-            <Route path="divCom/allCases" element={<AllCases />} />
+            <Route path="divCom/allCases" element={<DivComAllCases />} />
             <Route path="divCom/cases/edit/:id" element={<NewCase />} />
             <Route path="divCom/cases/newOrder/:id" element={<AddAdcOrder />} />
-            <Route path="divCom/cases/:id" element={<CaseDetails />} />
+            <Route path="divCom/cases/:id" element={<CaseDetailsDivCom />} />
             <Route
               path="divCom/cases/order/edit/:id"
               element={<AddAdcOrder />}

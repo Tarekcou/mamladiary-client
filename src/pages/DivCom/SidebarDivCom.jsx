@@ -166,7 +166,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            আগত মামলা
+             মামলার অনুরোধ 
           </NavLink>
         </ul>
       </div>{" "}

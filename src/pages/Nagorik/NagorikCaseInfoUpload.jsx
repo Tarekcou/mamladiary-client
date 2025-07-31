@@ -1,25 +1,76 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, X } from "lucide-react";
+import { CoinsIcon, Plus, X } from "lucide-react";
 import axiosPublic from "../../axios/axiosPublic";
 import { districts } from "../../data/districts";
 import { mamlaNames } from "../../data/mamlaNames";
 import { AuthContext } from "../../provider/AuthProvider";
+import { toBanglaNumber } from "../../utils/toBanglaNumber";
+import { useNavigate, useParams } from "react-router";
 
 export default function NagorikCaseInfoUpload() {
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(2025);
   const {user}=useContext(AuthContext)
-  console.log(user)
+  const navigate = useNavigate();
+  const { id: editId } = useParams(); // Optional: only present on edit
+  const isEditMode = Boolean(editId);
+  // console.log(user)
   const [badiInput, setBadiInput] = useState({ name: "", phone: "", address: "" });
   const [bibadiInput, setBibadiInput] = useState({ name: "", phone: "", address: "" });
 
   const [badiList, setBadiList] = useState([]);
   const [bibadiList, setBibadiList] = useState([]);
+  const [aclandInput, setAclandInput] = useState({ mamlaName: "", mamlaNo: "", year:"", district: "" });
+const [aclandList, setAclandList] = useState([]);
 
-  const toBanglaNumber = (number) => {
-    const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-    return number.toString().split("").map(d => banglaDigits[d] || d).join("");
+const [adcInput, setAdcInput] = useState({ mamlaName: "", mamlaNo: "", year:"", district: "" });
+const [adcList, setAdcList] = useState([]);
+const [isAllIAcLandinfoAdded, setIsAllIAcLandinfoAdded] = useState(true);
+const [isAllIAdcinfoAdded, setIsAllIAdcinfoAdded] = useState(true);
+
+
+   const [formState, setFormState] = useState({
+    trackingNo: "",
+    badi: [],
+    bibadi: [],
+    aclandMamlaInfo: [],
+    adcMamlaInfo: [],
+    isApproved: false,
+  });
+   // Fetch case details if editing
+  useEffect(() => {
+  if (isEditMode) {
+    axiosPublic.get(`/cases/${editId}`).then((res) => {
+      const data = res.data;
+      setFormState({
+        trackingNo: data.trackingNo,
+        badi: data.nagorikSubmission?.badi || [],
+        bibadi: data.nagorikSubmission?.bibadi || [],
+        aclandMamlaInfo: data.nagorikSubmission?.aclandMamlaInfo || [],
+        adcMamlaInfo: data.nagorikSubmission?.adcMamlaInfo || [],
+        isApproved: data.isApproved || false,
+      });
+
+      // ✅ Also populate local lists
+      setBadiList(data.nagorikSubmission?.badi || []);
+      setBibadiList(data.nagorikSubmission?.bibadi || []);
+      setAclandList(data.nagorikSubmission?.aclandMamlaInfo || []);
+      setAdcList(data.nagorikSubmission?.adcMamlaInfo || []);
+    });
+  } else {
+    setFormState((prev) => ({
+      ...prev,
+      trackingNo: `TRACK-${Date.now()}`,
+    }));
+  }
+}, [editId]);
+
+const handleChange = (field, value) => {
+    setFormState((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   const today = new Date().toISOString().split("T")[0];
@@ -42,63 +93,111 @@ export default function NagorikCaseInfoUpload() {
     if (type === "badi") setBadiList(badiList.filter(p => p.phone !== phone));
     else setBibadiList(bibadiList.filter(p => p.phone !== phone));
   };
+  const addAcland = () => {
+  if (aclandInput.mamlaName && aclandInput.mamlaNo&&aclandInput.year&&aclandInput.district) {
+    setAclandList([...aclandList, aclandInput]);
+    setAclandInput({ mamlaName: "", mamlaNo: "", year: "",district:"" });
+  setIsAllIAcLandinfoAdded(true); // Reset error message
+} else {
+  setIsAllIAcLandinfoAdded(false);
+}
+};
+
+const removeAcland = (name) => {
+  setAclandList(prev => prev.filter((_, i) => i !== index));
+};
+
+const addAdc = () => {
+  if (adcInput.mamlaName && adcInput.mamlaNo&&adcInput.year&&adcInput.district) {
+    console.log(adcInput)
+    setAdcList([...adcList, adcInput]);
+    setAdcInput({ mamlaName: "", mamlaNo: "", year: "",district:"" });
+  setIsAllIAdcinfoAdded(true); // Reset error message
+} else {
+  setIsAllIAdcinfoAdded(false);
+}
+};
+
+const removeAdc = (name) => {
+  setAdcList(prev => prev.filter((_, i) => i !== index));
+};
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   const form = e.target;
 
-  if (badiInput.name && badiInput.phone) {
-    badiList.push(badiInput);
-  }
+  const finalBadiList = badiInput.name && badiInput.phone
+    ? [...badiList, badiInput]
+    : badiList;
 
-  if (bibadiInput.name && bibadiInput.phone) {
-    bibadiList.push(bibadiInput);
-  }
+  const finalBibadiList = bibadiInput.name && bibadiInput.phone
+    ? [...bibadiList, bibadiInput]
+    : bibadiList;
+
+  const finalAclandList = aclandInput.mamlaName && aclandInput.mamlaNo && aclandInput.year && aclandInput.district
+    ? [...aclandList, aclandInput]
+    : aclandList;
+
+  const finalAdcList = adcInput.mamlaName && adcInput.mamlaNo && adcInput.year && adcInput.district
+    ? [...adcList, adcInput]
+    : adcList;
 
   const today = new Date().toISOString();
+  const trackNo = finalAclandList[0]?.mamlaNo + finalAclandList[0]?.year;
 
-  const nagorikData = {
-    mamlaName: form.mamlaName.value,
-    mamlaNo: form.mamlaNo.value,
-    year: form.year.value,
-    district: form.district.value,
-    trackingNo: form.trackingNo.value,
-    badi: badiList,
-    bibadi: bibadiList,
-    isApproved: false,
+  const postData = {
+    trackingNo: trackNo,
     createdAt: today,
+      isApproved: formState.isApproved || false,
+    submittedBy: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+  },
+    nagorikSubmission: {
+      badi: finalBadiList,
+      bibadi: finalBibadiList,
+      aclandMamlaInfo: finalAclandList,
+      adcMamlaInfo: finalAdcList,
+    },
   };
-
-  const userMamlaData = {
-    mamlas: [
-      {
-        trackingNo: form.trackingNo.value,
-        mamlaNo: form.mamlaNo.value,
-        district: form.district.value,
-      },
-    ],
-  };
+  console.log(postData)
 
   try {
     setLoading(true);
+     if (isEditMode) {
+        const res = await axiosPublic.patch(`/cases/${editId}`, postData);
+        if (res.data.modifiedCount > 0) {
+          toast.success("মামলাটি সফলভাবে হালনাগাদ হয়েছে");
+          navigate("/dashboard/nagorik/cases");
+        }
+      } else {
+        const res = await axiosPublic.post("/cases", postData);
+        if (res.data.insertedId) {
+          toast.success("মামলাটি সফলভাবে দাখিল হয়েছে");
+          navigate("/dashboard/nagorik/cases");
+        }
+      }
 
-    const res = await axiosPublic.patch(
-      `/cases/nagorik/${nagorikData.trackingNo}`,
-      nagorikData
-    );
 
-    await axiosPublic.patch(`/users/${user._id}`, userMamlaData);
-
-    if (res.data.message === "Nagorik data added to divCom") {
-      toast.success("আপলোড সফল হয়েছে");
+      // Clear all inputs & lists
       setBadiList([]);
       setBibadiList([]);
+      setAclandList([]);
+      setAdcList([]);
       setBadiInput({ name: "", phone: "", address: "" });
       setBibadiInput({ name: "", phone: "", address: "" });
-      form.reset();
-    } else {
-      toast.warning("আপলোড ব্যর্থ হয়েছে");
-    }
-  } catch (err) {
+      setAclandInput({ mamlaName: "", mamlaNo: "", year: "", district: "" });
+      setAdcInput({ mamlaName: "", mamlaNo: "", year: "", district: "" });
+
+      if (!isEditMode) {
+  form.reset();
+}
+
+    } 
+  
+    
+  catch (err) {
     console.error("Upload failed:", err);
     toast.warning("আপলোড ব্যর্থ হয়েছে");
   } finally {
@@ -106,38 +205,47 @@ const handleSubmit = async (e) => {
   }
 };
 
+
   return (
     <form onSubmit={handleSubmit} className="bg-gray-100 shadow-md mx-auto p-6">
       <h2 className="bg-[#004080] mb-4 py-2 font-bold text-white text-xl text-center">
-        মামলা তথ্য দিন
+                {isEditMode ? "মামলা হালনাগাদ" : "নতুন মামলা দাখিল"}
+
       </h2>
 
-      <div className="mb-4">
-        <label>
-          ট্র্যাকিং নম্বর:
-          <input type="number" name="trackingNo" className="mt-1 input input-bordered w-full" />
-        </label>
+     {/* Tracking No */}
+      <div>
+        <label className="label">ট্র্যাকিং নম্বর</label>
+        <input
+          type="text"
+          className="input input-bordered w-full"
+          value={formState.trackingNo}
+          readOnly
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 text-sm">
-        <label>
+      <div className="">
+          <label className="block mb-1 font-semibold">সহকারী কমিশনার (ভূমি) আদালতের তথ্য:</label>
+
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <label>
           মামলার নাম:
-          <select name="mamlaName" className="mt-1 select select-bordered w-full">
+          <select value={aclandInput.mamlaName} onChange={(e) => setAclandInput({ ...aclandInput, mamlaName: e.target.value })}  className="mt-1 select select-bordered w-full">
             <option value="">মামলার নাম নির্বচন করুন</option>
             {mamlaNames.map((name) => (
-              <option key={name} value={name}>{name}</option>
+              <option  key={name} value={name}>{name}</option>
             ))}
           </select>
         </label>
 
         <label>
           মামলা নম্বর:
-          <input name="mamlaNo" type="text" className="mt-1 input input-bordered w-full" />
+          <input value={aclandInput.mamlaNo} onChange={(e) => setAclandInput({ ...aclandInput, mamlaNo: e.target.value })} type="number" className="mt-1 input input-bordered w-full" />
         </label>
 
         <label>
           বছর:
-          <select name="year" className="mt-1 select select-bordered w-full" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+          <select value={aclandInput.year} onChange={(e) => setAclandInput({ ...aclandInput, year: e.target.value })}  name="year" className="mt-1 select select-bordered w-full" >
             <option value="">সাল নির্বচন করুন</option>
             {Array.from({ length: 50 }, (_, i) => {
               const year = 2000 + i;
@@ -148,12 +256,84 @@ const handleSubmit = async (e) => {
 
         <label>
           জেলা:
-          <select name="district" className="mt-1 select select-bordered w-full">
+          <select value={aclandInput.district} onChange={(e) => setAclandInput({ ...aclandInput, district: e.target.value })} name="district" className="mt-1 select select-bordered w-full">
             <option value="">জেলা নির্বচন করুন</option>
             {districts.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
         </label>
+            <button type="button" onClick={addAcland} className="btn bg-[#004080] text-white"><Plus /> যুক্ত করুন</button>
+{!isAllIAcLandinfoAdded && (
+  <p className="text-red-500 text-sm mt-2">সকল তথ্য যুক্ত করুন</p>
+)}
+        </div>
+
+        <div className="flex flex-wrap gap-2 mt-2">
+    {aclandList.map((item, index) => (
+      <div key={index} className="badge badge-info gap-2 p-3 text-white">
+        {item.mamlaName} | {item.mamlaNo} | {item.year} | {item.district}
+        <X className="cursor-pointer" size={14} onClick={() => removeAcland(item.mamlaName)} />
       </div>
+    ))}
+  </div>
+      </div>
+
+
+      {/* এডিসি তথ্য  */}
+      <div className="">
+          <label className="block mb-1 font-semibold">ADC আদালতের তথ্য:</label>
+
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <label>
+          মামলার নাম:
+          <select value={adcInput.mamlaName} onChange={(e) => setAdcInput({ ...adcInput, mamlaName: e.target.value })}  className="mt-1 select select-bordered w-full">
+            <option value="">মামলার নাম নির্বচন করুন</option>
+            {mamlaNames.map((name) => (
+              <option  key={name} value={name}>{name}</option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          মামলা নম্বর:
+          <input value={adcInput.mamlaNo} onChange={(e) => setAdcInput({ ...adcInput, mamlaNo: e.target.value })} type="number" className="mt-1 input input-bordered w-full" />
+        </label>
+
+        <label>
+          বছর:
+          <select value={adcInput.year} onChange={(e) => setAdcInput({ ...adcInput, year: e.target.value })}  name="year" className="mt-1 select select-bordered w-full" >
+            <option value="">সাল নির্বচন করুন</option>
+            {Array.from({ length: 50 }, (_, i) => {
+              const year = 2000 + i;
+              return <option key={year} value={year}>{toBanglaNumber(year)}</option>;
+            })}
+          </select>
+        </label>
+
+        <label>
+          জেলা:
+          <select value={adcInput.district} onChange={(e) => setAdcInput({ ...adcInput, district: e.target.value })} name="district" className="mt-1 select select-bordered w-full">
+            <option value="">জেলা নির্বচন করুন</option>
+            {districts.map((d) => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </label>
+            <button type="button" onClick={addAdc} className="btn bg-[#004080] text-white"><Plus /> যুক্ত করুন</button>
+            {!isAllIAdcinfoAdded && (
+        <p className="text-red-500 text-sm mt-2">সকল তথ্য যুক্ত করুন</p>)}
+        </div>
+
+        <div className="flex flex-wrap gap-2 mt-2">
+    {adcList.map((item, index) => (
+      <div key={index} className="badge badge-info gap-2 p-3 text-white">
+        {item.mamlaName} | {item.mamlaNo} | {item.year} | {item.district}
+        <X className="cursor-pointer" size={14} onClick={() => removeAdc(item.mamlaName)} />
+      </div>
+    ))}
+  </div>
+      </div>
+
+
+
+   
 
       {/* Badi */}
       <div className="col-span-2 mt-4">
@@ -200,7 +380,7 @@ const handleSubmit = async (e) => {
       <div className="mt-6 text-center">
         <button type="submit" className="btn px-6 bg-[#004080] text-white" disabled={loading}>
           
-          {loading ? "আপলোড হচ্ছে..." : "আপলোড করুন"}
+          {isEditMode ? "হালনাগাদ করুন" : "দাখিল করুন"}
         </button>
       </div>
     </form>
