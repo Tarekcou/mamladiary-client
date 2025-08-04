@@ -17,7 +17,7 @@ const SidebarAcLand = () => {
             এসিল্যান্ড ড্যাশবোর্ড
           </Link>
 
-          <NavLink
+          {/* <NavLink
             to="/dashboard/acLand/newCase"
             className={({ isActive }) =>
               isActive
@@ -26,7 +26,7 @@ const SidebarAcLand = () => {
             }
           >
             <Plus /> নতুন মামলা
-          </NavLink>
+          </NavLink> */}
 
           <NavLink
             to="/dashboard/acLand/allCases"

@@ -3,88 +3,84 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
-import { AuthContext } from "../../provider/AuthProvider";
-import { mamlaNames } from "../../data/mamlaNames";
-import axiosPublic from "../../axios/axiosPublic";
-import { toBanglaNumber } from "../../utils/toBanglaNumber";
+import { AuthContext } from "../../../provider/AuthProvider";
+import { mamlaNames } from "../../../data/mamlaNames";
+import axiosPublic from "../../../axios/axiosPublic";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
+import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 
-const AddAdcOrder = () => {
+const AddOrder = () => {
   const { state } = useLocation();
   const caseData = state?.caseData;
+  console.log(state.caseData);
+  const id = state?.id;
   const mode = state?.mode || "edit";
-  console.log("AddAdcOrder mode:", mode);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   const today = new Date().toISOString().split("T")[0];
   const queryClient = useQueryClient();
 
-  const existingData =
-    caseData?.caseStages?.[0]?.[user.role] ||
-    caseData?.caseStages?.[0]?.[caseData.currentStage.stage] ||
-    {};
-  console.log(existingData);
-  // Initialize applicants state from existingData or empty
   const [badi, setBadi] = useState(
-    existingData?.badi && existingData.badi.length > 0
-      ? existingData.badi
+    caseData?.nagorikSubmission?.badi?.length > 0
+      ? caseData.nagorikSubmission.badi.map((b) => ({
+          badiName: b.name,
+          badiPhone: b.phone,
+          badiAddress: b.address,
+        }))
       : [{ badiName: "", badiPhone: "", badiAddress: "" }]
   );
+
   const [bibadi, setBibadi] = useState(
-    existingData?.bibadi && existingData.bibadi.length > 0
-      ? existingData.bibadi
+    caseData?.nagorikSubmission?.bibadi?.length > 0
+      ? caseData.nagorikSubmission.bibadi.map((b) => ({
+          bibadiName: b.name,
+          bibadiPhone: b.phone,
+          bibadiAddress: b.address,
+        }))
       : [{ bibadiName: "", bibadiPhone: "", bibadiAddress: "" }]
   );
-
-  // Initialize formData and set applicants from state
+  const [formNo, setFormNo] = useState();
   const [formData, setFormData] = useState({
     userId: user._id,
     role: user.role,
     badi: badi,
     bibadi: bibadi,
-    mamlaName: existingData.mamlaName || "",
-    mamlaNo: existingData.mamlaNo || "",
-    year: existingData.year || new Date().getFullYear(),
-    district: existingData.district || user.district,
+    mamlaName: caseData?.divComReview?.mamlaName || "",
+    mamlaNo: caseData?.divComReview?.mamlaNo || "",
+    year: caseData?.divComReview?.year || new Date().getFullYear(),
+    district: caseData?.divComReview?.district || user.district,
     officeName: user.officeName,
-    orderSheets:
-      mode === "edit" && existingData?.orderSheets?.length > 0
-        ? [...existingData.orderSheets]
-        : [
-            {
-              date: today,
-              formNo: "",
-              orderNo: "",
+    formNo: formNo,
+    orderSheets: [
+      {
+        date: today,
 
-              order: "",
-              actionTaken: "",
-              remarks: "",
-            },
-          ],
-    remarks: mode === "edit" ? existingData.remarks || "" : "",
+        orderNo: "",
+        order: "",
+        actionTaken: "",
+        remarks: "",
+      },
+    ],
+    remarks: "",
   });
 
-  // Sync formData.applicants whenever applicants state changes
   useEffect(() => {
     setFormData((prev) => ({ ...prev, badi, bibadi }));
   }, [badi, bibadi]);
 
-  // Applicant inputs change handler
   const handleBadiChange = (index, field, value) => {
     const updated = [...badi];
     updated[index][field] = value;
     setBadi(updated);
   };
+
   const handleBibadiChange = (index, field, value) => {
     const updated = [...bibadi];
     updated[index][field] = value;
     setBibadi(updated);
   };
-
-  // The rest of your handlers (handleChange, handleOrderChange, addOrder, removeOrder)...
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,33 +95,6 @@ const AddAdcOrder = () => {
     });
   };
 
-  const addOrder = () => {
-    setFormData((prev) => ({
-      ...prev,
-      orderSheets: [
-        ...prev.orderSheets,
-        {
-          date: today,
-          formNo: "",
-          orderNo: "",
-          order: "",
-          actionTaken: "",
-          remarks: "",
-        },
-      ],
-    }));
-  };
-
-  const removeOrder = (index) => {
-    setFormData((prev) => {
-      const updated = [...prev.orderSheets];
-      updated.splice(index, 1);
-      return { ...prev, orderSheets: updated };
-    });
-  };
-
-  // Submit logic unchanged, formData.applicants will be up to date
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -139,52 +108,48 @@ const AddAdcOrder = () => {
 
     if (!confirm.isConfirmed) return;
 
-    const caseStageKey = user.role;
     const submittedAt = new Date().toISOString();
 
-    const previousStages = caseData?.caseStages?.[0] || {};
-    const previousRoleStage = previousStages[caseStageKey] || {};
+    const newOrderSheets = formData.orderSheets.map((order) => ({
+      orderNo: order.orderNo,
+      order: order.order,
+      date: order.date,
+      actionTaken: order.actionTaken,
+      remarks: order.remarks,
+    }));
 
-    let newStage;
+    let updatedPayload = {};
 
-    if (mode === "add") {
-      newStage = {
-        ...existingData,
-        userId: user._id,
-        role: user.role,
+    if (user.role === "divCom") {
+      updatedPayload.divComReview = {
         mamlaName: formData.mamlaName,
         mamlaNo: formData.mamlaNo,
         year: formData.year,
         district: formData.district,
-        officeName: user.officeName,
-        orderSheets: [
-          ...(existingData.orderSheets || []),
-          ...formData.orderSheets,
-        ],
-        badi: formData.badi,
-        bibadi: formData.bibadi,
-        remarks: formData.remarks,
+        formNo: formData.formNo,
         submittedAt,
+        orderSheets: newOrderSheets,
       };
     } else {
-      newStage = {
-        ...formData,
-        submittedAt,
-      };
+      updatedPayload.responsesFromOffices = [
+        {
+          role: user.role,
+          officeName: user.officeName,
+          district: user.district,
+          submittedAt,
+          mamlaName: formData.mamlaName,
+          mamlaNo: formData.mamlaNo,
+          year: formData.year,
+          formNo: formData.formNo,
+          orderSheets: newOrderSheets,
+          remarks: formData.remarks || "সম্পূর্ণ তথ্য প্রদান করা হয়েছে",
+        },
+      ];
     }
-
-    const updatedCaseStages = {
-      ...previousStages,
-      [caseStageKey]: newStage,
-    };
-
-    const updatedPayload = {
-      caseStages: [updatedCaseStages],
-    };
 
     try {
       const res = await axiosPublic.patch(
-        `/cases/${caseData._id}?district=${user.district.en}`,
+        `/cases/${caseData._id}`,
         updatedPayload
       );
 
@@ -200,6 +165,14 @@ const AddAdcOrder = () => {
       console.error("Update failed:", err);
       toast.error("আপডেট ব্যর্থ হয়েছে");
     }
+  };
+
+  const removeOrder = (index) => {
+    setFormData((prev) => {
+      const updatedOrders = [...prev.orderSheets];
+      updatedOrders.splice(index, 1);
+      return { ...prev, orderSheets: updatedOrders };
+    });
   };
 
   return (
@@ -365,7 +338,14 @@ const AddAdcOrder = () => {
 
         {/* Order Sheets */}
         <div>
-          <h3 className="mb-2 font-semibold">আদেশপত্রসমূহ</h3>
+          <input
+            type="text"
+            placeholder="ফর্ম নম্বর"
+            value={formData.formNo}
+            onChange={(e) => setFormNo(e.target.value)}
+            className="mb-2 input-bordered w-full input"
+          />
+          <h3 className="mb-2 font-semibold">আদেশপত্র</h3>
           {formData.orderSheets.map((order, idx) => (
             <div key={idx} className="bg-white mb-4 p-3 border rounded-md">
               <div>
@@ -383,15 +363,6 @@ const AddAdcOrder = () => {
                   value={order.orderNo}
                   onChange={(e) =>
                     handleOrderChange(idx, "orderNo", e.target.value)
-                  }
-                  className="mb-2 input-bordered w-full input"
-                />
-                <input
-                  type="text"
-                  placeholder="ফর্ম নম্বর"
-                  value={order.formNo}
-                  onChange={(e) =>
-                    handleOrderChange(idx, "formNo", e.target.value)
                   }
                   className="mb-2 input-bordered w-full input"
                 />
@@ -434,13 +405,13 @@ const AddAdcOrder = () => {
               </button>
             </div>
           ))}
-          <button
+          {/* <button
             type="button"
             onClick={addOrder}
             className="btn-outline btn btn-sm"
           >
             নতুন আদেশ যোগ করুন
-          </button>
+          </button> */}
         </div>
 
         {/* Remarks */}
@@ -464,4 +435,4 @@ const AddAdcOrder = () => {
   );
 };
 
-export default AddAdcOrder;
+export default AddOrder;

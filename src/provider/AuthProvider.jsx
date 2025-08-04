@@ -35,12 +35,12 @@ const AuthProvider = ({ children }) => {
       //     params: { loginStatus },
       //   });
       // }
-          console.log(loginStatus,formData);
+      console.log(loginStatus, formData);
 
-      res = await axiosPublic.post("/users/login", formData,  {
-        params: { loginStatus }
+      res = await axiosPublic.post("/users/login", formData, {
+        params: { loginStatus },
       });
-      console.log(res.data)
+      console.log(res.data);
       if (res?.data.status === "success") {
         toast.success("লগ ইন সফল হয়েছে!");
 
@@ -104,15 +104,15 @@ const AuthProvider = ({ children }) => {
 
   // register
   // AuthProvider
-const resigter = async (formData) => {
-  try {
-    const res = await axiosPublic.post("/users", formData);
-    return res.data; // return only response
-  } catch (error) {
-    console.error("Error during registration:", error);
-    return { error: true };
-  }
-};
+  const resigter = async (formData) => {
+    try {
+      const res = await axiosPublic.post("/users", formData);
+      return res.data; // return only response
+    } catch (error) {
+      console.error("Error during registration:", error);
+      return { error: true };
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
