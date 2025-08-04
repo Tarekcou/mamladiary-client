@@ -1,13 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Save, Plus, Trash2, Printer } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import axiosPublic from "../../../axios/axiosPublic";
 import { toast } from "sonner";
+import { AuthContext } from "../../../provider/AuthProvider";
+import Swal from "sweetalert2";
 
-const DivComDetails = ({ caseData }) => {
-  const [orderSheets, setOrderSheets] = useState(
-    caseData?.divComReview?.orderSheets || []
-  );
+const DivComDetails = ({ caseData,refetch }) => {
+  const [orderSheets, setOrderSheets] = useState([]);
+  const [editingRow, setEditingRow] = useState(null);
+  const {user}=useContext(AuthContext)
+
+  
+  useEffect(() => {
+    if (caseData?.divComReview?.orderSheets) {
+      setOrderSheets(caseData.divComReview.orderSheets);
+    }
+  }, [caseData?.divComReview?.orderSheets]);
   const [showHeaderModal, setShowHeaderModal] = useState(false);
 
   const badi = caseData?.nagorikSubmission?.badi?.[0];
@@ -15,12 +24,18 @@ const DivComDetails = ({ caseData }) => {
   const divComReview = caseData?.divComReview || {};
 
   const [headerInfo, setHeaderInfo] = useState({
-    formNo: divComReview.formNo || "",
-    mamlaName: divComReview.mamlaName || "",
-    mamlaNo: divComReview.mamlaNo || "",
-    year: divComReview.year || "",
-    district: divComReview.district?.bn || "",
   });
+  useEffect(() => {
+    if (divComReview) {
+      setHeaderInfo({
+        formNo: divComReview.formNo || "",
+        mamlaName: divComReview.mamlaName || "",
+        mamlaNo: divComReview.mamlaNo || "",
+        year: divComReview.year || "",
+        district: divComReview.district?.bn || "",
+      });
+    }
+  }, [divComReview, showHeaderModal]);
   // Refs for auto-growing textareas
   const textareaRefs = useRef([]);
 
@@ -32,8 +47,12 @@ const DivComDetails = ({ caseData }) => {
         ref.style.height = `${ref.scrollHeight}px`;
       }
     });
-  }, [orderSheets]);
-
+  }, [orderSheets,caseData]);
+  const toggleEditing = (rowIndex, fieldName) => {
+    const key = `${rowIndex}-${fieldName}`;
+    setEditingFields((prev) => ({ ...prev, [key]: true }));
+  };
+  
   const handleInputChange = (index, field, value) => {
     const updated = [...orderSheets];
     updated[index][field] = value;
@@ -47,7 +66,18 @@ const DivComDetails = ({ caseData }) => {
     ]);
   };
 
-  const handleDeleteRow = (index) => {
+  const handleDeleteRow =async (index) => {
+    console.log(index )
+    const confirm = await Swal.fire({
+      title: "আপনি কি ডিলেট  চান?",
+      text: "এই কাজটি অপরিবর্তনীয়!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, করুন!",
+    });
+
+    if (!confirm.isConfirmed) return;
+    setEditingRow(index)
     const updated = orderSheets.filter((_, i) => i !== index);
     setOrderSheets(updated);
   };
@@ -65,6 +95,9 @@ const DivComDetails = ({ caseData }) => {
 
       if (res.data.modifiedCount > 0) {
         toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
+        setEditingRow(null);
+
+
       } else {
         toast("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
       }
@@ -79,24 +112,28 @@ const DivComDetails = ({ caseData }) => {
   };
   const handleHeader = async () => {
     {
-      const updatedReview = {
-        ...divComReview,
-        formNo: headerInfo.formNo,
-        mamlaName: headerInfo.mamlaName,
-        mamlaNo: headerInfo.mamlaNo,
-        year: headerInfo.year,
-        district: {
-          ...divComReview.district,
-          bn: headerInfo.district,
-        },
-      };
+      const { orderSheets, ...rest } = divComReview || {};
+
+const updatedHeader = {
+  ...rest,
+  formNo: headerInfo.formNo,
+  mamlaName: headerInfo.mamlaName,
+  mamlaNo: headerInfo.mamlaNo,
+  year: headerInfo.year,
+  district: {
+    ...divComReview?.district,
+    bn: headerInfo.district,
+  },
+};
+
       const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        divComReview: updatedReview,
+        divComReview: updatedHeader,
       });
       if (res.data.modifiedCount > 0) {
         setShowHeaderModal(false);
         toast("হেডার তথ্য সংরক্ষণ হয়েছে");
-        location.reload(); // Or refresh divComReview in state if you want live update
+        refetch(  )
+        // location.reload(); // Or refresh divComReview in state if you want live update
       } else {
         toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
       }
@@ -234,67 +271,93 @@ const DivComDetails = ({ caseData }) => {
               </tr>
             </thead>
             <tbody>
-              {orderSheets.map((row, idx) => (
-                <tr key={idx}>
-                  <td className="p-2 border-r align-top">
-                    <div className="flex flex-col items-center">
-                      <input
-                        type="date"
-                        value={row.date}
-                        onChange={(e) =>
-                          handleInputChange(idx, "date", e.target.value)
-                        }
-                        className="w-full text-center input"
-                      />
-                    </div>
-                    <textarea
-                      value={row.orderNo}
-                      placeholder="আদেশের নম্বর"
-                      onChange={(e) =>
-                        handleInputChange(idx, "orderNo", e.target.value)
-                      }
-                      className="w-full overflow-hidden resize-none"
-                    />
-                  </td>
-                  <td className="p-2 border-r align-top">
-                    <textarea
-                      ref={(el) => (textareaRefs.current[idx] = el)}
-                      value={row.order}
-                      placeholder="আদেশ ও সাক্ষর"
-                      onChange={(e) => {
-                        handleInputChange(idx, "order", e.target.value);
-                        const el = e.target;
-                        el.style.height = "auto";
-                        el.style.height = `${el.scrollHeight}px`;
-                      }}
-                      className="w-full overflow-hidden resize-none"
-                    />
-                  </td>
-                  <td className="p-2 border-r align-top">
-                    <textarea
-                      ref={(el) => (textareaRefs.current[idx + "-action"] = el)} // avoid ref clash
-                      value={row.actionTaken || ""}
-                      placeholder="গৃহীত ব্যবস্থা"
-                      onChange={(e) => {
-                        handleInputChange(idx, "actionTaken", e.target.value);
-                        const el = e.target;
-                        el.style.height = "auto";
-                        el.style.height = `${el.scrollHeight}px`;
-                      }}
-                      className="w-full overflow-hidden resize-none"
-                    />
-                  </td>
-                  <td id="action" className="p-2 border-r">
-                    <button
-                      className="text-red-600 btn btn-sm btn-ghost"
-                      onClick={() => handleDeleteRow(idx)}
-                    >
-                      <Trash2 className="w-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {orderSheets.map((row, idx) => {
+    const isEditing = editingRow === idx;
+
+    return (
+      <tr key={idx}>
+        <td className="p-2 border-r align-top">
+          <div className="flex flex-col items-center">
+            <input
+              type="date"
+              value={row.date}
+              readOnly={!isEditing || user?.role !== "divCom"}
+              onChange={(e) =>
+                handleInputChange(idx, "date", e.target.value)
+              }
+              className="w-full text-center input"
+            />
+          </div>
+
+          <textarea
+            value={row.orderNo}
+            placeholder="আদেশের নম্বর"
+            readOnly={!isEditing || user?.role !== "divCom"}
+            onChange={(e) =>
+              handleInputChange(idx, "orderNo", e.target.value)
+            }
+            className="w-full overflow-hidden resize-none"
+          />
+        </td>
+
+        <td className="p-2 border-r align-top">
+          <textarea
+            ref={(el) => (textareaRefs.current[idx] = el)}
+            value={row.order}
+            placeholder="আদেশ ও সাক্ষর"
+            readOnly={!isEditing || user?.role !== "divCom"}
+            onChange={(e) => {
+              handleInputChange(idx, "order", e.target.value);
+              const el = e.target;
+              el.style.height = "auto";
+              el.style.height = `${el.scrollHeight}px`;
+            }}
+            className="w-full overflow-hidden resize-none"
+          />
+        </td>
+
+        <td className="p-2 border-r align-top">
+          <textarea
+            ref={(el) => (textareaRefs.current[idx + "-action"] = el)}
+            value={row.actionTaken || ""}
+            placeholder="গৃহীত ব্যবস্থা"
+            readOnly={!isEditing || user?.role !== "divCom"}
+            onChange={(e) => {
+              handleInputChange(idx, "actionTaken", e.target.value);
+              const el = e.target;
+              el.style.height = "auto";
+              el.style.height = `${el.scrollHeight}px`;
+            }}
+            className="w-full overflow-hidden resize-none"
+          />
+        </td>
+
+        <td id="action" className="p-2 border-r space-y-2">
+          
+              {!isEditing ? (
+                <button
+                  className="text-blue-600 btn btn-sm btn-ghost"
+                  onClick={() => setEditingRow(idx)}
+                >
+                  ✏️
+                </button>
+              ) : (
+                <span className="text-green-600 text-xs">Editing</span>
+              )}
+         
+    
+          <button
+            className="text-red-600 btn btn-sm btn-ghost"
+            onClick={() => handleDeleteRow(idx)}
+          >
+            <Trash2 className="w-4" />
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
           </table>
         </div>
       </div>
@@ -302,10 +365,10 @@ const DivComDetails = ({ caseData }) => {
         <button className="btn-outline btn" onClick={handleAddRow}>
           <Plus className="w-4" /> নতুন আদেশ
         </button>
-
+        {editingRow !== null && (
         <button className="btn btn-success" onClick={handleSave}>
           <Save /> সংরক্ষণ করুন
-        </button>
+        </button>)}
       </div>
 
       {showHeaderModal && (
@@ -366,6 +429,8 @@ const DivComDetails = ({ caseData }) => {
               >
                 বাতিল
               </button>
+              
+
               <button className="btn btn-primary" onClick={handleHeader}>
                 সংরক্ষণ করুন
               </button>

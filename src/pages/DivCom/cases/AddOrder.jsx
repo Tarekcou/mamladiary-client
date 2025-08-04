@@ -63,7 +63,6 @@ const AddOrder = () => {
         remarks: "",
       },
     ],
-    remarks: "",
   });
 
   useEffect(() => {
@@ -99,11 +98,11 @@ const AddOrder = () => {
     e.preventDefault();
 
     const confirm = await Swal.fire({
-      title: "আপনি কি নিশ্চিত?",
-      text: "সব পরিবর্তন ডাটাবেজে সংরক্ষিত হবে।",
+      title: "আপনি কি নতুন আদেশ যুক্ত করতে চান ?",
+      text: " পরিবর্তন ডাটাবেজে সংরক্ষিত হবে।",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, আপডেট করুন",
+      confirmButtonText: "হ্যাঁ, যুক্ত করুন",
     });
 
     if (!confirm.isConfirmed) return;
@@ -120,7 +119,7 @@ const AddOrder = () => {
 
     let updatedPayload = {};
 
-    if (user.role === "divCom") {
+    if (user?.role === "divCom") {
       updatedPayload.divComReview = {
         mamlaName: formData.mamlaName,
         mamlaNo: formData.mamlaNo,
@@ -142,7 +141,7 @@ const AddOrder = () => {
           year: formData.year,
           formNo: formData.formNo,
           orderSheets: newOrderSheets,
-          remarks: formData.remarks || "সম্পূর্ণ তথ্য প্রদান করা হয়েছে",
+          
         },
       ];
     }
@@ -152,6 +151,7 @@ const AddOrder = () => {
         `/cases/${caseData._id}`,
         updatedPayload
       );
+      console.log(res.data, updatedPayload)
 
       if (res.data.modifiedCount > 0) {
         toast.success("আপডেট সফল হয়েছে!");
@@ -341,7 +341,7 @@ const AddOrder = () => {
           <input
             type="text"
             placeholder="ফর্ম নম্বর"
-            value={formData.formNo}
+            value={formNo}
             onChange={(e) => setFormNo(e.target.value)}
             className="mb-2 input-bordered w-full input"
           />
@@ -396,13 +396,13 @@ const AddOrder = () => {
                 className="mb-2 textarea-bordered w-full textarea"
               />
 
-              <button
+              {/* <button
                 type="button"
                 onClick={() => removeOrder(idx)}
                 className="btn btn-error btn-xs"
               >
                 মুছে ফেলুন
-              </button>
+              </button> */}
             </div>
           ))}
           {/* <button
@@ -415,7 +415,7 @@ const AddOrder = () => {
         </div>
 
         {/* Remarks */}
-        <div>
+        {/* <div>
           <label className="block font-medium">সামগ্রিক মন্তব্য</label>
           <textarea
             name="remarks"
@@ -424,7 +424,7 @@ const AddOrder = () => {
             rows="3"
             className="textarea-bordered w-full textarea"
           />
-        </div>
+        </div> */}
 
         {/* Submit */}
         <button type="submit" className="mt-4 w-full btn btn-primary">

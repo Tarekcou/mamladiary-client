@@ -1,17 +1,17 @@
 import React from "react";
 
-const Message = ({ caseInfo, role }) => {
-  if (!caseInfo) return null;
+const Message = ({ caseData, role }) => {
+  if (!caseData) return null;
 
-  const badi = caseInfo.nagorikSubmission?.badi;
-  const bibadi = caseInfo.nagorikSubmission?.bibadi;
+  const badi = caseData.nagorikSubmission?.badi;
+  const bibadi = caseData.nagorikSubmission?.bibadi;
 
   const mamlaInfo =
     role === "acLand"
-      ? caseInfo.nagorikSubmission?.aclandMamlaInfo?.[0]
-      : caseInfo.nagorikSubmission?.adcMamlaInfo?.[0];
+      ? caseData.nagorikSubmission?.aclandMamlaInfo?.[0]
+      : caseData.nagorikSubmission?.adcMamlaInfo?.[0];
 
-  const order = caseInfo.divComReview?.orderSheets?.[0]?.order || "N/A";
+  const order = caseData.divComReview?.orderSheets?.[0]?.order || "N/A";
 
   if (!mamlaInfo)
     return <p className="text-red-600">মামলার তথ্য পাওয়া যায়নি।</p>;
@@ -27,7 +27,7 @@ const Message = ({ caseInfo, role }) => {
           <div>মামলার নাম: {mamlaInfo.mamlaName}</div>
           <div>মামলা নম্বর: {mamlaInfo.mamlaNo}</div>
           <div>সালঃ ({mamlaInfo.year})</div>
-          <div>জেলা: {mamlaInfo.district}</div>
+          <div>জেলা: {mamlaInfo.district.bn}</div>
         </div>
       </div>
 

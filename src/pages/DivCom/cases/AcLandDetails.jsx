@@ -141,9 +141,7 @@ const AcLandDetails = ({ caseData }) => {
               >
                 PDF ডাউনলোড (Print)
               </button>
-              <div className="">
-                {role === "acLand" && (
-                  <button
+              <button
                     className="btn btn-sm btn-primary"
                     onClick={() =>
                       navigate(`/dashboard/acLand/newCase`, {
@@ -153,8 +151,11 @@ const AcLandDetails = ({ caseData }) => {
                   >
                     <PlusSquareIcon className="mr-2 w-5" /> মামলা যোগ করুন
                   </button>
+              {/* <div className="">
+                {role === "acLand" && (
+                  
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
 

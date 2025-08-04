@@ -9,35 +9,36 @@ import { Phone, Send } from "lucide-react";
 
 const MySwal = withReactContent(Swal);
 
-const OfficeMessaging = ({ caseInfo, role }) => {
+const OfficeMessaging = ({ caseData, role }) => {
+  console.log(role)
   const [showModal, setShowModal] = useState(false);
   const [messageData, setMessageData] = useState(null);
   const [sendingTo, setSendingTo] = useState("");
-  // console.log(caseInfo);
+  console.log(caseData);
 
-  const messages = caseInfo?.messagesToOffices || [];
+  const messages = caseData?.messagesToOffices || [];
 
-  // Check if message already sent
-  const alreadySentToAcLand = messages.some(
-    (msg) => msg.sentTo?.role === "acLand"
-  );
-
-  const alreadySentToADC = messages.some((msg) => msg.sentTo?.role === "adc");
-  const badi = caseInfo.nagorikSubmission?.badi?.[0];
-  const bibadi = caseInfo.nagorikSubmission?.bibadi?.[0];
+  const sentRoles = messages.map((msg) => msg.sentTo?.role?.toLowerCase?.());
+  console.log(sentRoles,messages)
+  const alreadySentToAcLand = sentRoles.includes("acland");
+  const alreadySentToADC = sentRoles.includes("adc");
+  
+  console.log(alreadySentToADC,alreadySentToAcLand)
+  const badi = caseData.nagorikSubmission?.badi?.[0];
+  const bibadi = caseData.nagorikSubmission?.bibadi?.[0];
 
   const plainTextMessage = createPlainTextMessage(
-    caseInfo,
+    caseData,
     sendingTo,
     badi,
     bibadi,
-    caseInfo.divComReview?.orderSheets
+    caseData.divComReview?.orderSheets
   );
   const handleOpenModal = (role) => {
     const mamlaInfo =
       role === "acLand"
-        ? caseInfo.nagorikSubmission?.aclandMamlaInfo
-        : caseInfo.nagorikSubmission?.adcMamlaInfo;
+        ? caseData.nagorikSubmission?.aclandMamlaInfo
+        : caseData.nagorikSubmission?.adcMamlaInfo;
 
     if (!mamlaInfo?.length) {
       Swal.fire("তথ্য নেই", "এই রোলে কোনো মামলা নেই", "warning");
@@ -54,9 +55,8 @@ const OfficeMessaging = ({ caseInfo, role }) => {
     const role = sendingTo;
     const mamla =
       role === "acLand"
-        ? caseInfo.nagorikSubmission?.aclandMamlaInfo
-        : caseInfo.nagorikSubmission?.adcMamlaInfo;
-
+        ? caseData.nagorikSubmission?.aclandMamlaInfo
+        : caseData.nagorikSubmission?.adcMamlaInfo;
     const payload = {
       date: new Date().toISOString(),
 
@@ -67,17 +67,24 @@ const OfficeMessaging = ({ caseInfo, role }) => {
       },
 
       parties: {
-        badiList: caseInfo.nagorikSubmission?.badi || [],
-        bibadiList: caseInfo.nagorikSubmission?.bibadi || [],
+        badiList: caseData.nagorikSubmission?.badi || [],
+        bibadiList: caseData.nagorikSubmission?.bibadi || [],
       },
 
       mamlaList: mamla || [],
     };
+   
 
     try {
       // DB Update
-      const res = await axiosPublic.patch(`/cases/${caseInfo._id}`, {
+      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
         messagesToOffices: [payload], // Just send the new one, let backend `$push`
+      });
+
+      const stageKey= "divComReview"
+      await axiosPublic.patch(`/cases/${caseData._id}/status`, {
+        stageKey,
+        status: 'messaged',
       });
 
       if (res.data.modifiedCount > 0) {
@@ -100,13 +107,13 @@ const OfficeMessaging = ({ caseInfo, role }) => {
   return (
     <div className="my-10">
       <h1 className="font-bold underline">অন্য অফিসে তথ্য চেয়ে প্রেরণ:</h1>
-      <div className="gap-4 mt-4">
-        {(role === "lawyer" || role === "acLand") && !alreadySentToAcLand ? (
+      <div className="gap-4 flex btn-sm mt-4">
+        { !alreadySentToAcLand ? (
           <button
             onClick={() => handleOpenModal("acLand")}
             className="btn btn-primary"
           >
-            <Send /> সহকারী কমিশনার (ভূমি) বরাবর প্রেরণ
+            <Send /> এসিল্যান্ড 
           </button>
         ) : (
           <h1 className="bg-emerald-700 my-5 p-2 text-white ul">
@@ -114,12 +121,12 @@ const OfficeMessaging = ({ caseInfo, role }) => {
           </h1>
         )}
 
-        {(role === "lawyer" || role === "adc") && !alreadySentToADC ? (
+        { !alreadySentToADC ? (
           <button
             onClick={() => handleOpenModal("adc")}
             className="btn btn-success"
           >
-            <Send /> এডিসি আদালতে প্রেরণ
+            <Send /> এডিসি 
           </button>
         ) : (
           <h1 className="bg-emerald-700 my-5 p-2 text-white ul">
@@ -136,7 +143,7 @@ const OfficeMessaging = ({ caseInfo, role }) => {
             </h2>
 
             <div className="bg-gray-50 p-4 border rounded max-h-[400px] overflow-y-auto text-gray-800">
-              <Message caseInfo={caseInfo} role={sendingTo} />
+              <Message caseData={caseData} role={sendingTo} />
             </div>
 
             <div className="flex justify-end gap-2">

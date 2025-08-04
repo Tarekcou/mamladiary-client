@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import axiosPublic from "../../../axios/axiosPublic";
 import { AuthContext } from "../../../provider/AuthProvider";
 import { Edit, PlusSquareIcon, Send } from "lucide-react";
+import OfficeMessaging from "./OfficeMessaging";
 
 const AllCasesList = () => {
   const navigate = useNavigate();
@@ -15,12 +16,12 @@ const AllCasesList = () => {
   const location = useLocation();
   const allCasesPath = location.pathname.includes("allCases");
   const {
-    data: cases = [],
+    data: caseData = [],
     isLoading,
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["cases", user?.role, allCasesPath],
+    queryKey: ["caseData", user?.role, allCasesPath],
     queryFn: async () => {
       const params = { role: user.role };
 
@@ -92,7 +93,7 @@ const AllCasesList = () => {
             </tr>
           </thead>
           <tbody>
-            {cases?.map((cas, index) => (
+            {caseData?.map((cas, index) => (
               <tr key={cas._id} className="text-center">
                 <td>{index + 1}</td>
                 <td>{cas.trackingNo}</td>
@@ -116,7 +117,10 @@ const AllCasesList = () => {
                   )) || "-"}
                 </td>
                 <td>{cas.isApproved ? "অনুমোদিত" : "অপেক্ষমাণ"}</td>
-                <td className="flex justify-center gap-1">
+
+
+                <td className="flex flex-col justify-center gap-1">
+                  <div>
                   <button
                     className="btn btn-sm btn-info"
                     onClick={() =>
@@ -132,7 +136,7 @@ const AllCasesList = () => {
                     className="btn btn-sm btn-primary"
                     onClick={() =>
                       navigate(
-                        `/dashboard/${user.role}/cases/newOrder/${cas._id}`,
+                        `/dashboard/${user.role}/cases/order/${cas._id}`,
                         {
                           state: { caseData: cas, mode: "add" }, // <-- edit mode flag
                         }
@@ -141,26 +145,10 @@ const AllCasesList = () => {
                   >
                     <PlusSquareIcon className="w-6 text-xl" />
                   </button>
+                  </div>
 
-                  <button
-                    className="btn btn-sm btn-warning"
-                    onClick={() =>
-                      navigate(
-                        `/dashboard/${user.role}/cases/edit/${cas._id}`,
-                        {
-                          state: { caseData: cas },
-                        }
-                      )
-                    }
-                  >
-                    <Edit className="w-6" />
-                  </button>
-                  <button
-                    className="btn btn-sm btn-success"
-                    onClick={() => handleSeniorOfficeSend(cas)}
-                  >
-                    <Send className="w-6" />
-                  </button>
+                  <OfficeMessaging caseData={caseData} role={user.role}/>
+                
 
                   {!cas.isApproved && (
                     <button

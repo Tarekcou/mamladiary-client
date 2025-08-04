@@ -14,7 +14,6 @@ const AllDetails = () => {
   const location = useLocation();
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const [activeTab, setActiveTab] = useState(user?.role);
 
   const navigate = useNavigate();
 
@@ -63,7 +62,7 @@ const AllDetails = () => {
     if (hasAdc) {
       allTabs.push({ key: "adc", label: "ADC (Revenue)" });
     }
-
+    
     // 🔒 Filter based on strict role permission
     if (user.role === "divCom") return allTabs;
 
@@ -71,7 +70,8 @@ const AllDetails = () => {
   };
 
   const dynamicTabs = buildTabs();
-  // console.log(dynamicTabs);
+  console.log(dynamicTabs);
+  const [activeTab, setActiveTab] = useState( user.role);
 
   const renderContent = () => {
     switch (activeTab) {

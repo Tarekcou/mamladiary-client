@@ -1,31 +1,35 @@
 import React, { useContext, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosPublic from "../../axios/axiosPublic";
 import { AuthContext } from "../../provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
+import { MdSignalWifiStatusbar1Bar } from "react-icons/md";
+import { Check, ReceiptRussianRubleIcon, Send, Undo } from "lucide-react";
 
 const MyMamla = () => {
   const { user } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();  
   const {
-    data: cases = [],
+    data: caseData = [],
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["myCases", user?._id],
+    queryKey: ["nagorikCases", user?._id],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cases`, {
         params: { submittedBy: user?._id },
       });
+      // console.log(res.data.nagorikSubmission.status)
+
       return res.data;
     },
   });
-
-  const filteredCases = cases.filter((cas) => {
+  const filteredCases = caseData.filter((cas) => {
     const badiNames = cas.nagorikSubmission?.badi
       ?.map((b) => b.name)
       .join(" ")
@@ -73,6 +77,49 @@ const MyMamla = () => {
       toast.error("মামলাটি মুছে ফেলতে সমস্যা হয়েছে।");
     }
   };
+  const handleStatusChange = async (caseId, stageKey, newStatus) => {
+    const confirm = await Swal.fire({
+      title: "আপনি কি প্রেরন চান?",
+      text: "এই কাজটি অপরিবর্তনীয়!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, প্রেরন করুন!",
+    });
+
+    if (!confirm.isConfirmed) return;
+    try {
+      const res = await axiosPublic.patch(`/cases/${caseId}/status`, {
+        stageKey,
+        status: newStatus,
+      });
+      // Optimistically update local cache
+      queryClient.setQueryData(["myCases", user._id], (oldCases = []) =>
+        oldCases.map((cas) =>
+          cas._id === caseId
+            ? {
+                ...cas,
+                [stageKey]: {
+                  ...cas[stageKey],
+                  status: newStatus,
+                },
+              }
+            : cas
+        )
+      );
+  
+      if (res.data.success) {
+        toast.success("স্ট্যাটাস সফলভাবে পরিবর্তন করা হয়েছে");
+        refetch();
+      } else {
+        toast.error("স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে");
+      }
+    } catch (err) {
+      console.error("Status update error:", err);
+      toast.error("স্ট্যাটাস পরিবর্তনে সমস্যা হয়েছে");
+    }
+  };
+  
+  
 
   if (isLoading) return <p>লোড হচ্ছে...</p>;
 
@@ -130,21 +177,23 @@ const MyMamla = () => {
                   <td>
                     {cas.nagorikSubmission?.aclandMamlaInfo?.map((info) => (
                       <div key={info.mamlaNo}>
-                        {info.mamlaName} - {info.mamlaNo}/{info.year} ({info.district})
+                        {info.mamlaName} - {info.mamlaNo}/{info.year} ({info.district.bn})
                       </div>
                     )) || "-"}
                   </td>
                   <td>
                     {cas.nagorikSubmission?.adcMamlaInfo?.map((info) => (
                       <div key={info.mamlaNo}>
-                        {info.mamlaName} - {info.mamlaNo}/{info.year} ({info.district})
+                        {info.mamlaName} - {info.mamlaNo}/{info.year} ({info.district.bn})
                       </div>
                     )) || "-"}
                   </td>
                   <td className="">{cas.isApproved ? <h1 className="text-green-500 font-bold">"অনুমোদিত"</h1> : <h1 className="text-red-500 font-bold">"অনুমোদনের জন্য অপেক্ষমাণ"</h1>}</td>
-                  <td className="flex justify-center gap-2">
+                  <td className="flex flex-col justify-center gap-2">
                     {/* Edit button */}
-                    <button
+                    {cas?.nagorikSubmission?.status!="submitted" &&
+                    <>
+                     <button
                       onClick={() =>
                         navigate(`/dashboard/${user.role}/cases/edit/${cas._id}`, {
                           state: { caseData: cas },
@@ -162,6 +211,18 @@ const MyMamla = () => {
                     >
                       মুছে ফেলুন
                     </button>
+                    <button
+          onClick={() => handleStatusChange(cas._id, "nagorikSubmission", "submitted")}
+          className="btn btn-sm bg-blue-500 text-white"
+        >
+          {cas?.nagorikSubmission?.status!="submitted" && <h1 className="flex items-center  text-xs">প্রেরন   </h1>}
+        </button>
+                    </>
+                   
+              }
+                      
+                    {cas?.nagorikSubmission?.status=="submitted" &&  <h1 className="flex items-center  text-md gap-1  text-success font-semibold"><Check className="w-5"/>প্রেরিত </h1>}
+
                   </td>
                 </tr>
               ))

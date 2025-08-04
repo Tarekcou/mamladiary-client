@@ -488,7 +488,7 @@ export default function NagorikCaseInfoUpload() {
                 const selectedDistrict = aclandOptions.find(
                   (d) => d.district.en === e.target.value
                 );
-                setAclandInput({
+                setAdcInput({
                   ...adcInput,
                   district: selectedDistrict?.district || null,
                   officeName: null, // Reset office

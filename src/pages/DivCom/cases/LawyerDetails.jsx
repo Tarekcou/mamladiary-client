@@ -42,7 +42,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
     caseData;
 
   const handleAddOrder = () => {
-    navigate(`/dashboard/divCom/cases/newOrder/${caseData._id}`, {
+    navigate(`/dashboard/divCom/cases/order/${caseData._id}`, {
       state: { caseData, mode: "add" },
     });
   };
@@ -54,18 +54,26 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
             নাগরিক মামলার বিস্তারিত
           </h2>
 
-          <p>
+         
+          <div className="flex justify-between">
+            <div className="flex flex-col gap-3">
+            <p>
             <strong>ট্র্যাকিং নম্বর:</strong> {trackingNo}
           </p>
-          <div className="flex justify-between">
-            <div className="flex gap-3">
+              <div className="flex gap-1">
               <h1>অনুমোদনের অবস্থা:</h1>{" "}
               <h1 className={isApproved ? "text-green-600" : "text-red-600"}>
                 {isApproved ? "অনুমোদিত" : "অনুমোদনের অপেক্ষায়"}
-              </h1>
+              </h1></div>
             </div>
+            <button
+                  onClick={() => handleApprove(true)}
+                  className="flex items-center btn btn-success"
+                >
+                  <CheckCircle2 /> অনুমোদন করুন
+                </button>
             {/* Approve Button */}
-            {!isApproved ? (
+            {(!isApproved && user?.role==="lawyer") ? (
               <div className="text-center">
                 <button
                   onClick={() => handleApprove(true)}
@@ -75,14 +83,20 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                 </button>
               </div>
             ) : (
-              <div className="text-center">
+              <div className="text-center space-y-1 btn-sm">
                 {!caseData.divComReview && (
-                  <button
+                  <>
+                  <button onClick={handleAddOrder} className="flex btn-success btn">
+            <Plus /> নতুন আদেশ যুক্ত
+          </button>
+          <button
                     onClick={() => handleApprove(false)}
                     className="flex items-center btn btn-warning"
                   >
-                    <FcCancel className="text-2xl" /> অনুমোদন বাতিল করুন
+                    <FcCancel className="text-2xl" /> অনুমোদন বাতিল 
                   </button>
+                  </>
+                  
                 )}
               </div>
             )}
@@ -90,9 +104,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
         </div>
 
         <div className="flex justify-end gap-2 my-2">
-          {/* <button onClick={handleAddOrder} className="flex btn-success btn">
-            <Plus /> নতুন আদেশ যুক্ত করুন
-          </button> */}
+          
           {/* <button
                 className="btn btn-warning"
                 onClick={() =>
@@ -186,7 +198,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                     <td>{m.mamlaName}</td>
                     <td>{m.mamlaNo}</td>
                     <td>{m.year}</td>
-                    <td>{m.district}</td>
+                    <td>{m.district.bn}</td>
                   </tr>
                 ))}
               </tbody>
@@ -217,7 +229,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                     <td>{m.mamlaName}</td>
                     <td>{m.mamlaNo}</td>
                     <td>{m.year}</td>
-                    <td>{m.district}</td>
+                    <td>{m.district.bn}</td>
                   </tr>
                 ))}
               </tbody>
@@ -227,10 +239,11 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
           )}
         </div>
       )}
-
+      {isApproved &&
       <div>
-        <OfficeMessaging caseInfo={caseData} role={role} />
+        <OfficeMessaging caseData={caseData} role={role} />
       </div>
+}
     </div>
   );
 };
