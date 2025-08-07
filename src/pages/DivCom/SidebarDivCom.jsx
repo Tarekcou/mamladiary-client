@@ -24,7 +24,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            নতুন আগত মামলা
+            আগত মামলা
           </NavLink>
           <NavLink
             to="/dashboard/divCom/allCases"

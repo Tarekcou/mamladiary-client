@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
 import SidebarNagorik from "../pages/Nagorik/SidebarNagorik";
 import SidebarAcLand from "../pages/AcLand/SidebarAcLand";
-import SidebarDivCom from "../pages/divCom/SidebarDivCom";
 import SidebarAdc from "../pages/adc/SidebarAdc";
+import SidebarDivCom from "../pages/divCom/SidebarDivCom";
 
 const DashboardLayout = () => {
   const [isSticky, setIsSticky] = useState(false);
