@@ -5,15 +5,27 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
-import { MdSignalWifiStatusbar1Bar } from "react-icons/md";
-import { Check, ReceiptRussianRubleIcon, Send, Undo } from "lucide-react";
+import { MdDelete, MdSignalWifiStatusbar1Bar } from "react-icons/md";
+import {
+  ArrowLeft,
+  Check,
+  Delete,
+  DeleteIcon,
+  Edit,
+  LucideDelete,
+  ReceiptRussianRubleIcon,
+  Send,
+  SendIcon,
+  Undo,
+} from "lucide-react";
+import { FcViewDetails } from "react-icons/fc";
 
 const MyMamla = () => {
   const { user } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();  
+  const queryClient = useQueryClient();
   const {
     data: caseData = [],
     isLoading,
@@ -106,7 +118,7 @@ const MyMamla = () => {
             : cas
         )
       );
-  
+
       if (res.data.success) {
         toast.success("স্ট্যাটাস সফলভাবে পরিবর্তন করা হয়েছে");
         refetch();
@@ -118,20 +130,20 @@ const MyMamla = () => {
       toast.error("স্ট্যাটাস পরিবর্তনে সমস্যা হয়েছে");
     }
   };
-  
-  
 
   if (isLoading) return <p>লোড হচ্ছে...</p>;
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 font-bold text-xl">আমার দাখিলকৃত মামলা সমূহ</h2>
+      <h2 className="flex items-center gap-1 mb-4 font-bold text-xl">
+        আমার দাখিলকৃত মামলা সমূহ
+      </h2>
 
       {/* Search input */}
       <div className="mb-4 max-w-sm">
         <input
           type="text"
-          className="input input-bordered w-full"
+          className="input-bordered w-full input"
           placeholder="সার্চ করুন (ট্র্যাকিং, বাদী, বিবাদী, বছর)"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -155,7 +167,7 @@ const MyMamla = () => {
           <tbody>
             {filteredCases.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center py-4">
+                <td colSpan="8" className="py-4 text-center">
                   কোনো মামলা পাওয়া যায়নি।
                 </td>
               </tr>
@@ -177,52 +189,110 @@ const MyMamla = () => {
                   <td>
                     {cas.nagorikSubmission?.aclandMamlaInfo?.map((info) => (
                       <div key={info.mamlaNo}>
-                        {info.mamlaName} - {info.mamlaNo}/{info.year} ({info.district.bn})
+                        {info.mamlaName} - {info.mamlaNo}/{info.year} (
+                        {info.officeName.bn}- {info.district.bn} )
                       </div>
                     )) || "-"}
                   </td>
                   <td>
                     {cas.nagorikSubmission?.adcMamlaInfo?.map((info) => (
                       <div key={info.mamlaNo}>
-                        {info.mamlaName} - {info.mamlaNo}/{info.year} ({info.district.bn})
+                        {info.mamlaName} - {info.mamlaNo}/{info.year} (
+                        {info.district.bn})
                       </div>
                     )) || "-"}
                   </td>
-                  <td className="">{cas.isApproved ? <h1 className="text-green-500 font-bold">"অনুমোদিত"</h1> : <h1 className="text-red-500 font-bold">"অনুমোদনের জন্য অপেক্ষমাণ"</h1>}</td>
-                  <td className="flex flex-col justify-center gap-2">
-                    {/* Edit button */}
-                    {cas?.nagorikSubmission?.status!="submitted" &&
-                    <>
-                     <button
+                  <td className="">
+                    {cas.isApproved ? (
+                      <h1 className="font-bold text-green-500">"অনুমোদিত"</h1>
+                    ) : cas.nagorikSubmission.status == "submitted" ? (
+                      <>
+                        <div className="my-1 badge badge-success">
+                          <Check className="w-5" />
+                          প্রেরিত{" "}
+                        </div>
+
+                        <h1 className="font-bold text-red-500">
+                          "অনুমোদনের জন্য অপেক্ষমাণ"
+                        </h1>
+                      </>
+                    ) : (
+                      <>
+                        <h1> অনুমোদনের জন্য প্রেরণ করুন </h1>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(
+                              cas._id,
+                              "nagorikSubmission",
+                              "submitted"
+                            )
+                          }
+                          className="bg-blue-500 text-white btn btn-sm"
+                        >
+                          {cas?.nagorikSubmission?.status != "submitted" && (
+                            <h1 className="flex flex-col items-center text-xs">
+                              <SendIcon />
+                            </h1>
+                          )}
+                        </button>
+                      </>
+                    )}
+                  </td>
+                  <td className="flex flex-col justify-center items-center gap-2 h-full">
+                    <button
+                      className="btn btn-sm btn-info"
                       onClick={() =>
-                        navigate(`/dashboard/${user.role}/cases/edit/${cas._id}`, {
-                          state: { caseData: cas },
+                        navigate(`/dashboard/${user.role}/cases/${cas._id}`, {
+                          state: { id: cas._id, mode: "view" },
                         })
                       }
-                      className="btn btn-sm btn-warning"
                     >
-                      সম্পাদনা
+                      <FcViewDetails className="w-6 text-xl" />
                     </button>
+                    {/* Edit button */}
+                    {cas?.nagorikSubmission?.status != "submitted" && (
+                      <>
+                        <button
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/${user.role}/cases/edit/${cas._id}`,
+                              {
+                                state: { caseData: cas },
+                              }
+                            )
+                          }
+                          className="btn btn-sm btn-warning"
+                        >
+                          <Edit />
+                        </button>
 
-                    {/* Delete button */}
-                    <button
-                      onClick={() => handleDelete(cas._id)}
-                      className="btn btn-sm btn-error"
-                    >
-                      মুছে ফেলুন
-                    </button>
-                    <button
-          onClick={() => handleStatusChange(cas._id, "nagorikSubmission", "submitted")}
-          className="btn btn-sm bg-blue-500 text-white"
-        >
-          {cas?.nagorikSubmission?.status!="submitted" && <h1 className="flex items-center  text-xs">প্রেরন   </h1>}
-        </button>
-                    </>
-                   
-              }
-                      
-                    {cas?.nagorikSubmission?.status=="submitted" &&  <h1 className="flex items-center  text-md gap-1  text-success font-semibold"><Check className="w-5"/>প্রেরিত </h1>}
+                        {/* Delete button */}
+                        <button
+                          onClick={() => handleDelete(cas._id)}
+                          className="btn btn-sm btn-error"
+                        >
+                          <MdDelete className="text-white text-2xl" />
+                        </button>
+                        {/* <button
+                          onClick={() =>
+                            handleStatusChange(
+                              cas._id,
+                              "nagorikSubmission",
+                              "submitted"
+                            )
+                          }
+                          className="bg-blue-500 text-white btn btn-sm"
+                        >
+                          {cas?.nagorikSubmission?.status != "submitted" && (
+                            <h1 className="flex items-center text-xs">
+                              <SendIcon />
+                            </h1>
+                          )}
+                        </button> */}
+                      </>
+                    )}
 
+                    
                   </td>
                 </tr>
               ))

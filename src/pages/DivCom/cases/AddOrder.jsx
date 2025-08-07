@@ -7,7 +7,7 @@ import { AuthContext } from "../../../provider/AuthProvider";
 import { mamlaNames } from "../../../data/mamlaNames";
 import axiosPublic from "../../../axios/axiosPublic";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 
 const AddOrder = () => {
@@ -141,7 +141,6 @@ const AddOrder = () => {
           year: formData.year,
           formNo: formData.formNo,
           orderSheets: newOrderSheets,
-          
         },
       ];
     }
@@ -151,7 +150,7 @@ const AddOrder = () => {
         `/cases/${caseData._id}`,
         updatedPayload
       );
-      console.log(res.data, updatedPayload)
+      console.log(res.data, updatedPayload);
 
       if (res.data.modifiedCount > 0) {
         toast.success("আপডেট সফল হয়েছে!");
@@ -177,7 +176,15 @@ const AddOrder = () => {
 
   return (
     <div className="bg-base-200 shadow mx-auto p-6 rounded max-w-2xl">
-      <h2 className="mb-4 font-semibold text-xl">আদেশপত্র ব্যবস্থাপনা</h2>
+      <h2 className="flex items-center mb-4 font-bold text-xl">
+        <button
+          onClick={() => navigate(-1)} // -1 means go back one page
+          className="btn btn-ghost"
+        >
+          <ArrowLeft />
+        </button>{" "}
+        আদেশপত্র ব্যবস্থাপনা
+      </h2>
 
       {/* Applicants বাদি */}
       <div>

@@ -11,7 +11,8 @@ const Message = ({ caseData, role }) => {
       ? caseData.nagorikSubmission?.aclandMamlaInfo?.[0]
       : caseData.nagorikSubmission?.adcMamlaInfo?.[0];
 
-  const order = caseData.divComReview?.orderSheets?.[0]?.order || "N/A";
+  const staffNote = caseData.divComReview?.orderSheets?.[0]?.staffNote || "N/A";
+  const judgeNote = caseData.divComReview?.orderSheets?.[0]?.judgeNote || "N/A";
 
   if (!mamlaInfo)
     return <p className="text-red-600">মামলার তথ্য পাওয়া যায়নি।</p>;
@@ -82,13 +83,14 @@ const Message = ({ caseData, role }) => {
         <h3 className="pb-1 border-b font-bold text-base text-center">
           আদেশ ও অনুরোধ
         </h3>
-        <p className="mt-2 whitespace-pre-wrap">আদেশ বিবরণী: {order}</p>
+        <p className="mt-2 whitespace-pre-wrap">আদেশ বিবরণী: {staffNote}</p>
+        <p className="mt-2 whitespace-pre-wrap"> {judgeNote}</p>
         <p className="mt-2">
           এই মামলার নথি যাচাই করে প্রয়োজনীয় ব্যবস্থা গ্রহণ করার জন্য অনুরোধ করা
           হলো।
         </p>
-        <p className="mt-4">ধন্যবাদান্তে,</p>
-        <p>[আপনার নাম বা দপ্তর]</p>
+        {/* <p className="mt-4">ধন্যবাদান্তে,</p>
+        <p>[আপনার নাম বা দপ্তর]</p> */}
       </div>
     </div>
   );

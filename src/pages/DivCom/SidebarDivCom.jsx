@@ -17,7 +17,7 @@ const SidebarDivCom = () => {
             ড্যাশবোর্ড
           </Link>
           <NavLink
-            to="/dashboard/divCom/requestedCases"
+            to="/dashboard/divCom/allCases"
             className={({ isActive }) =>
               isActive
                 ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"

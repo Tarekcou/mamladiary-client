@@ -8,6 +8,7 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { useNavigate, useParams } from "react-router";
 import { aclandOptions } from "../../data/aclandOptions";
+import Swal from "sweetalert2";
 
 export default function NagorikCaseInfoUpload() {
   const { user } = useContext(AuthContext);
@@ -16,6 +17,7 @@ export default function NagorikCaseInfoUpload() {
   const isEditMode = Boolean(editId);
 
   const [trackingNo, setTrackingNo] = useState("");
+  const [tamadi, setTamadi] = useState("");
   const [loading, setLoading] = useState(false);
   const [badiInput, setBadiInput] = useState({
     name: "",
@@ -35,7 +37,7 @@ export default function NagorikCaseInfoUpload() {
     year: "",
     district: "",
     officeName: "",
-    unionName: "",
+    mouza: "",
   });
   const [aclandList, setAclandList] = useState([]);
   const [adcInput, setAdcInput] = useState({
@@ -43,6 +45,7 @@ export default function NagorikCaseInfoUpload() {
     mamlaNo: "",
     year: "",
     district: "",
+    officeName: "",
   });
   const [adcList, setAdcList] = useState([]);
   const [isAllIAcLandinfoAdded, setIsAllIAcLandinfoAdded] = useState(true);
@@ -52,6 +55,7 @@ export default function NagorikCaseInfoUpload() {
     bibadi: [],
     aclandMamlaInfo: [],
     adcMamlaInfo: [],
+    tamadi: "",
     isApproved: false,
   });
 
@@ -71,6 +75,7 @@ export default function NagorikCaseInfoUpload() {
         setAclandList(data.nagorikSubmission?.aclandMamlaInfo || []);
         setAdcList(data.nagorikSubmission?.adcMamlaInfo || []);
         setTrackingNo(data.trackingNo || "");
+        setTamadi(data.tamadi || "");
       });
     } else {
       setFormState((prev) => ({
@@ -151,7 +156,7 @@ export default function NagorikCaseInfoUpload() {
         year: "",
         district: "",
         officeName: "",
-        unionName: "",
+        mouza: "",
       });
       setIsAllIAcLandinfoAdded(true);
     } else {
@@ -171,7 +176,14 @@ export default function NagorikCaseInfoUpload() {
       adcInput.district
     ) {
       setAdcList([...adcList, adcInput]);
-      setAdcInput({ mamlaName: "", mamlaNo: "", year: "", district: "" });
+      setAdcInput({
+        mamlaName: "",
+        mamlaNo: "",
+        year: "",
+        district: "",
+        officeName: "",
+      });
+      console.log(adcInput);
       setIsAllIAdcinfoAdded(true);
     } else {
       setIsAllIAdcinfoAdded(false);
@@ -198,13 +210,21 @@ export default function NagorikCaseInfoUpload() {
       aclandInput.district
         ? [...aclandList, aclandInput]
         : aclandList;
+
+    const newAdcInput = {
+      ...adcInput,
+      officeName: adcInput.district, // copy district value into officeName
+    };
+
     const finalAdcList =
-      adcInput.mamlaName &&
-      adcInput.mamlaNo &&
-      adcInput.year &&
-      adcInput.district
-        ? [...adcList, adcInput]
+      newAdcInput.mamlaName &&
+      newAdcInput.mamlaNo &&
+      newAdcInput.year &&
+      newAdcInput.officeName
+        ? [...adcList, newAdcInput]
         : adcList;
+
+    // continue with your save logic...
 
     const postData = {
       trackingNo: trackingNo,
@@ -220,16 +240,26 @@ export default function NagorikCaseInfoUpload() {
         bibadi: finalBibadiList,
         aclandMamlaInfo: finalAclandList,
         adcMamlaInfo: finalAdcList,
+        tamadi: tamadi,
       },
     };
+    console.log("Post Data:", postData);
 
+    const confirm = await Swal.fire({
+      title: "আপনি কি আপলোড করতে চান ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, প্ররন করুন",
+    });
+
+    if (!confirm.isConfirmed) return;
     try {
       setLoading(true);
       if (isEditMode) {
         const res = await axiosPublic.patch(`/cases/${editId}`, postData);
         if (res.data.modifiedCount > 0) {
           toast.success("মামলাটি সফলভাবে হালনাগাদ হয়েছে");
-          navigate("/dashboard/nagorik/cases");
+          navigate("/dashboard/lawyer/cases");
         }
       } else {
         const res = await axiosPublic.post("/cases", postData);
@@ -240,7 +270,7 @@ export default function NagorikCaseInfoUpload() {
           setAclandList([]);
           setAdcList([]);
           setTrackingNo("");
-          navigate("/dashboard/nagorik/cases");
+          navigate("/dashboard/lawyer/allCases");
         }
       }
     } catch (err) {
@@ -258,7 +288,7 @@ export default function NagorikCaseInfoUpload() {
       </h2>
 
       {/* Tracking No */}
-      <div>
+      {/* <div>
         <label className="label">ট্র্যাকিং নম্বর</label>
         <input
           type="text"
@@ -266,7 +296,7 @@ export default function NagorikCaseInfoUpload() {
           value={trackingNo}
           readOnly
         />
-      </div>
+      </div> */}
 
       {/* Acland Input */}
       <div className="mt-4">
@@ -284,12 +314,17 @@ export default function NagorikCaseInfoUpload() {
               }
               className="mt-1 w-full select-bordered select"
             >
-              <option value="">মামলার নাম নির্বচন করুন</option>
-              {mamlaNames.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
+              <option value="">মামলার নাম নির্বাচন করুন</option>
+
+              {(aclandList.some((a) => a.mamlaName.includes("নামজারি"))
+                ? mamlaNames // show all if at least one "নামজারি" is added
+                : mamlaNames.filter((name) => name.includes("নামজারি"))
+              ) // otherwise only "নামজারি"-related
+                .map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
             </select>
           </label>
 
@@ -384,13 +419,13 @@ export default function NagorikCaseInfoUpload() {
 
           {/* Union */}
           <label>
-            ইউনিয়ন (ঐচ্ছিক):
+            মৌজা:
             <input
               className="input-bordered w-full input"
-              placeholder="ইউনিয়নের নাম লিখুন"
-              value={aclandInput.unionName || ""}
+              placeholder="মৌজার তথ্য"
+              value={aclandInput.mouza || ""}
               onChange={(e) =>
-                setAclandInput({ ...aclandInput, unionName: e.target.value })
+                setAclandInput({ ...aclandInput, mouza: e.target.value })
               }
               disabled={!aclandInput.district}
             />
@@ -401,7 +436,7 @@ export default function NagorikCaseInfoUpload() {
         <button
           type="button"
           onClick={addAcland}
-          className="bg-[#004080] mt-2 text-white btn"
+          className="bg-[#004080] mt-2 text-white btn btn-sm"
         >
           <Plus /> যুক্ত করুন
         </button>
@@ -413,7 +448,7 @@ export default function NagorikCaseInfoUpload() {
 
         {/* List */}
         {aclandList.map((item, index) => (
-          <div key={index} className="gap-2 p-4 text-white badge badge-info">
+          <div key={index} className="mx-1 p-3 text-white badge badge-info">
             {item.mamlaName} | {item.mamlaNo} | {item.year} |{" "}
             {item.district?.bn || "নির্বাচিত নয়"} | {item.officeName?.bn || ""}
             <X
@@ -439,11 +474,15 @@ export default function NagorikCaseInfoUpload() {
               className="mt-1 w-full select-bordered select"
             >
               <option value="">মামলার নাম নির্বচন করুন</option>
-              {mamlaNames.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
+              {(adcList.some((a) => a.mamlaName.includes("আপিল" || "রিভিশন"))
+                ? mamlaNames // show all if at least one "নামজারি" is added
+                : mamlaNames.filter((name) => name.includes("আপিল" || "রিভিশন"))
+              ) // otherwise only "নামজারি"-related
+                .map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
             </select>
           </label>
 
@@ -491,7 +530,7 @@ export default function NagorikCaseInfoUpload() {
                 setAdcInput({
                   ...adcInput,
                   district: selectedDistrict?.district || null,
-                  officeName: null, // Reset office
+                  officeName: selectedDistrict?.district || null, // Reset office
                 });
               }}
             >
@@ -507,7 +546,7 @@ export default function NagorikCaseInfoUpload() {
         <button
           type="button"
           onClick={addAdc}
-          className="bg-[#004080] mt-2 text-white btn"
+          className="bg-[#004080] mt-2 text-white btn btn-sm"
         >
           <Plus /> যুক্ত করুন
         </button>
@@ -528,6 +567,19 @@ export default function NagorikCaseInfoUpload() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* tamadi */}
+      <div>
+        <label>
+          তামাদি:
+          <input
+            className="input-bordered w-full input"
+            placeholder="তামাদি তথ্য"
+            value={tamadi || ""}
+            onChange={(e) => setTamadi(e.target.value)}
+          />
+        </label>
       </div>
 
       {/* Badi */}
@@ -571,11 +623,11 @@ export default function NagorikCaseInfoUpload() {
             <Plus /> যুক্ত করুন
           </button>
         </div>
-        <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex flex-wrap gap-2 my-2">
           {badiList.map((p) => (
             <div
               key={p.phone}
-              className="gap-2 p-3 text-white badge badge-success"
+              className="mx-1 p-3 text-white badge badge-success"
             >
               {p.name} | {p.phone} | {p.address}
               <X

@@ -286,7 +286,7 @@ const newSchema = {
         district: "Cumilla",
       },
     ],
-    adcMamlaInfo: [],
+    adcMamlaInfo: [], 
   },
   divComReview: {
     orderSheets: [

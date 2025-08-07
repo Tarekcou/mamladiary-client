@@ -4,24 +4,103 @@ import {
   DeleteIcon,
   Edit,
   Edit2,
+  Plus,
   PlusSquareIcon,
   Send,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import LawyerDetails from "./LawyerDetails";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../provider/AuthProvider";
-const AcLandDetails = ({ caseData }) => {
+import NewCase from "./NewCase";
+import { toast } from "sonner";
+import Swal from "sweetalert2";
+import axiosPublic from "../../../axios/axiosPublic";
+import { MdWarning } from "react-icons/md";
+const AcLandDetails = ({ caseData, refetch }) => {
   const navigate = useNavigate();
   const acLandMessages =
     caseData?.messagesToOffices?.filter(
       (msg) => msg.sentTo?.role === "acLand"
     ) || [];
-  const { role } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
-  const responses =
+  const acLandCaseData =
     caseData?.responsesFromOffices?.filter((r) => r.role === "acLand") || [];
+  // console.log(acLandCaseData[0].role);
+  const handleAddCases = () => {
+    // navigate(`/dashboard/${user.role}/cases/new`, {
+    //   state: { caseData, mode: "add" },
+    // });
+    console.log("Adding new cases for AC Land");
+    setIsOpenCaseForm(true);
+  };
+  const handleDeleteCase = async (caseId, officeIndex, entryIndex) => {
+    Swal.fire({
+      title: "আপনি কি নিশ্চিত?",
+      text: "এই পরিবর্তন অপরিবর্তনীয় !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "হ্যাঁ ডিলেট করুন !",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await axiosPublic.patch(
+          `/cases/${caseId}/delete-mamla-entry`,
+          {
+            officeIndex,
+            entryIndex,
+          }
+        );
+        console.log(res.data);
+        if (res.data.message == "Mamla entry deleted successfully") {
+          Swal.fire({
+            title: "ডিলেট হয়েছে !",
+            text: "আপনার মামলার তথ্য সফলভাবে ডিলেট হয়েছে !",
+            icon: "success",
+          });
+          refetch();
+        }
+      } else toast.error("কিছু সমস্যা হয়েছে, পরে আবার চেষ্টা করুন");
+    });
+  };
+  const handleSend = async () => {
+    const confirm = await Swal.fire({
+      title: "আপনি কি প্রেরণ করতে চান ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, প্ররন করুন",
+    });
+
+    if (!confirm.isConfirmed) return;
+    if (acLandCaseData.length === 0) {
+      toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
+      return;
+    }
+    try {
+      const res = await axiosPublic.patch(
+        `/cases/${caseData._id}/send-divCom`,
+        {
+          role: user?.role,
+          officeName: user.officeName.en,
+        }
+      );
+      if (res.data.success) {
+        toast.success("অতিরিক্ত বিভাগীয় কমিশনার রাজস্ব আদালতে প্রেরণ হয়েছে!");
+        refetch();
+      } else {
+        toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("পাঠাতে সমস্যা হয়েছে!");
+    }
+  };
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+
+  const toggleCollapse = () => setIsCollapseOpen(!isCollapseOpen);
   return (
     <>
       <h4 className="m-4 mb-2 font-semibold text-lg">
@@ -64,7 +143,7 @@ const AcLandDetails = ({ caseData }) => {
             >
               <input type="checkbox" />
 
-              <div className="collapse-title font-semibold">
+              <div className="collapse-title bg-green-100 font-semibold">
                 বাদী বিবাদীর তথ্য
               </div>
               <ul className="collapse-content flex flex-col gap-1 p-0 list-disc list-inside">
@@ -127,35 +206,63 @@ const AcLandDetails = ({ caseData }) => {
       ) : (
         <LawyerDetails role={"acLand"} caseData={caseData} />
       )}
+      {/* --- Add New Case Collapse --- */}
+      {user?.role === "acLand" && (
+        <div
+          className={`collapse collapse-arrow  bg-base-100 border border-base-300  ${
+            isCollapseOpen ? "collapse-open" : ""
+          }`}
+        >
+          <input
+            type="checkbox"
+            className="hidden"
+            checked={isCollapseOpen}
+            onChange={toggleCollapse}
+          />
+
+          <div
+            onClick={toggleCollapse}
+            className="collapse-title flex gap-2 bg-green-100 m-4 font-semibold text-success cursor-pointer"
+          >
+            <Plus /> মামলার তথ্য যোগ করুন
+          </div>
+
+          <div className="collapse-content text-sm">
+            <NewCase />
+          </div>
+        </div>
+      )}
 
       {/* --- Response Area --- */}
 
-      {responses.length > 0 ? (
+      {acLandCaseData.length > 0 ? (
         <>
-          <div className="flex justify-between">
-            <h4 className="m-4 font-semibold text-2xl">আগত মামলার তথ্য</h4>
-            <div className="flex gap-2">
-              <button
-                onClick={() => window.print()}
-                className="print:hidden btn btn-primary btn-sm"
-              >
-                PDF ডাউনলোড (Print)
-              </button>
-              <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() =>
-                      navigate(`/dashboard/acLand/newCase`, {
-                        state: { id: caseData._id, mode: "add" },
-                      })
-                    }
+          <div className="flex justify-between mt-10">
+            <h4 className="m-4 font-semibold text-2xl"> মামলার তথ্য</h4>
+            <div className="flex flex-col gap-2">
+              {acLandCaseData[0].sentToDivcom && (
+                <button className="text-sm text-center whitespace-break-spaces btn btn-active">
+                  {" "}
+                  বর্তমান অবস্থানঃ <br /> অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব)
+                  আদালত
+                </button>
+              )}
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => window.print()}
+                  className="print:hidden btn btn-primary btn-sm"
+                >
+                  PDF ডাউনলোড (Print)
+                </button>
+                {user?.role === "acLand" && (
+                  <button
+                    onClick={toggleCollapse}
+                    className="flex items-center gap-2 btn btn-sm btn-primary"
                   >
-                    <PlusSquareIcon className="mr-2 w-5" /> মামলা যোগ করুন
+                    <PlusSquareIcon className="w-5" /> মামলা যোগ করুন
                   </button>
-              {/* <div className="">
-                {role === "acLand" && (
-                  
                 )}
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -197,26 +304,57 @@ const AcLandDetails = ({ caseData }) => {
               }
             `}</style>
 
-            {responses.map((res, i) =>
-              res.mamlaEntries?.map((entry, j) => (
+            {acLandCaseData.map((res, officeIndex) =>
+              res.mamlaEntries?.map((entry, entryIndex) => (
                 <div
-                  key={`${i}-${j}`}
+                  key={`${officeIndex}-${entryIndex}`}
                   className="bg-white shadow mb-8 p-4 print:break-after-page"
                 >
                   <div className="flex justify-between mb-2 font-bold text-lg">
-                    <h1> অফিস: {res.officeName?.bn || res.officeName}</h1>
-                    {role === "acLand" && (
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() =>
-                          navigate(`/dashboard/acLand/newCase`, {
-                            state: { id: caseData._id, caseData, mode: "edit" },
-                          })
-                        }
-                      >
-                        <Edit2 className="mr-2 w-5" /> মামলা সম্পাদনা করুন
-                      </button>
-                    )}
+                    <div>
+                      <h1>
+                        {" "}
+                        অফিস: {res.officeName?.bn || res.officeName.en} ভূমি
+                        অফিস{" "}
+                      </h1>
+                      <h1> জেলা: {res.district?.bn || res.district.en} </h1>
+                    </div>
+
+                    {user?.role === "acLand" &&
+                      !acLandCaseData[0].sentToDivcom && (
+                        <div className="space-x-2">
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() =>
+                              navigate(
+                                `/dashboard/${user?.role}/cases/edit/${caseData._id}`,
+                                {
+                                  state: {
+                                    id: caseData._id,
+                                    caseData,
+                                    mode: "edit",
+                                  },
+                                }
+                              )
+                            }
+                          >
+                            <Edit2 className="mr-2 w-5" /> মামলা সম্পাদনা করুন
+                          </button>
+                          {/* handle delete */}
+                          <button
+                            className="btn btn-error btn-sm"
+                            onClick={() =>
+                              handleDeleteCase(
+                                caseData._id,
+                                officeIndex,
+                                entryIndex
+                              )
+                            }
+                          >
+                            <DeleteIcon className="w-5" /> ডিলেট করুন
+                          </button>
+                        </div>
+                      )}
                   </div>
 
                   {/* Tracking No */}
@@ -267,10 +405,12 @@ const AcLandDetails = ({ caseData }) => {
                     </strong>
                     <div>{entry?.caseHistory || "N/A"}</div>
                   </div>
-                  <div className="mb-4">
-                    <strong>আদেশ:</strong>
-                    <div>{entry?.order || "N/A"}</div>
-                  </div>
+                  {entry?.order && (
+                    <div className="mb-4">
+                      <strong>আদেশ:</strong>
+                      <div>{entry?.order || "N/A"}</div>
+                    </div>
+                  )}
 
                   {/* Remarks */}
                   <div className="mb-4">
@@ -301,11 +441,23 @@ const AcLandDetails = ({ caseData }) => {
                 </div>
               ))
             )}
+
+            {user.role === "acLand" && !acLandCaseData[0].sentToDivcom && (
+              <div className="flex justify-center items-center w-full">
+                <button
+                  onClick={() => handleSend()}
+                  className="gap-2 mb-4 btn btn-success"
+                >
+                  <Send /> প্রেরণ করুন
+                </button>
+              </div>
+            )}
           </div>
         </>
       ) : (
-        <div className="px-4 text-gray-500 italic">
-          AC Land থেকে কোনো রেসপন্স পাওয়া যায়নি।
+        <div className="flex gap-2 mb-20 px-4 text-gray-500 italic">
+          <MdWarning className="text-xl" /> AC Land থেকে কোনো রেসপন্স পাওয়া
+          যায়নি।
         </div>
       )}
     </>

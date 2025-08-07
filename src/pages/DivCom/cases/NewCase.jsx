@@ -7,11 +7,14 @@ import { AuthContext } from "../../../provider/AuthProvider";
 import axiosPublic from "../../../axios/axiosPublic";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import { mamlaNames } from "../../../data/mamlaNames";
+import Swal from "sweetalert2";
 
 const NewCase = () => {
   const { state } = useLocation();
   const caseData = state?.caseData;
   const id = state?.id;
+  const mode = state?.mode;
+  const refetch = state?.refetch;
   const { user } = useContext(AuthContext);
   const isEditMode = !!caseData;
   const navigate = useNavigate();
@@ -66,36 +69,48 @@ const NewCase = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const responsePayload = {
-      responsesFromOffices: [
+    // Build the new response object
+    const newResponse = {
+      role: user.role,
+      officeName: user?.officeName,
+      district: user?.district,
+      mamlaEntries: [
         {
-          role: user.role,
-          officeName: user?.officeName,
-          district: user?.district,
-          mamlaEntries: [
-            {
-              mamlaName: formData.mamlaName,
-              mamlaNo: formData.mamlaNo,
-              year: formData.year,
-              caseHistory:
-                selectedCaseName === "মিস কেইস"
-                  ? undefined
-                  : formData.caseHistory,
-              remarks: "সম্পূর্ণ তথ্য প্রদান করা হয়েছে",
-              documents,
-              ...(selectedCaseName === "মিস কেইস" && { orderSheets }),
-            },
-          ],
+          mamlaName: formData.mamlaName,
+          mamlaNo: formData.mamlaNo,
+          year: formData.year,
+          caseHistory:
+            selectedCaseName === "মিস কেইস" ? undefined : formData.caseHistory,
+          remarks: "সম্পূর্ণ তথ্য প্রদান করা হয়েছে",
+          documents,
+          ...(selectedCaseName === "মিস কেইস" && { orderSheets }),
         },
       ],
     };
-    console.log(
-      "🔍 Final response payload:",
-      JSON.stringify(responsePayload, null, 2)
-    );
+
+    // Start with the existing ones (or empty)
+    const existingResponses = caseData?.responsesFromOffices || [];
+
+    // Replace existing response from this role/office or append new
+    const updatedResponses = isEditMode
+      ? existingResponses.map((r) => {
+          if (
+            r.role === user.role &&
+            r.officeName?.en === user.officeName?.en &&
+            r.district?.en === user.district?.en
+          ) {
+            return newResponse; // replace this one
+          }
+          return r;
+        })
+      : [...existingResponses, newResponse]; // not edit mode, just add
+
+    const responsePayload = {
+      responsesFromOffices: updatedResponses,
+    };
+
     try {
       const res = await axiosPublic.patch(`/cases/${id}`, responsePayload);
-      console.log(res.data);
       if (res.status === 200) {
         toast.success("রেসপন্স সফলভাবে সাবমিট হয়েছে!");
         navigate(`/dashboard/acLand/allCases`);

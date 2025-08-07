@@ -9,21 +9,17 @@ import { Phone, Send } from "lucide-react";
 
 const MySwal = withReactContent(Swal);
 
-const OfficeMessaging = ({ caseData, role }) => {
-  console.log(role)
+const OfficeMessaging = ({ caseData, role, refetch }) => {
   const [showModal, setShowModal] = useState(false);
   const [messageData, setMessageData] = useState(null);
   const [sendingTo, setSendingTo] = useState("");
-  console.log(caseData);
 
   const messages = caseData?.messagesToOffices || [];
 
   const sentRoles = messages.map((msg) => msg.sentTo?.role?.toLowerCase?.());
-  console.log(sentRoles,messages)
   const alreadySentToAcLand = sentRoles.includes("acland");
   const alreadySentToADC = sentRoles.includes("adc");
-  
-  console.log(alreadySentToADC,alreadySentToAcLand)
+
   const badi = caseData.nagorikSubmission?.badi?.[0];
   const bibadi = caseData.nagorikSubmission?.bibadi?.[0];
 
@@ -73,7 +69,6 @@ const OfficeMessaging = ({ caseData, role }) => {
 
       mamlaList: mamla || [],
     };
-   
 
     try {
       // DB Update
@@ -81,14 +76,15 @@ const OfficeMessaging = ({ caseData, role }) => {
         messagesToOffices: [payload], // Just send the new one, let backend `$push`
       });
 
-      const stageKey= "divComReview"
+      const stageKey = "divComReview";
       await axiosPublic.patch(`/cases/${caseData._id}/status`, {
         stageKey,
-        status: 'messaged',
+        status: "messaged",
       });
 
       if (res.data.modifiedCount > 0) {
         MySwal.fire("সফল", "বার্তা সফলভাবে সংরক্ষণ করা হয়েছে", "success");
+        refetch();
       }
 
       //  await axiosPublic.patch(`send-whatsapp`, {
@@ -106,31 +102,31 @@ const OfficeMessaging = ({ caseData, role }) => {
 
   return (
     <div className="my-10">
-      <h1 className="font-bold underline">অন্য অফিসে তথ্য চেয়ে প্রেরণ:</h1>
-      <div className="gap-4 flex btn-sm mt-4">
-        { !alreadySentToAcLand ? (
+      {/* <h1 className="font-bold underline">অন্য অফিসে তথ্য চেয়ে প্রেরণ:</h1> */}
+      <div className="flex gap-4 mt-4 btn-sm">
+        {!alreadySentToAcLand ? (
           <button
             onClick={() => handleOpenModal("acLand")}
             className="btn btn-primary"
           >
-            <Send /> এসিল্যান্ড 
+            <Send /> এসিল্যান্ড
           </button>
         ) : (
-          <h1 className="bg-emerald-700 my-5 p-2 text-white ul">
-            সহকারী কমিশনার (ভূমি) বরাবর প্রেরণ করা হয়েছে{" "}
+          <h1 className="bg-emerald-700 p-2 text-white">
+            সহকারী কমিশনার (ভূমি) বরাবর প্রেরিত
           </h1>
         )}
 
-        { !alreadySentToADC ? (
+        {!alreadySentToADC ? (
           <button
             onClick={() => handleOpenModal("adc")}
             className="btn btn-success"
           >
-            <Send /> এডিসি 
+            <Send /> এডিসি
           </button>
         ) : (
-          <h1 className="bg-emerald-700 my-5 p-2 text-white ul">
-            এডিসি আদালত বরাবর প্রেরণ করা হয়েছে{" "}
+          <h1 className="bg-emerald-700 p-2 text-white ul">
+            এডিসি আদালত বরাবর প্রেরিত
           </h1>
         )}
       </div>

@@ -11,31 +11,58 @@ import {
 import { useNavigate } from "react-router";
 import LawyerDetails from "./LawyerDetails";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
-import { useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 import { AuthContext } from "../../../provider/AuthProvider";
-import DivComDetails from "./DivComDetails";
 import AdcOrderDetails from "./AdcOrderDetails";
-const AdcDetails = ({ caseData, refetch }) => {
+import DivComOrders from "./DivComOrders";
+import AdcOrder from "./AdcOrder";
+import { useQuery } from "@tanstack/react-query";
+import axiosPublic from "../../../axios/axiosPublic";
+import { MdWarning } from "react-icons/md";
+const AdcDetails = ({ id }) => {
   const navigate = useNavigate();
   const { user, role } = useContext(AuthContext);
-  const adcMessages =
-    caseData?.messagesToOffices?.filter((msg) => msg.sentTo?.role === "adc") ||
-    [];
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+
+  const toggleCollapse = () => setIsCollapseOpen(!isCollapseOpen);
+  const {
+    data: caseData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["adcDetails", id],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/cases/${id}`);
+      console.log("ADC Case Data:", res.data);
+      return res.data;
+    },
+    enabled: !!id,
+  });
   const handleAddCases = () => {
     console.log("Adding new cases for ADC");
     navigate(`/dashboard/${user.role}/cases/order/${user._id}`, {
       state: { caseData, mode: "add" },
     });
   };
-
-  const responses =
+  const adcMessages = useMemo(() => {
+    return (
+      caseData?.messagesToOffices?.filter(
+        (msg) => msg.sentTo?.role === "adc"
+      ) || []
+    );
+  }, [caseData]);
+  console.log(adcMessages);
+  const adcOrderData =
     caseData?.responsesFromOffices?.filter((r) => r.role === "adc") || [];
+  console.log(adcOrderData);
+
   return (
     <>
       <h4 className="m-4 mb-2 font-semibold text-lg">
         রিকোয়েস্টকৃত মামলার তালিকা
       </h4>
-
       {adcMessages.length > 0 ? (
         adcMessages.map((msg, idx) => (
           <div key={idx} className="bg-white shadow-sm mb-4 p-4 rounded">
@@ -72,7 +99,7 @@ const AdcDetails = ({ caseData, refetch }) => {
             >
               <input type="checkbox" />
 
-              <div className="collapse-title font-semibold">
+              <div className="collapse-title bg-green-100 font-semibold">
                 বাদী বিবাদীর তথ্য
               </div>
               <ul className="collapse-content flex flex-col gap-1 p-0 list-disc list-inside">
@@ -130,22 +157,56 @@ const AdcDetails = ({ caseData, refetch }) => {
                 </div>
               </ul>
             </div>
-            <div className="bg-gray-100 my-5 text-center card">
-              <h1 className="my-3 font-bold text-2xl">আপলোড কৃত আদেশ সমূহ</h1>
-            </div>
 
-            <button onClick={handleAddCases} className="flex btn-success btn">
-              <Plus /> নতুন আদেশ
-            </button>
-            <AdcOrderDetails
-              caseData={caseData}
-              officeName={user?.officeName}
-              refetch={refetch}
-            />
+            {/* --- Add New Case Collapse --- */}
+            {adcOrderData[0]?.sentToDivcom || user?.role === "adc" ? (
+              <div
+                className={`collapse collapse-arrow bg-base-100 border border-base-300  ${
+                  isCollapseOpen ? "collapse-open" : ""
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  checked={isCollapseOpen}
+                  onChange={toggleCollapse}
+                />
+
+                <div
+                  onClick={toggleCollapse}
+                  className="collapse-title flex gap-2 bg-green-100 font-semibold text-blue cursor-pointer"
+                >
+                  <Plus />
+                  {user.role == "adc" ? "আদেশ যোগ করুন" : "আদেশ দেখুন"}
+                </div>
+
+                <div className="collapse-content text-sm">
+                  <div className="bg-gray-100 my-5 text-center card">
+                    <h1 className="my-3 font-bold text-2xl">
+                      আপলোড কৃত আদেশ সমূহ
+                    </h1>
+                  </div>
+                  <AdcOrder
+                    caseData={caseData}
+                    officeName={user?.officeName}
+                    refetch={refetch}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-2 mb-20 px-4 text-gray-500 italic">
+                <MdWarning className="text-xl" /> ADC থেকে কোনো রেসপন্স পাওয়া
+                যায়নি।
+              </div>
+            )}
           </div>
         ))
       ) : (
-        <LawyerDetails role={"adc"} caseData={caseData} />
+        <>
+          <div className="flex gap-2 mb-20 px-4 text-gray-500 italic">
+            <MdWarning className="text-xl" /> ADC থেকে কোনো রেসপন্স পাওয়া যায়নি।
+          </div>
+        </>
       )}
     </>
   );

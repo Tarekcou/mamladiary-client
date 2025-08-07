@@ -31,7 +31,7 @@ const Modal = ({ children, onClose }) => {
         >
           <button
             onClick={onClose}
-            className="top-3 right-4 absolute focus:outline-none font-bold text-gray-500 hover:text-red-500 text-2xl"
+            className="top-3 right-4 absolute focus:outline-none font-bold text-gray-500 hover:text-red-500 text-2xl btn"
             aria-label="Close modal"
           >
             &times;

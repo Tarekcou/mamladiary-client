@@ -40,13 +40,12 @@ import AllMamla from "./pages/DivCom/mamlas/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/DivCom/mamlas/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/DivCom/mamlas/AdcMamla.jsx";
 import NagorikCaseInfoUpload from "./pages/Nagorik/NagorikCaseInfoUpload.jsx";
-import AllCases from "./pages/AcLand/AllCases.jsx";
 import NewCase from "./pages/DivCom/cases/NewCase.jsx";
-import CaseDetails from "./pages/AcLand/CaseDetails.jsx";
 import MyMamla from "./pages/Nagorik/MyMamla.jsx";
 import AddOrder from "./pages/DivCom/cases/AddOrder.jsx";
 import AllCasesList from "./pages/DivCom/cases/AllCasesList.jsx";
 import AllDetails from "./pages/DivCom/cases/AllDetails.jsx";
+import DivComOrders from "./pages/DivCom/cases/DivComOrders.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
@@ -102,47 +101,24 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             {/* OTHER DASHBOARD ROLES */}
             <Route path="adc" element={<AdcDashboard />} />
             <Route path="acLand" element={<AcLandDashboard />} />
-            <Route path="nagorik" element={<NagorikDashboard />} />
+            <Route path="lawyer" element={<NagorikDashboard />} />
             <Route
-              path="nagorik/caseUpload"
+              path="lawyer/caseUpload"
               element={<NagorikCaseInfoUpload />}
             />
-            <Route path="nagorik/cases" element={<MyMamla />} />
+            <Route path="lawyer/cases" element={<MyMamla />} />
             <Route
-              path="nagorik/cases/edit/:id"
+              path="lawyer/cases/edit/:id"
               element={<NagorikCaseInfoUpload />}
             />
-
-            {/* <Route path="nagorik/mamla" element={<NagorikCases />} /> */}
-            <Route
-              path="nagorik/mamla/edit/:id"
-              element={<NagorikCaseInfoUpload />}
-            />
-
-            <Route path=":role/cases/edit/:id" element={<NewCase />} />
-            {/* <Route path="divCom/cases/newOrder/:id" element={<AddOrder />} /> */}
             <Route path=":role/cases/:id" element={<AllDetails />} />
+            <Route path=":role/cases/new" element={<NewCase />} />
+            <Route path=":role/cases/edit/:id" element={<NewCase />} />
+
             <Route path=":role/cases/order/edit/:id" element={<AddOrder />} />
-            <Route path=":role/cases/order/:id" element={<AddOrder />} />
+            <Route path=":role/cases/order/:id" element={<DivComOrders />} />
 
             <Route path=":role/allCases" element={<AllCasesList />} />
-
-            <Route path="divCom/requestedCases" element={<AllCasesList />} />
-
-            {/* <Route path="adc/allCases" element={<AllCasesList />} /> */}
-            {/* <Route path="adc/cases/newOrder/:id" element={<AddOrder />} /> */}
-            <Route path="adc/sendCases" element={<AllCases />} />
-            {/* <Route path="adc/cases/edit/:id" element={<NewCase />} /> */}
-            {/* <Route path="adc/cases/order/edit/:id" element={<AddOrder />} /> */}
-            {/* <Route path="adc/cases/:id" element={<CaseDetails />} /> */}
-
-            <Route path=":role/cases/new" element={<NewCase />} />
-            {/* <Route path=":role/adc/cases/new" element={<NewCase />} /> */}
-            {/* <Route path="acLand/allCases" element={<AllCasesList />} /> */}
-
-            <Route path="acLand/sendCases" element={<AllCases />} />
-            {/* <Route path="acLand/cases/:id" element={<CaseDetails />} /> */}
-            {/* <Route path="acLand/cases/edit/:id" element={<NewCase />} /> */}
           </Route>
         </Routes>
         <Toaster richColors position="top-right" />

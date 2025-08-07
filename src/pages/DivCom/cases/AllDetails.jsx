@@ -1,22 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, createContext } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import CaseDetailsUpper from "../../Adc/CaseDetailsUpper";
 import LawyerDetails from "./LawyerDetails";
-import { Edit, Plus } from "lucide-react";
+import { ArrowLeft, Edit, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axiosPublic from "../../../axios/axiosPublic";
-import DivComOrderForm from "./DivComDetails";
+import DivComDetails from "./DivComOrders";
 import AcLandDetails from "./AcLandDetails";
 import { AuthContext } from "../../../provider/AuthProvider";
 import AdcDetails from "./AdcDetails";
-
 const AllDetails = () => {
   const location = useLocation();
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-
   const navigate = useNavigate();
-
+  // console.log(user.role);
   const {
     data: caseData,
     isLoading,
@@ -62,7 +60,7 @@ const AllDetails = () => {
     if (hasAdc) {
       allTabs.push({ key: "adc", label: "ADC (Revenue)" });
     }
-    
+
     // 🔒 Filter based on strict role permission
     if (user.role === "divCom") return allTabs;
 
@@ -70,15 +68,15 @@ const AllDetails = () => {
   };
 
   const dynamicTabs = buildTabs();
-  console.log(dynamicTabs);
-  const [activeTab, setActiveTab] = useState( user.role);
+  // console.log(dynamicTabs);
+  const [activeTab, setActiveTab] = useState(dynamicTabs[0]?.key || "lawyer");
 
   const renderContent = () => {
     switch (activeTab) {
       case "divCom":
-        return <DivComOrderForm caseData={caseData} refetch={refetch} />;
+        return <DivComDetails id={caseData._id} />;
       case "adc":
-        return <AdcDetails caseData={caseData} role="adc" refetch={refetch} />;
+        return <AdcDetails id={caseData._id} role="adc" refetch={refetch} />;
       case "acLand":
         return (
           <AcLandDetails caseData={caseData} role="acLand" refetch={refetch} />
@@ -94,7 +92,13 @@ const AllDetails = () => {
 
   return (
     <div className="bg-base-100 shadow mx-auto px-4 py-6 rounded max-w-5xl">
-      <h2 className="mb-4 font-bold text-xl">
+      <h2 className="flex items-center mb-4 font-bold text-xl">
+        <button
+          onClick={() => navigate(-1)} // -1 means go back one page
+          className="btn btn-ghost"
+        >
+          <ArrowLeft />
+        </button>{" "}
         মামলার বিস্তারিত তথ্য (ভূমিকা অনুযায়ী)
       </h2>
 
