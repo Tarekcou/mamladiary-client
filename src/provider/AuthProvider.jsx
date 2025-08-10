@@ -28,15 +28,6 @@ const AuthProvider = ({ children }) => {
     try {
       let res;
 
-      // if (loginStatus === "nagorik") {
-      //   res = await axiosPublic.post("/users", formData);
-      // } else {
-      //   res = await axiosPublic.post("/users/login", formData, {
-      //     params: { loginStatus },
-      //   });
-      // }
-      console.log(loginStatus, formData);
-
       res = await axiosPublic.post("/users/login", formData, {
         params: { loginStatus },
       });
