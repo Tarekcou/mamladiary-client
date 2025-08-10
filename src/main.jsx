@@ -12,13 +12,13 @@ import PrivateRouter from "./routes.jsx/PrivateRouter.jsx";
 import { Toaster, toast } from "sonner";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
-// import ComplainDetails from "./pages/divCom/ComplainDetails.jsx";
-// import FeedbackDetails from "./pages/divCom/FeedbackDetails.jsx";
+import ComplainDetails from "./pages/divCom/ComplainDetails.jsx";
+import FeedbackDetails from "./pages/divCom/FeedbackDetails.jsx";
 import CitizenCharter from "./components/sidebar/CitizenCharter.jsx";
 import History from "./components/sidebar/History.jsx";
 import Gallery from "./components/sidebar/Gallery.jsx";
-// import CauseListDashboard from "./pages/divCom/CauseListDashboard.jsx";
-// import MonthlyReport from "./pages/divCom/MonthlyReport/MonthlyReport.jsx";
+import CauseListDashboard from "./pages/divCom/CauseListDashboard.jsx";
+import MonthlyReport from "./pages/divCom/MonthlyReport/MonthlyReport.jsx";
 import CauseList from "./components/home/CauseList.jsx";
 import Home from "./components/home/Home.jsx";
 import Complain from "./components/home/Complain.jsx";
@@ -92,10 +92,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="divComUsers" element={<ManageDivComUser />} />
             <Route path="adcUsers" element={<ManageAdcUser />} />
             <Route path="acLandUsers" element={<ManageACLandUser />} />
-            {/* <Route path="causeList" element={<CauseListDashboard />} /> */}
-            {/* <Route path="complain" element={<ComplainDetails />} /> */}
-            {/* <Route path="feedback" element={<FeedbackDetails />} /> */}
-            {/* <Route path="monthlyReport" element={<MonthlyReport />} /> */}
+            <Route path="causeList" element={<CauseListDashboard />} />
+            <Route path="complain" element={<ComplainDetails />} />
+            <Route path="feedback" element={<FeedbackDetails />} />
+            <Route path="monthlyReport" element={<MonthlyReport />} />
 
             {/* OTHER DASHBOARD ROLES */}
             <Route path="adc" element={<AdcDashboard />} />
