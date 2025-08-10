@@ -92,10 +92,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="divComUsers" element={<ManageDivComUser />} />
             <Route path="adcUsers" element={<ManageAdcUser />} />
             <Route path="acLandUsers" element={<ManageACLandUser />} />
-            <Route path="causeList" element={<CauseListDashboard />} />
+            {/* <Route path="causeList" element={<CauseListDashboard />} /> */}
             {/* <Route path="complain" element={<ComplainDetails />} /> */}
             {/* <Route path="feedback" element={<FeedbackDetails />} /> */}
-            <Route path="monthlyReport" element={<MonthlyReport />} />
+            {/* <Route path="monthlyReport" element={<MonthlyReport />} /> */}
 
             {/* OTHER DASHBOARD ROLES */}
             <Route path="adc" element={<AdcDashboard />} />
