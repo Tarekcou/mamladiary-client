@@ -18,9 +18,6 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { districts } from "../../data/districts";
 import { monthNames } from "../../data/months";
 
-
-
-
 const toBanglaNumber = (num) => {
   const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
   return String(num)

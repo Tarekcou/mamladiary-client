@@ -4,8 +4,6 @@ import { districts } from "../../../data/districts";
 import { mamlaNames } from "../../../data/mamlaNames";
 import axiosPublic from "../../../axios/axiosPublic";
 
-
-
 export default function AdcMamlaUploadForm() {
   const [loading, setLoading] = useState(false);
   const toBanglaNumber = (number) => {
