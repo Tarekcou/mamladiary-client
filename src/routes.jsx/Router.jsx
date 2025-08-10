@@ -31,9 +31,9 @@ import CauseListDashboard from "../pages/dashboard/CauseListDashboard";
 import ComplainDetails from "../pages/dashboard/ComplainDetails";
 import FeedbackDetails from "../pages/dashboard/FeedbackDetails";
 import MonthlyReport from "../pages/dashboard/MonthlyReport/MonthlyReport";
-import NagorikDashboard from "../pages/Nagorik/NagorikDashboard";
+import NagorikDashboard from "../pages/nagorik/NagorikDashboard";
 import AdcDashboard from "../pages/adc/AdcDashboard";
-import AcLandDashboard from "../pages/AcLand/AcLandDashboard";
+import AcLandDashboard from "../pages/acLand/AcLandDashboard";
 
 const router = createBrowserRouter([
   {

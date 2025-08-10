@@ -1,6 +1,5 @@
 import React, { useState, useContext, createContext } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import CaseDetailsUpper from "../../Adc/CaseDetailsUpper";
 import LawyerDetails from "./LawyerDetails";
 import { ArrowLeft, Edit, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";

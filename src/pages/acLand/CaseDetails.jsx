@@ -5,7 +5,6 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { Plus, Edit } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axiosPublic from "../../axios/axiosPublic";
-import CaseDetailsUpper from "../Adc/CaseDetailsUpper";
 
 const CaseDetails = () => {
   const { user } = useContext(AuthContext);
