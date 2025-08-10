@@ -1,18 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { QueryClient, useQuery } from "@tanstack/react-query";
-import { CheckCircle2, CrossIcon, Plus, SendIcon } from "lucide-react";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  CheckCircle,
+  CheckCircle2,
+  CrossIcon,
+  Plus,
+  SendIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AuthContext } from "../../../provider/AuthProvider";
 import axiosPublic from "../../../axios/axiosPublic";
 import OfficeMessaging from "./OfficeMessaging";
 import { FcCancel } from "react-icons/fc";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 
 const LawyerDetails = ({ caseData, role, refetch }) => {
   const { user } = useContext(AuthContext);
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   //
 
@@ -58,7 +66,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
         status: newStatus,
       });
       // Optimistically update local cache
-      QueryClient.setQueryData(["myCases", user._id], (oldCases = []) =>
+      queryClient.setQueryData(["caseData", user._id], (oldCases = []) =>
         oldCases.map((cas) =>
           cas._id === caseId
             ? {
@@ -105,7 +113,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
           </h2>
 
           <div className="flex justify-between">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 w-full">
               <p>
                 <strong>ট্র্যাকিং নম্বর:</strong> {trackingNo}
               </p>
@@ -114,15 +122,19 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                 {isApproved ? (
                   <h1 className="font-bold badge badge-success">"অনুমোদিত"</h1>
                 ) : nagorikSubmission.status == "submitted" ? (
-                  <h1 className="font-bold text-red-500">
-                    "অনুমোদনের জন্য অপেক্ষমাণ"
+                  <h1 className="font-bold badge badge-info">
+                    অনুমোদনের জন্য অপেক্ষমাণ
                   </h1>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <h1 className="p-4 badge badge-neutral">
-                      অনুমোদনের জন্য প্রেরণ করুন{" "}
+                  <div className="flex justify-between items-center w-full">
+                    <h1 className="badge badge-warning">
+                      অনুমোদনের জন্য প্রেরণ করুন
                     </h1>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ repeat: Infinity, duration: 0.3 }}
+                      className="bg-blue-500 rounded text-white btn btn-sm"
                       onClick={() =>
                         handleStatusChange(
                           caseData._id,
@@ -130,24 +142,23 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                           "submitted"
                         )
                       }
-                      className="bg-blue-500 text-white btn btn-sm"
                     >
                       {nagorikSubmission?.status != "submitted" && (
-                        <h1 className="flex flex-col items-center text-xs">
-                          <SendIcon />
+                        <h1 className="flex items-center p-4 text-sm">
+                          <SendIcon className="w-5" /> প্রেরণ করুন
                         </h1>
                       )}
-                    </button>
+                    </motion.button>
                   </div>
                 )}
               </div>
               <h1 className="font-bold">
                 ভূমি অফিসঃ{" "}
-                <span className="text-blue-600">
+                <span className="font-bold text-blue-600 text-lg">
                   {nagorikSubmission.aclandMamlaInfo[0].officeName.bn}
                 </span>
               </h1>
-              <h1 className="font-bold">
+              <h1 className="font-bold text-lg">
                 জেলাঃ{" "}
                 <span className="text-blue-600">
                   {nagorikSubmission.adcMamlaInfo[0]?.district.bn}
@@ -157,13 +168,18 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
 
             {/* Approve Button */}
             {!isApproved && user?.role === "divCom" ? (
-              <div className="text-center">
-                <button
+              <div className="flex justify-end items-start mt-8 w-1/2 text-center">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  animate={{ y: [0, -3, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.3 }}
                   onClick={() => handleApprove(true)}
-                  className="flex items-center btn btn-success"
+                  className=""
                 >
-                  <CheckCircle2 /> অনুমোদন করুন
-                </button>
+                  <h1 className="btn-block flex justify-center items-center gap-2 btn btn-success">
+                    <CheckCircle /> অনুমোদন দিন
+                  </h1>
+                </motion.button>
               </div>
             ) : (
               <div className="space-y-1 text-center btn-sm">

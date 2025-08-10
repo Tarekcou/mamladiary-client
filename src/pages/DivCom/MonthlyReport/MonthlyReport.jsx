@@ -15,7 +15,7 @@ const MonthlyReport = () => {
   const itemsPerPage = 20;
 
   const {
-    data: mamlaList = [],
+    data: caseList = [],
     isLoading,
     isError,
     error,
@@ -29,8 +29,8 @@ const MonthlyReport = () => {
     },
   });
 
-  const totalPages = Math.ceil(mamlaList.length / itemsPerPage);
-  const paginatedData = mamlaList.slice(
+  const totalPages = Math.ceil(caseList.length / itemsPerPage);
+  const paginatedData = caseList.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -57,7 +57,7 @@ const MonthlyReport = () => {
         </h2>
 
         <PDFDownloadLink
-          document={<BanglaPDF data={mamlaList} thisMonth={thisMonth} />}
+          document={<BanglaPDF data={caseList} thisMonth={thisMonth} />}
           fileName={`মাসিক_প্রতিবেদন ${thisMonth}.pdf`}
           className="bg-red-500 text-white btn-sm btn btn-error"
         >
@@ -130,7 +130,7 @@ const MonthlyReport = () => {
       {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
         <p>
-          Showing {paginatedData?.length || 0} of {mamlaList?.length || 0}{" "}
+          Showing {paginatedData?.length || 0} of {caseList?.length || 0}{" "}
           records
         </p>
         <div className="flex gap-2">

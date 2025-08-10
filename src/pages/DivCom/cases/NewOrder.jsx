@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Plus } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 
-const AddOrder = () => {
+const NewOrder = () => {
   const { state } = useLocation();
   const caseData = state?.caseData;
   console.log(state.caseData);
@@ -156,9 +156,10 @@ const AddOrder = () => {
         toast.success("আপডেট সফল হয়েছে!");
         queryClient.invalidateQueries(["allCases"]);
         queryClient.invalidateQueries(["caseDetails", caseData._id]);
-        navigate(`/dashboard/${user.role}/cases/${caseData._id}`, {
-          state: user.role,
-        });
+        // navigate(`/dashboard/${user.role}/cases/${caseData._id}`, {
+        //   state: user.role,
+        // });
+        // navigate(-1);
       }
     } catch (err) {
       console.error("Update failed:", err);
@@ -442,4 +443,4 @@ const AddOrder = () => {
   );
 };
 
-export default AddOrder;
+export default NewOrder;

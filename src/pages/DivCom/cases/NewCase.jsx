@@ -2,19 +2,20 @@ import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { AuthContext } from "../../../provider/AuthProvider";
 import axiosPublic from "../../../axios/axiosPublic";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import { mamlaNames } from "../../../data/mamlaNames";
 import Swal from "sweetalert2";
 
-const NewCase = () => {
+const NewCase = ({ cas, refetch, setIsCollapseOpen }) => {
+  // console.log(cas);
   const { state } = useLocation();
   const caseData = state?.caseData;
   const id = state?.id;
   const mode = state?.mode;
-  const refetch = state?.refetch;
+  const entryIndex = state?.entryIndex;
   const { user } = useContext(AuthContext);
   const isEditMode = !!caseData;
   const navigate = useNavigate();
@@ -35,20 +36,20 @@ const NewCase = () => {
   const [selectedCaseName, setSelectedCaseName] = useState("");
 
   useEffect(() => {
-    if (isEditMode && caseData) {
+    if (caseData || cas) {
       const entry =
-        caseData?.responsesFromOffices?.[0]?.mamlaEntries?.[0] || {};
+        caseData?.responsesFromOffices?.[0]?.caseEntries?.[entryIndex] || {};
       setFormData({
-        mamlaName: entry.mamlaName || "",
-        mamlaNo: entry.mamlaNo || "",
-        year: entry.year || "",
+        mamlaName: entry.mamlaName || cas.mamlaName || "",
+        mamlaNo: entry.mamlaNo || cas.mamlaNo || "",
+        year: entry.year || cas.year || "",
         caseHistory: entry.caseHistory || "",
       });
       setDocuments(entry.documents || initialDocuments);
       setOrderSheets(entry.orderSheets || initialOrderSheets);
-      setSelectedCaseName(entry.mamlaName || "");
+      setSelectedCaseName(entry.mamlaName || cas.mamlaName || "");
     }
-  }, [isEditMode, caseData]);
+  }, [isEditMode, caseData, cas]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -69,12 +70,11 @@ const NewCase = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Build the new response object
-    const newResponse = {
+    const newEntry = {
       role: user.role,
-      officeName: user?.officeName,
-      district: user?.district,
-      mamlaEntries: [
+      officeName: user.officeName,
+      district: user.district,
+      caseEntries: [
         {
           mamlaName: formData.mamlaName,
           mamlaNo: formData.mamlaNo,
@@ -88,32 +88,18 @@ const NewCase = () => {
       ],
     };
 
-    // Start with the existing ones (or empty)
-    const existingResponses = caseData?.responsesFromOffices || [];
-
-    // Replace existing response from this role/office or append new
-    const updatedResponses = isEditMode
-      ? existingResponses.map((r) => {
-          if (
-            r.role === user.role &&
-            r.officeName?.en === user.officeName?.en &&
-            r.district?.en === user.district?.en
-          ) {
-            return newResponse; // replace this one
-          }
-          return r;
-        })
-      : [...existingResponses, newResponse]; // not edit mode, just add
-
-    const responsePayload = {
-      responsesFromOffices: updatedResponses,
-    };
-
     try {
-      const res = await axiosPublic.patch(`/cases/${id}`, responsePayload);
+      const res = await axiosPublic.patch(`/cases/${id}`, {
+        responsesFromOffices: [newEntry], // send only this one role group
+      });
       if (res.status === 200) {
         toast.success("রেসপন্স সফলভাবে সাবমিট হয়েছে!");
-        navigate(`/dashboard/acLand/allCases`);
+        if (cas) {
+          refetch();
+          setIsCollapseOpen(false);
+          setFormData({});
+        }
+        navigate(-1);
       }
     } catch (err) {
       console.error(err);
@@ -122,147 +108,158 @@ const NewCase = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white shadow mx-auto p-6 rounded-xl max-w-4xl"
-    >
-      <h2 className="mb-4 font-bold text-xl">
+    <>
+      <h2 className="flex justify-start items-center my-4 font-bold text-xl">
+        <button
+          onClick={() => navigate(-1)} // -1 means go back one page
+          className="btn btn-ghost"
+        >
+          <ArrowLeft />{" "}
+        </button>
         {isEditMode ? "মামলা সম্পাদনা করুন" : "নতুন মামলা তথ্য যুক্ত করুন"}
       </h2>
-
-      <div className="gap-4 grid grid-cols-2 mb-5">
-        <label>
-          {t("district")}:
-          <input
-            readOnly
-            value={user?.district?.bn || ""}
-            className="bg-gray-100 mt-1 input-bordered w-full input"
-          />
-        </label>
-
-        <label>
-          {t("মামলার নাম")}:
-          <select
-            value={formData.mamlaName}
-            onChange={(e) => {
-              handleChange("mamlaName", e.target.value);
-              setSelectedCaseName(e.target.value);
-            }}
-            className="bg-gray-100 mt-1 w-full select-bordered select"
-          >
-            <option value="">{t("select mamla name")}</option>
-            {mamlaNames.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label>
-          {t("case number")}:
-          <input
-            type="number"
-            value={formData.mamlaNo}
-            onChange={(e) => handleChange("mamlaNo", e.target.value)}
-            className="bg-gray-100 input-bordered w-full input"
-          />
-        </label>
-
-        <label>
-          {t("year")}:
-          <select
-            value={formData.year}
-            onChange={(e) => handleChange("year", e.target.value)}
-            className="bg-gray-100 w-full select-bordered select"
-          >
-            <option value="">{t("Select Year")}</option>
-            {Array.from({ length: 50 }, (_, i) => {
-              const year = 2000 + i;
-              return (
-                <option key={year} value={year}>
-                  {toBanglaNumber(year)}
-                </option>
-              );
-            })}
-          </select>
-        </label>
-      </div>
-
-      {selectedCaseName && selectedCaseName !== "মিস কেইস" && (
-        <>
-          <label className="block mb-4">
-            <textarea
-              className="textarea-bordered w-full h-48 resize-none textarea"
-              placeholder="মামলার ইতিহাস লিখুন..."
-              value={formData.caseHistory}
-              onChange={(e) => handleChange("caseHistory", e.target.value)}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow mx-auto p-6 rounded-xl max-w-4xl"
+      >
+        <div className="gap-4 grid grid-cols-2 mb-5">
+          <label>
+            {t("district")}:
+            <input
+              readOnly
+              value={user?.district?.bn || cas.district.bn || ""}
+              className="bg-gray-100 mt-1 input-bordered w-full input"
             />
           </label>
-        </>
-      )}
 
-      <div className="mt-6">
-        <h3 className="mb-2 font-semibold">ডকুমেন্টস</h3>
-        {documents.map((doc, idx) => (
-          <div key={idx} className="gap-2 grid grid-cols-2 mb-2">
-            <input
-              type="text"
-              value={doc.label}
-              placeholder="লেবেল"
-              className="input-bordered input"
-              onChange={(e) =>
-                handleDocumentChange(idx, "label", e.target.value)
-              }
-            />
-            <input
-              type="text"
-              value={doc.url}
-              placeholder="URL"
-              className="input-bordered input"
-              onChange={(e) => handleDocumentChange(idx, "url", e.target.value)}
-            />
-          </div>
-        ))}
-        <button
-          type="button"
-          className="btn-outline btn btn-sm"
-          onClick={() => setDocuments([...documents, { label: "", url: "" }])}
-        >
-          নতুন ডকুমেন্ট
-        </button>
-      </div>
+          <label>
+            {t("মামলার নাম")}:
+            <select
+              value={formData.mamlaName}
+              onChange={(e) => {
+                handleChange("mamlaName", e.target.value);
+                setSelectedCaseName(e.target.value);
+              }}
+              className="bg-gray-100 mt-1 w-full select-bordered select"
+            >
+              <option value="">{t("select mamla name")}</option>
+              {mamlaNames.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
 
-      {selectedCaseName === "মিস কেইস" && (
-        <div className="mt-6">
-          <h3 className="mb-2 font-semibold">আদেশপত্রসমূহ</h3>
-          {orderSheets.map((order, idx) => (
-            <div key={idx} className="mb-4 p-3 border rounded-md">
-              <input
-                type="date"
-                className="mb-2 input-bordered w-full input"
-                value={order.date}
-                onChange={(e) => handleOrderChange(idx, "date", e.target.value)}
-              />
+          <label>
+            {t("case number")}:
+            <input
+              type="number"
+              value={formData.mamlaNo}
+              onChange={(e) => handleChange("mamlaNo", e.target.value)}
+              className="bg-gray-100 input-bordered w-full input"
+            />
+          </label>
+
+          <label>
+            {t("year")}:
+            <select
+              value={formData.year}
+              onChange={(e) => handleChange("year", e.target.value)}
+              className="bg-gray-100 w-full select-bordered select"
+            >
+              <option value="">{t("Select Year")}</option>
+              {Array.from({ length: 50 }, (_, i) => {
+                const year = 2000 + i;
+                return (
+                  <option key={year} value={year}>
+                    {toBanglaNumber(year)}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+        </div>
+
+        {selectedCaseName && selectedCaseName !== "মিস কেইস" && (
+          <>
+            <label className="block mb-4">
               <textarea
-                className="mb-2 textarea-bordered w-full textarea"
-                placeholder="আদেশের বিবরণ"
-                value={order.order}
+                className="textarea-bordered w-full h-48 resize-none textarea"
+                placeholder="মামলার ইতিহাস লিখুন..."
+                value={formData.caseHistory}
+                onChange={(e) => handleChange("caseHistory", e.target.value)}
+              />
+            </label>
+          </>
+        )}
+
+        <div className="mt-6">
+          <h3 className="mb-2 font-semibold">ডকুমেন্টস</h3>
+          {documents.map((doc, idx) => (
+            <div key={idx} className="gap-2 grid grid-cols-2 mb-2">
+              <input
+                type="text"
+                value={doc.label}
+                placeholder="লেবেল"
+                className="input-bordered input"
                 onChange={(e) =>
-                  handleOrderChange(idx, "order", e.target.value)
+                  handleDocumentChange(idx, "label", e.target.value)
                 }
               />
-              <textarea
-                className="textarea-bordered w-full textarea"
-                placeholder="গৃহীত কার্যক্রম"
-                value={order.actionTaken || ""}
+              <input
+                type="text"
+                value={doc.url}
+                placeholder="URL"
+                className="input-bordered input"
                 onChange={(e) =>
-                  handleOrderChange(idx, "actionTaken", e.target.value)
+                  handleDocumentChange(idx, "url", e.target.value)
                 }
               />
             </div>
           ))}
           <button
+            type="button"
+            className="btn-outline btn btn-sm"
+            onClick={() => setDocuments([...documents, { label: "", url: "" }])}
+          >
+            নতুন ডকুমেন্ট
+          </button>
+        </div>
+
+        {selectedCaseName === "মিস কেইস" && (
+          <div className="mt-6">
+            <h3 className="mb-2 font-semibold">আদেশপত্রসমূহ</h3>
+            {orderSheets.map((order, idx) => (
+              <div key={idx} className="mb-4 p-3 border rounded-md">
+                <input
+                  type="date"
+                  className="mb-2 input-bordered w-full input"
+                  value={order.date}
+                  onChange={(e) =>
+                    handleOrderChange(idx, "date", e.target.value)
+                  }
+                />
+                <textarea
+                  className="mb-2 textarea-bordered w-full textarea"
+                  placeholder="আদেশের বিবরণ"
+                  rows={10}
+                  value={order.order}
+                  onChange={(e) =>
+                    handleOrderChange(idx, "order", e.target.value)
+                  }
+                />
+                <textarea
+                  className="textarea-bordered w-full textarea"
+                  placeholder="গৃহীত কার্যক্রম"
+                  value={order.actionTaken || ""}
+                  onChange={(e) =>
+                    handleOrderChange(idx, "actionTaken", e.target.value)
+                  }
+                />
+              </div>
+            ))}
+            {/* <button
             type="button"
             className="btn-outline btn btn-sm"
             onClick={() =>
@@ -273,14 +270,15 @@ const NewCase = () => {
             }
           >
             নতুন আদেশপত্র
-          </button>
-        </div>
-      )}
+          </button> */}
+          </div>
+        )}
 
-      <button type="submit" className="mt-6 w-full btn btn-primary">
-        {isEditMode ? "আপডেট করুন" : "মামলা সাবমিট করুন"}
-      </button>
-    </form>
+        <button type="submit" className="mt-6 w-full btn btn-primary">
+          {isEditMode ? "আপডেট করুন" : "মামলা সাবমিট করুন"}
+        </button>
+      </form>
+    </>
   );
 };
 

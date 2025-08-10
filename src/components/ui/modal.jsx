@@ -15,7 +15,7 @@ const Modal = ({ children, onClose }) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-sm"
+        className="z-50 fixed inset-0 flex justify-center items-center bg-black/50 bg-opacity-40 backdrop-blur-sm"
         variants={backdrop}
         initial="hidden"
         animate="visible"

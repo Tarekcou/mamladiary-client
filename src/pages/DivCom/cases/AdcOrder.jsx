@@ -8,6 +8,8 @@ import {
   Edit,
   Edit2,
   Send,
+  Pencil,
+  PencilOff,
 } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import axiosPublic from "../../../axios/axiosPublic";
@@ -21,7 +23,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { mamlaNames } from "../../../data/mamlaNames";
 import { aclandOptions } from "../../../data/aclandOptions";
-const AdcOrder = () => {
+import Tippy from "@tippyjs/react";
+const AdcOrder = ({ header }) => {
+  // console.log(header.mamlaName);
   const [orderSheets, setOrderSheets] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const { user } = useContext(AuthContext);
@@ -50,6 +54,7 @@ const AdcOrder = () => {
       ? responses.find((r) => r.role === "adc")
       : {};
   }, [caseData]);
+  // console.log(adcCaseData);
 
   // Extract adc data using useEffect (not useMemo)
   useEffect(() => {
@@ -70,14 +75,15 @@ const AdcOrder = () => {
 
   const [headerInfo, setHeaderInfo] = useState({});
   useEffect(() => {
-    if (adcCaseData) {
+    if (adcCaseData || header) {
+      // console.log(header);
       setHeaderInfo((prev) => {
         const newInfo = {
-          formNo: adcCaseData?.formNo || "",
-          mamlaName: adcCaseData?.mamlaName || "",
-          mamlaNo: adcCaseData?.mamlaNo || "",
-          year: adcCaseData?.year || "",
-          district: adcCaseData?.district?.bn || "",
+          formNo: adcCaseData?.formNo || header?.formNo || "",
+          mamlaName: adcCaseData?.mamlaName || header?.mamlaName || "",
+          mamlaNo: adcCaseData?.mamlaNo || header?.mamlaNo || "",
+          year: adcCaseData?.year || header?.year || "",
+          district: adcCaseData?.district || header?.district || "",
         };
 
         // Avoid infinite loop by checking if update is needed
@@ -87,7 +93,7 @@ const AdcOrder = () => {
         return prev;
       });
     }
-  }, [adcCaseData, showHeaderModal]);
+  }, [adcCaseData, header, showHeaderModal]);
 
   // Refs for auto-growing textareas
   const textareaRefs = useRef([]);
@@ -193,9 +199,8 @@ const AdcOrder = () => {
   };
 
   const handleDeleteRow = async (index) => {
-    console.log(index);
     const confirm = await Swal.fire({
-      title: "আপনি কি ডিলেট  চান?",
+      title: "আপনি কি ডিলেট চান?",
       text: "এই কাজটি অপরিবর্তনীয়!",
       icon: "warning",
       showCancelButton: true,
@@ -203,9 +208,28 @@ const AdcOrder = () => {
     });
 
     if (!confirm.isConfirmed) return;
-    setEditingRow(index);
-    const updated = orderSheets.filter((_, i) => i !== index);
-    setOrderSheets(updated);
+
+    try {
+      // Assuming each row is a unique object in orderSheets
+      const rowToDelete = orderSheets[index];
+
+      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+        deleteOrderSheet: {
+          role: "adc", // or user.role
+          officeName: user?.officeName,
+          district: user?.district,
+          orderSheet: rowToDelete,
+        },
+      });
+
+      if (res.status === 200) {
+        toast.success("সফলভাবে ডিলেট হয়েছে!");
+        setOrderSheets((prev) => prev.filter((_, i) => i !== index));
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("ডিলেট করতে সমস্যা হয়েছে");
+    }
   };
 
   const handleSave = async () => {
@@ -218,13 +242,15 @@ const AdcOrder = () => {
       const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
         responsesFromOffices: [
           {
-            officeName: user?.district,
+            officeName: user?.officeName,
             district: user?.district,
             role: "adc",
             orderSheets,
           },
         ],
       });
+
+      console.log(res.data);
 
       if (res.data.modifiedCount > 0) {
         toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
@@ -269,59 +295,62 @@ const AdcOrder = () => {
       }
     }
   };
-  // const handleAddOrder = () => {
-  //   navigate(`/dashboard/${user?.role}/cases/new`, {
-  //     state: { adcCaseData, mode: "add" },
-  //   });
 
-  // };
   const parseDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date) ? null : date;
   };
-  const generateDefaultActionText = (messages = []) => {
-    if (!messages.length) return "";
+  const generateDefaultActionText = (order, date) => {
+    console.log(order);
+    const newText = `মামলা নং ${order.mamlaNo} (${
+      order.mamlaName
+    }) সংক্রান্ত আদেশ অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতে ${
+      date?.split("T")[0] || "___"
+    } তারিখে প্রেরণ করা হয়েছে।`;
 
-    return messages
-      .flatMap((msg) => {
-        if (!msg.mamlaList || !Array.isArray(msg.mamlaList)) return []; // skip if missing
-        return msg.mamlaList.map((m) => {
-          return `মামলা নং ${m.mamlaNo} (${m.mamlaName}) সংক্রান্ত ${
-            msg.sentTo === "acland"
-              ? "সহকারী কমিশনার (ভূমি)"
-              : "অতিরিক্ত জেলা প্রশাসক"
-          } অফিসে ${
-            msg.date?.split("T")[0] || "___"
-          } তারিখে বার্তা প্রেরণ করা হয়েছে।`;
-        });
-      })
-      .join("\n");
+    // Append if existing text present
+    return newText;
   };
 
   const handleSend = async () => {
     const confirm = await Swal.fire({
-      title: "আপনি কি প্রেরণ করতে চান ?",
+      title: "আপনি কি প্রেরণ করতে চান?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, প্ররন করুন",
+      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
     });
 
     if (!confirm.isConfirmed) return;
-    if (adcCaseData.length === 0) {
-      toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
-      return;
-    }
-    console.log(caseData._id);
+
     try {
-      const res = await axiosPublic.patch(
-        `/cases/${caseData._id}/send-divCom`,
-        {
-          role: user?.role,
-          district: user?.district?.en, // for ADC
-        }
+      const adcResp = caseData.responsesFromOffices.find(
+        (resp) => resp.role === "adc"
       );
-      console.log(res);
-      if (res.data.success) {
+
+      const updatedOrderSheets = adcResp.orderSheets.map((order) => ({
+        ...order,
+        actionTaken: order.actionTaken
+          ? order.actionTaken +
+            "\n" +
+            generateDefaultActionText(headerInfo, new Date().toISOString())
+          : generateDefaultActionText(headerInfo, new Date().toISOString()),
+        sentToDivcom: true,
+        sentDate: new Date().toISOString(),
+      }));
+
+      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+        responsesFromOffices: [
+          {
+            role: adcResp.role,
+            officeName: { en: adcResp.officeName.en },
+            district: { en: adcResp.district.en },
+            orderSheets: updatedOrderSheets,
+          },
+        ],
+      });
+      console.log(res.data);
+
+      if (res.data.modifiedCount > 0) {
         toast.success("অতিরিক্ত বিভাগীয় কমিশনার রাজস্ব আদালতে প্রেরণ হয়েছে!");
         refetch();
       } else {
@@ -336,7 +365,7 @@ const AdcOrder = () => {
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
-        <div>বাংলাদেশ ফরম নং - {adcCaseData?.formNo}</div>
+        <div>বাংলাদেশ ফরম নং - {headerInfo?.formNo}</div>
         <div className="text-right">
           {badi?.name || "বাদী"} <br /> বনাম <br /> {bibadi?.name || "বিবাদী"}
         </div>
@@ -376,8 +405,8 @@ const AdcOrder = () => {
       </div>
 
       <div className="my-4">
-        মামলার ধরন: {adcCaseData?.mamlaName} মামলার নংঃ {adcCaseData?.mamlaNo} /
-        ({adcCaseData?.year}) ({adcCaseData?.district?.bn})
+        মামলার ধরন: {headerInfo?.mamlaName} মামলার নংঃ {headerInfo?.mamlaNo} / (
+        {headerInfo?.year}) ({headerInfo?.district?.bn})
       </div>
     </div>
   );
@@ -474,7 +503,7 @@ const AdcOrder = () => {
               </tr>
             </thead>
             <tbody>
-              {orderSheets.map((row, idx) => {
+              {orderSheets.map((order, idx) => {
                 const isEditing = editingRow === idx;
 
                 return (
@@ -483,7 +512,7 @@ const AdcOrder = () => {
                       <div className="flex flex-col items-center">
                         <input
                           type="date"
-                          value={row?.orderDate}
+                          value={order?.orderDate}
                           readOnly={!isEditing || user?.role !== "adc"}
                           onChange={(e) =>
                             handleInputChange(idx, "orderDate", e.target.value)
@@ -493,7 +522,7 @@ const AdcOrder = () => {
                       </div>
 
                       <textarea
-                        value={row.orderNo}
+                        value={order.orderNo}
                         placeholder="আদেশের নম্বর"
                         readOnly={!isEditing || user?.role !== "adc"}
                         onChange={(e) =>
@@ -511,7 +540,7 @@ const AdcOrder = () => {
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-staffNote`] = el)
                         }
-                        value={row.staffNote || ""}
+                        value={order.staffNote || ""}
                         placeholder="সহকারীর মন্তব্য"
                         readOnly={!isEditing || user?.role !== "adc"}
                         onChange={(e) =>
@@ -527,7 +556,7 @@ const AdcOrder = () => {
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-judgeNote`] = el)
                         }
-                        value={row.judgeNote}
+                        value={order.judgeNote}
                         readOnly={!isEditing || user?.role !== "adc"}
                         placeholder="দেখলাম ..."
                         onChange={(e) =>
@@ -539,7 +568,7 @@ const AdcOrder = () => {
                       {/* next data */}
                       <div className="flex flex-col justify-end items-end mt-5">
                         <DatePicker
-                          selected={parseDate(row.nextOrderDate)}
+                          selected={parseDate(order.nextOrderDate)}
                           readOnly={!isEditing || user?.role !== "adc"}
                           onChange={(date) =>
                             handleInputChange(
@@ -567,18 +596,12 @@ const AdcOrder = () => {
                       </div>
                     </td>
 
-                    <td className="px-1 pt-5 border-r w-3/12 align-top">
+                    <td className="px-1 pt-5 border-r w-3/12 text-center align-top">
                       <textarea
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-actionTaken`] = el)
                         }
-                        value={
-                          row.actionTaken && row.actionTaken.trim()
-                            ? row.actionTaken
-                            : generateDefaultActionText(
-                                adcCaseData?.messagesToOffices
-                              )
-                        }
+                        value={order.actionTaken}
                         placeholder="গৃহীত ব্যবস্থা"
                         readOnly={!isEditing || user?.role !== "adc"}
                         onChange={(e) => {
@@ -587,30 +610,68 @@ const AdcOrder = () => {
                           el.style.height = "auto";
                           el.style.height = `${el.scrollHeight}px`;
                         }}
-                        className="w-full overflow-hidden resize-none"
+                        className="w-full overflow-hidden text-center resize-none"
                       />
                     </td>
-                    {user?.role == "adc" && (
+                    {user?.role == "adc" && !order?.sentToDivcom && (
                       <td id="action" className="space-y-2 p-2 border-r">
                         {!isEditing ? (
-                          <button
-                            className="btn btn-sm btn-ghost"
-                            onClick={() => setEditingRow(idx)}
+                          <Tippy
+                            className=""
+                            content="সম্পাদন করুন "
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
                           >
-                            <Edit className="w-4" />
-                          </button>
+                            <button
+                              className="btn btn-sm"
+                              onClick={() => setEditingRow(idx)}
+                            >
+                              <Pencil className="w-4" />
+                            </button>
+                          </Tippy>
                         ) : (
-                          <span className="text-green-600 text-xs">
-                            Editing
-                          </span>
+                          <Tippy
+                            content="সম্পাদন বন্ধ করুন"
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
+                          >
+                            <span
+                              onClick={() => setEditingRow(null)}
+                              className="text-green-600 text-xs btn btn-sm"
+                            >
+                              <PencilOff className="w-4" />
+                            </span>
+                          </Tippy>
                         )}
-
-                        <button
-                          className="text-red-600 btn btn-sm btn-ghost"
-                          onClick={() => handleDeleteRow(idx)}
+                        <Tippy
+                          content="মুছে ফেলুন "
+                          animation="scale"
+                          duration={[150, 100]} // faster show/hide
                         >
-                          <Trash2 className="w-4" />
-                        </button>
+                          <button
+                            className="text-red-600 btn btn-sm"
+                            onClick={() => handleDeleteRow(idx)}
+                          >
+                            <Trash2 className="w-4" />
+                          </button>
+                        </Tippy>
+
+                        <div className="flex justify-center items-center">
+                          <Tippy
+                            content=" বিভাগীয় কমিশনার অফিসে প্রেরণ করুন "
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
+                          >
+                            <button
+                              onClick={() => handleSend()}
+                              className="btn btn-sm btn-success"
+                            >
+                              <h1>
+                                <Send className="w-4 text-xl" />
+                              </h1>
+                            </button>
+                          </Tippy>
+                        </div>
                       </td>
                     )}
                   </tr>
@@ -630,16 +691,6 @@ const AdcOrder = () => {
               <button className="btn btn-success" onClick={handleSave}>
                 <Save /> সংরক্ষণ করুন
               </button>
-            )}
-            {!adcCaseData?.sentToDivcom && (
-              <div className="flex justify-center items-center">
-                <button
-                  onClick={() => handleSend()}
-                  className="gap-2 btn btn-success"
-                >
-                  <Send /> প্রেরণ করুন
-                </button>
-              </div>
             )}
           </>
         )}

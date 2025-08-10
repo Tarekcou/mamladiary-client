@@ -286,7 +286,7 @@ const newSchema = {
         district: "Cumilla",
       },
     ],
-    adcMamlaInfo: [], 
+    adcMamlaInfo: [],
   },
   divComReview: {
     orderSheets: [
@@ -314,7 +314,7 @@ const newSchema = {
         badiList: "caseInfo.nagorikSubmission.badi",
         bibadiList: "caseInfo.nagorikSubmission.bibadi",
       },
-      mamlaList: "selectedMamlas", // simplified array of mamla info
+      caseList: "selectedMamlas", // simplified array of mamla info
       date: "new Date().toISOString()",
     },
   ],

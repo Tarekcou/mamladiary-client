@@ -3,8 +3,8 @@ import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../components/common/Footer";
 import { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
-import SidebarNagorik from "../pages/Nagorik/SidebarNagorik";
-import SidebarAcLand from "../pages/AcLand/SidebarAcLand";
+import SidebarNagorik from "../pages/nagorik/SidebarNagorik";
+import SidebarAcLand from "../pages/acLand/SidebarAcLand";
 import SidebarAdc from "../pages/adc/SidebarAdc";
 import SidebarDivCom from "../pages/divCom/SidebarDivCom";
 

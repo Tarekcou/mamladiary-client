@@ -49,7 +49,7 @@ const AddUsers = () => {
               bn: "বিভাগীয় কমিশনারের কার্যালয়",
             },
     };
-    console.log(payload);
+    // console.log(payload);
     await createItem(payload);
 
     form.reset();

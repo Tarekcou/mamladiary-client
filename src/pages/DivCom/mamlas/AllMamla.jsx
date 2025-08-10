@@ -7,10 +7,10 @@ import Swal from "sweetalert2";
 import axiosPublic from "../../../axios/axiosPublic";
 
 const AllMamla = () => {
-  // const [mamlaList, setMamlaList] = useState([]);
+  // const [caseList, setMamlaList] = useState([]);
 
   const {
-    data: mamlaList,
+    data: caseList,
     isLoading,
     isError,
     error,
@@ -41,7 +41,7 @@ const AllMamla = () => {
 
   // Filtered Data
   const filteredData = useMemo(() => {
-    return (mamlaList ?? []).filter(
+    return (caseList ?? []).filter(
       (item) =>
         item?.mamlaName
           .toLowerCase()
@@ -50,7 +50,7 @@ const AllMamla = () => {
         item?.district.toLowerCase().includes(search.district.toLowerCase()) &&
         item?.year.toLowerCase().includes(search.year.toLowerCase())
     );
-  }, [mamlaList, search]);
+  }, [caseList, search]);
 
   // Pagination Logic
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);

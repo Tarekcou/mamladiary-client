@@ -1,24 +1,43 @@
 import {
   ArrowDownWideNarrowIcon,
+  CloudUpload,
   Delete,
   DeleteIcon,
   Edit,
   Edit2,
+  FilePlus2,
   Plus,
   PlusSquareIcon,
   Send,
+  SquareCheckBig,
 } from "lucide-react";
 import { useNavigate } from "react-router";
-import LawyerDetails from "./LawyerDetails";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../provider/AuthProvider";
-import NewCase from "./NewCase";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import axiosPublic from "../../../axios/axiosPublic";
 import { MdWarning } from "react-icons/md";
-const AcLandDetails = ({ caseData, refetch }) => {
+import NewCase from "./NewCase";
+import Tippy from "@tippyjs/react";
+import { useQuery } from "@tanstack/react-query";
+const AcLandDetails = ({ id }) => {
+  const {
+    data: caseData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["acLandDetails", id],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/cases/${id}`);
+      console.log("Ac land Case Data:", res.data);
+      return res.data;
+    },
+    enabled: !!id,
+  });
   const navigate = useNavigate();
   const acLandMessages =
     caseData?.messagesToOffices?.filter(
@@ -29,12 +48,24 @@ const AcLandDetails = ({ caseData, refetch }) => {
   const acLandCaseData =
     caseData?.responsesFromOffices?.filter((r) => r.role === "acLand") || [];
   // console.log(acLandCaseData[0].role);
+  const isUploaded = (mamlaNo) =>
+    caseData?.responsesFromOffices
+      ?.filter((r) => r.role === "acLand")
+      ?.some((r) => r.caseEntries?.some((cas) => cas?.mamlaNo == mamlaNo));
+
+  // console.log(isUploaded(10));
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+
+  const toggleCollapse = () => setIsCollapseOpen(!isCollapseOpen);
+  const [addedCase, setNewAddedCase] = useState({});
   const handleAddCases = () => {
     // navigate(`/dashboard/${user.role}/cases/new`, {
     //   state: { caseData, mode: "add" },
     // });
     console.log("Adding new cases for AC Land");
     setIsOpenCaseForm(true);
+
+    setIsCollapseOpen(!isCollapseOpen);
   };
   const handleDeleteCase = async (caseId, officeIndex, entryIndex) => {
     Swal.fire({
@@ -98,45 +129,80 @@ const AcLandDetails = ({ caseData, refetch }) => {
       toast.error("পাঠাতে সমস্যা হয়েছে!");
     }
   };
-  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
 
-  const toggleCollapse = () => setIsCollapseOpen(!isCollapseOpen);
   return (
     <>
       <h4 className="m-4 mb-2 font-semibold text-lg">
         রিকোয়েস্টকৃত মামলার তালিকা
       </h4>
 
-      {acLandMessages.length > 0 ? (
+      {acLandMessages.length > 0 &&
         acLandMessages.map((msg, idx) => (
           <div key={idx} className="bg-white shadow-sm mb-4 p-4 rounded">
             <p className="mb-2 font-medium text-gray-700">
               <strong>প্রেরণের তারিখ:</strong>{" "}
               {toBanglaNumber(msg.date.split("T")[0])}
             </p>
+            <div
+              tabIndex="0"
+              className="collapse collapse-arrow bg-base-100 my-2 border border-base-300"
+            >
+              <input type="checkbox" />
 
-            <table className="table bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th>ক্রমিক</th>
-                  <th>মামলার নাম</th>
-                  <th>মামলা নং</th>
-                  <th>সাল</th>
-                  <th>জেলা</th>
-                </tr>
-              </thead>
-              <tbody>
-                {msg.mamlaList?.map((m, i) => (
-                  <tr key={i}>
-                    <td>{i + 1}</td>
-                    <td>{m.mamlaName}</td>
-                    <td>{m.mamlaNo}</td>
-                    <td>{m.year}</td>
-                    <td>{m.district.bn}</td>
+              <div className="collapse-title bg-green-100 font-semibold">
+                মামলার তথ্য
+              </div>
+
+              <table className="collapse-content table shadow my-2 mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th>ক্রমিক</th>
+                    <th>মামলার নাম</th>
+                    <th>মামলা নং</th>
+                    <th>সাল</th>
+                    <th>জেলা</th>
+                    <th>কার্যক্রম</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {msg.caseList?.map((m, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>{m.mamlaName}</td>
+                      <td>{toBanglaNumber(m.mamlaNo)}</td>
+                      <td>{toBanglaNumber(m.year)}</td>
+                      <td>{m.district.bn}</td>
+                      <td>
+                        {user?.role === "acLand" && !isUploaded(m.mamlaNo) ? (
+                          <Tippy
+                            className=""
+                            content="মামলার তথ্য যুক্ত করুন"
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
+                          >
+                            <button
+                              onClick={() => {
+                                setNewAddedCase(m);
+                                setIsCollapseOpen(!isCollapseOpen);
+                              }}
+                              className="flex items-center gap-2 btn btn-sm btn-success"
+                            >
+                              <CloudUpload className="" />{" "}
+                            </button>
+                          </Tippy>
+                        ) : (
+                          <h1>
+                            {" "}
+                            <SquareCheckBig className="text-success" />
+                          </h1>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             <div
               tabIndex="0"
               className="collapse collapse-arrow bg-base-100 my-2 border border-base-300"
@@ -202,10 +268,7 @@ const AcLandDetails = ({ caseData, refetch }) => {
               </ul>
             </div>
           </div>
-        ))
-      ) : (
-        <LawyerDetails role={"acLand"} caseData={caseData} />
-      )}
+        ))}
       {/* --- Add New Case Collapse --- */}
       {user?.role === "acLand" && (
         <div
@@ -228,7 +291,11 @@ const AcLandDetails = ({ caseData, refetch }) => {
           </div>
 
           <div className="collapse-content text-sm">
-            <NewCase />
+            <NewCase
+              cas={addedCase}
+              refetch={refetch}
+              setIsCollapseOpen={setIsCollapseOpen}
+            />
           </div>
         </div>
       )}
@@ -305,7 +372,7 @@ const AcLandDetails = ({ caseData, refetch }) => {
             `}</style>
 
             {acLandCaseData.map((res, officeIndex) =>
-              res.mamlaEntries?.map((entry, entryIndex) => (
+              res.caseEntries?.map((entry, entryIndex) => (
                 <div
                   key={`${officeIndex}-${entryIndex}`}
                   className="bg-white shadow mb-8 p-4 print:break-after-page"
@@ -324,7 +391,7 @@ const AcLandDetails = ({ caseData, refetch }) => {
                       !acLandCaseData[0].sentToDivcom && (
                         <div className="space-x-2">
                           <button
-                            className="btn btn-sm btn-primary"
+                            className="btn btn-sm btn-success"
                             onClick={() =>
                               navigate(
                                 `/dashboard/${user?.role}/cases/edit/${caseData._id}`,
@@ -333,12 +400,13 @@ const AcLandDetails = ({ caseData, refetch }) => {
                                     id: caseData._id,
                                     caseData,
                                     mode: "edit",
+                                    entryIndex,
                                   },
                                 }
                               )
                             }
                           >
-                            <Edit2 className="mr-2 w-5" /> মামলা সম্পাদনা করুন
+                            <Edit2 className="w-4" />
                           </button>
                           {/* handle delete */}
                           <button
@@ -351,7 +419,7 @@ const AcLandDetails = ({ caseData, refetch }) => {
                               )
                             }
                           >
-                            <DeleteIcon className="w-5" /> ডিলেট করুন
+                            <DeleteIcon className="w-5" />
                           </button>
                         </div>
                       )}
@@ -399,17 +467,28 @@ const AcLandDetails = ({ caseData, refetch }) => {
                   </div>
 
                   {/* Case History */}
-                  <div className="my-4">
-                    <strong className="font-bold underline">
-                      মামলার ইতিহাস:
-                    </strong>
-                    <div>{entry?.caseHistory || "N/A"}</div>
-                  </div>
-                  {entry?.order && (
-                    <div className="mb-4">
-                      <strong>আদেশ:</strong>
-                      <div>{entry?.order || "N/A"}</div>
+                  {entry?.caseHistory ? (
+                    <div className="my-4">
+                      <strong className="font-bold underline">
+                        মামলার ইতিহাস:
+                      </strong>
+                      <div>{entry?.caseHistory || "N/A"}</div>
                     </div>
+                  ) : (
+                    <>
+                      {entry.orderSheets.map((o) => (
+                        <div className="my-4">
+                          <div className="flex gap-2 my-4">
+                            <h1 className="underline">আদেশের তারিখঃ</h1>{" "}
+                            <h1 className="">{toBanglaNumber(o.date)}</h1>
+                          </div>
+                          <strong className="font-bold underline">
+                            মামলার আদেশ:
+                          </strong>
+                          <div>{o?.order || "N/A"}</div>
+                        </div>
+                      ))}
+                    </>
                   )}
 
                   {/* Remarks */}
@@ -419,7 +498,7 @@ const AcLandDetails = ({ caseData, refetch }) => {
                   </div>
 
                   {/* Documents */}
-                  {entry.documents?.length > 0 && (
+                  {entry.documents?.length > 0 ? (
                     <div className="mb-2">
                       <strong>সংযুক্তি:</strong>
                       <ul className="ml-5 text-blue-600 list-disc">
@@ -427,16 +506,20 @@ const AcLandDetails = ({ caseData, refetch }) => {
                           <li key={k}>
                             <a
                               href={doc.url}
-                              target="_blank"
+                              // target="_blank"
                               rel="noopener noreferrer"
                               className="underline"
                             >
-                              {doc.label}
+                              {doc.label || "সংযুক্তি নেই "}
                             </a>
                           </li>
                         ))}
                       </ul>
                     </div>
+                  ) : (
+                    <>
+                      <h1>N/A</h1>
+                    </>
                   )}
                 </div>
               ))

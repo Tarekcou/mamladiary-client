@@ -79,7 +79,7 @@ const AllDetails = () => {
         return <AdcDetails id={caseData._id} role="adc" refetch={refetch} />;
       case "acLand":
         return (
-          <AcLandDetails caseData={caseData} role="acLand" refetch={refetch} />
+          <AcLandDetails id={caseData._id} role="acLand" refetch={refetch} />
         );
       case "lawyer":
         return (

@@ -8,8 +8,9 @@ const Message = ({ caseData, role }) => {
 
   const mamlaInfo =
     role === "acLand"
-      ? caseData.nagorikSubmission?.aclandMamlaInfo?.[0]
-      : caseData.nagorikSubmission?.adcMamlaInfo?.[0];
+      ? caseData.nagorikSubmission?.aclandMamlaInfo
+      : caseData.nagorikSubmission?.adcMamlaInfo;
+  // console.log(mamlaInfo);
 
   const staffNote = caseData.divComReview?.orderSheets?.[0]?.staffNote || "N/A";
   const judgeNote = caseData.divComReview?.orderSheets?.[0]?.judgeNote || "N/A";
@@ -21,60 +22,84 @@ const Message = ({ caseData, role }) => {
     <div className="space-y-4 text-sm leading-relaxed">
       {/* মামলার তথ্য */}
       <div>
-        <h3 className="pb-1 border-b font-bold text-base text-center">
+        <h3 className="pb-1 font-bold text-base text-center">
           মামলার তথ্য ({role === "acLand" ? "এসি ল্যান্ড" : "এডিসি"})
         </h3>
-        <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 mt-2">
-          <div>মামলার নাম: {mamlaInfo.mamlaName}</div>
-          <div>মামলা নম্বর: {mamlaInfo.mamlaNo}</div>
-          <div>সালঃ ({mamlaInfo.year})</div>
-          <div>জেলা: {mamlaInfo.district.bn}</div>
+
+        <div className="border border-gray-300 overflow-x-auto">
+          <table className="table table-sm mt-2">
+            <thead>
+              <tr className="bg-base-300">
+                <th>মামলার নাম</th>
+                <th>মামলা নম্বর</th>
+                <th>সাল</th>
+                <th>জেলা</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mamlaInfo.map((mamla, i) => (
+                <tr key={i}>
+                  <td> {mamla.mamlaName}</td>
+                  <td> {mamla.mamlaNo}</td>
+                  <td> ({mamla.year})</td>
+                  <td> {mamla.district.bn}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
       {/* বাদী ও বিবাদীর তথ্য */}
       <div>
-        <h3 className="pb-1 border-b font-bold text-base text-center">
+        <h3 className="pb-1 font-bold text-base text-center">
           বাদী ও বিবাদীর তথ্য
         </h3>
-        <table className="gap-2 mt-2 w-full text-center">
-          <table></table>
-          <tr className="w-full">
-            <th className="px-2 py-1 border" colSpan={3}>
-              বাদী
-            </th>
-          </tr>
-          <tr>
-            <th className="px-2 py-1 border">নাম</th>
-            <th className="px-2 py-1 border">ফোন</th>
-            <th className="px-2 py-1 border">ঠিকানা</th>
-          </tr>
-          {badi.map((b, index) => (
-            <tr>
-              <td className="px-2 py-1 border">{b.name || "N/A"}</td>
-              <td className="px-2 py-1 border">{b.phone || "N/A"}</td>
-              <td className="px-2 py-1 border">{b.address || "N/A"}</td>
+        <table className="table table-sm mt-2 border border-gray-300 w-full text-center">
+          <thead>
+            <tr className="w-full">
+              <th className="bg-base-300" colSpan={3}>
+                বাদী
+              </th>
             </tr>
-          ))}
+            <tr>
+              <th className="">নাম</th>
+              <th className="">ফোন</th>
+              <th className="">ঠিকানা</th>
+            </tr>
+          </thead>
+          <tbody>
+            {badi.map((b, index) => (
+              <tr key={index}>
+                <td className="">{b.name || "N/A"}</td>
+                <td className="">{b.phone || "N/A"}</td>
+                <td className="">{b.address || "N/A"}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
-        <table className="gap-2 mt-2 w-full text-center">
-          <tr className="w-full">
-            <th className="px-2 py-1 border" colSpan={3}>
-              বিবাদী
-            </th>
-          </tr>
-          <tr>
-            <th className="px-2 py-1 border">নাম</th>
-            <th className="px-2 py-1 border">ফোন</th>
-            <th className="px-2 py-1 border">ঠিকানা</th>
-          </tr>
-          {bibadi.map((b, index) => (
-            <tr>
-              <td className="px-2 py-1 border">{b.name || "N/A"}</td>
-              <td className="px-2 py-1 border">{b.phone || "N/A"}</td>
-              <td className="px-2 py-1 border">{b.address || "N/A"}</td>
+        <table className="table table-sm gap-2 mt-2 border border-gray-200 w-full text-center">
+          <thead>
+            <tr className="w-full">
+              <th className="bg-base-300" colSpan={3}>
+                বিবাদী
+              </th>
             </tr>
-          ))}
+            <tr>
+              <th className="">নাম</th>
+              <th className="">ফোন</th>
+              <th className="">ঠিকানা</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bibadi.map((b, index) => (
+              <tr key={index}>
+                <td className="">{b.name || "N/A"}</td>
+                <td className="">{b.phone || "N/A"}</td>
+                <td className="">{b.address || "N/A"}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

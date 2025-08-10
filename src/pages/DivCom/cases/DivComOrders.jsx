@@ -7,6 +7,8 @@ import {
   ArrowLeft,
   Edit,
   Edit2,
+  Pencil,
+  PencilOff,
 } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import axiosPublic from "../../../axios/axiosPublic";
@@ -19,6 +21,8 @@ import { useQuery } from "@tanstack/react-query";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { mamlaNames } from "../../../data/mamlaNames";
+import { aclandOptions } from "../../../data/aclandOptions";
+import Tippy from "@tippyjs/react";
 const DivComOrders = () => {
   const { id } = useParams();
   // console.log(id);
@@ -57,9 +61,15 @@ const DivComOrders = () => {
   const bibadi = caseData?.nagorikSubmission?.bibadi?.[0];
   const divComReview = caseData?.divComReview || {};
 
-  const [headerInfo, setHeaderInfo] = useState({});
+  const [headerInfo, setHeaderInfo] = useState({
+    formNo: "",
+    mamlaName: "",
+    mamlaNo: "",
+    year: "",
+    district: { bn: "", en: "" },
+  });
   useEffect(() => {
-    if (divComReview) {
+    if (showHeaderModal && divComReview) {
       setHeaderInfo((prev) => {
         const newInfo = {
           formNo: divComReview.formNo || "",
@@ -76,13 +86,13 @@ const DivComOrders = () => {
         return prev;
       });
     }
-  }, [divComReview, showHeaderModal]);
+  }, [showHeaderModal]);
 
   // Refs for auto-growing textareas
   const textareaRefs = useRef([]);
 
   useEffect(() => {
-    orderSheets.forEach((row, idx) => {
+    orderSheets.forEach((order, idx) => {
       ["judgeNote", "staffNote", "actionTaken"].forEach((field) => {
         const ref = textareaRefs.current[`${idx}-${field}`];
         if (ref) {
@@ -104,11 +114,11 @@ const DivComOrders = () => {
     if (field === "judgeNote") {
       // Ensure prefix
       if (!updated[index][field]) {
-        updated[index][field] = "    দেখলাম ...";
+        updated[index][field] = "    দেখলাম। ";
       }
 
-      if (!value.startsWith("    দেখলাম ...")) {
-        value = "    দেখলাম ..." + value.replace(/^দেখলাম\s*\.*\.*\s*/, "");
+      if (!value.startsWith("    দেখলাম। ")) {
+        value = "    দেখলাম। " + value.replace(/^দেখলাম\s*\.*\.*\s*/, "");
       }
     }
 
@@ -236,11 +246,9 @@ const DivComOrders = () => {
         mamlaName: headerInfo.mamlaName,
         mamlaNo: headerInfo.mamlaNo,
         year: headerInfo.year,
-        district: {
-          ...divComReview?.district,
-          bn: headerInfo.district,
-        },
+        district: headerInfo.district,
       };
+      console.log(updatedHeader);
 
       const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
         divComReview: updatedHeader,
@@ -270,8 +278,8 @@ const DivComOrders = () => {
 
     return messages
       .flatMap((msg) => {
-        if (!msg.mamlaList || !Array.isArray(msg.mamlaList)) return []; // skip if missing
-        return msg.mamlaList.map((m) => {
+        if (!msg.caseList || !Array.isArray(msg.caseList)) return []; // skip if missing
+        return msg.caseList.map((m) => {
           return `মামলা নং ${m.mamlaNo} (${m.mamlaName}) সংক্রান্ত ${
             msg.sentTo === "acland"
               ? "সহকারী কমিশনার (ভূমি)"
@@ -287,7 +295,7 @@ const DivComOrders = () => {
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
-        <div>বাংলাদেশ ফরম নং - {divComReview.formNo}</div>
+        <div>বাংলাদেশ ফরম নং - {toBanglaNumber(divComReview.formNo)}</div>
         <div className="text-right">
           {badi?.name || "বাদী"} <br /> বনাম <br /> {bibadi?.name || "বিবাদী"}
         </div>
@@ -327,8 +335,9 @@ const DivComOrders = () => {
       </div>
 
       <div className="my-4">
-        মামলার ধরন: {divComReview.mamlaName} মামলার নংঃ {divComReview.mamlaNo} /
-        ({divComReview.year}) ({divComReview.district?.bn})
+        মামলার ধরন: {divComReview.mamlaName} মামলার নংঃ{" "}
+        {toBanglaNumber(divComReview.mamlaNo)} / (
+        {toBanglaNumber(divComReview.year)}) ({divComReview.district?.bn})
       </div>
     </div>
   );
@@ -390,14 +399,15 @@ const DivComOrders = () => {
           >
             <Plus /> নতুন আদেশ
           </button>
-          {divComReview.orderSheets && (
-            <button
-              onClick={() => setShowHeaderModal(true)}
-              className="mb-2 btn-outline btn btn-sm"
-            >
-              <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
-            </button>
-          )}
+          {/* {divComReview.orderSheets && (
+            
+          )} */}
+          <button
+            onClick={() => setShowHeaderModal(true)}
+            className="mb-2 btn-outline btn btn-sm"
+          >
+            <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
+          </button>
           <button
             onClick={handlePrint}
             className="no-print btn btn-sm btn-info"
@@ -421,7 +431,7 @@ const DivComOrders = () => {
               </tr>
             </thead>
             <tbody>
-              {orderSheets.map((row, idx) => {
+              {orderSheets.map((order, idx) => {
                 const isEditing = editingRow === idx;
 
                 return (
@@ -430,7 +440,7 @@ const DivComOrders = () => {
                       <div className="flex flex-col items-center">
                         <input
                           type="date"
-                          value={row?.orderDate}
+                          value={order?.orderDate}
                           readOnly={!isEditing || user?.role !== "adc"}
                           onChange={(e) =>
                             handleInputChange(idx, "orderDate", e.target.value)
@@ -440,7 +450,7 @@ const DivComOrders = () => {
                       </div>
 
                       <textarea
-                        value={row.orderNo}
+                        value={order.orderNo}
                         placeholder="আদেশের নম্বর"
                         readOnly={!isEditing || user?.role !== "adc"}
                         onChange={(e) =>
@@ -450,7 +460,7 @@ const DivComOrders = () => {
                       />
                     </td>
 
-                    <td className="p-2 border-r w-7/12 align-top">
+                    <td className="p-2 pt-4 border-r w-7/12 align-top">
                       {/* <p className="font-semibold text-xs text-left">
                         অফিস সহকারীর মন্তব্য
                       </p> */}
@@ -458,13 +468,13 @@ const DivComOrders = () => {
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-staffNote`] = el)
                         }
-                        value={row.staffNote || ""}
+                        value={order.staffNote || ""}
                         placeholder="সহকারীর মন্তব্য"
                         readOnly={!isEditing || user?.role !== "divCom"}
                         onChange={(e) =>
                           handleInputChange(idx, "staffNote", e.target.value)
                         }
-                        className="mt-8 w-full overflow-hidden resize-none"
+                        className="hover:border-cyan-800 w-full overflow-hidden resize-none"
                       />
 
                       {/* <p className="font-semibold text-xs text-left">
@@ -474,7 +484,7 @@ const DivComOrders = () => {
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-judgeNote`] = el)
                         }
-                        value={row.judgeNote}
+                        value={order.judgeNote}
                         readOnly={!isEditing || user?.role !== "divCom"}
                         placeholder="দেখলাম ..."
                         onChange={(e) =>
@@ -486,8 +496,8 @@ const DivComOrders = () => {
                       {/* next data */}
                       <div className="flex flex-col justify-end items-end mt-5">
                         <DatePicker
-                          selected={parseDate(row.nextOrderDate)}
-                          readOnly={!isEditing || user?.role !== "adc"}
+                          selected={parseDate(order.nextOrderDate)}
+                          readOnly={!isEditing || user?.role !== "divCom"}
                           onChange={(date) =>
                             handleInputChange(
                               idx,
@@ -513,15 +523,15 @@ const DivComOrders = () => {
                         />
                       </div>
                     </td>
-
-                    <td className="px-1 pt-5 border-r w-3/12 h-full align-top">
+                    {/* Action taken */}
+                    <td className="px-1 pt-4 border-r w-3/12 h-full align-top">
                       <textarea
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-actionTaken`] = el)
                         }
                         value={
-                          row.actionTaken && row.actionTaken.trim()
-                            ? row.actionTaken
+                          order.actionTaken && order.actionTaken.trim()
+                            ? order.actionTaken
                             : generateDefaultActionText(
                                 caseData?.messagesToOffices
                               )
@@ -534,28 +544,65 @@ const DivComOrders = () => {
                           el.style.height = "auto";
                           el.style.height = `${el.scrollHeight}px`;
                         }}
-                        className="w-full overflow-hidden resize-none"
+                        className="w-full overflow-hidden text-center resize-none"
                       />
                     </td>
 
                     <td id="action" className="space-y-2 p-2 border-r">
                       {!isEditing ? (
-                        <button
-                          className="btn btn-sm btn-ghost"
-                          onClick={() => setEditingRow(idx)}
+                        <Tippy
+                          className=""
+                          content="সম্পাদন করুন "
+                          animation="scale"
+                          duration={[150, 100]} // faster show/hide
                         >
-                          <Edit className="w-4" />
-                        </button>
+                          <button
+                            className="btn btn-sm"
+                            onClick={() => setEditingRow(idx)}
+                          >
+                            <Pencil className="w-4" />
+                          </button>
+                        </Tippy>
                       ) : (
-                        <span className="text-green-600 text-xs">Editing</span>
+                        <Tippy
+                          content="সম্পাদন বন্ধ করুন"
+                          animation="scale"
+                          duration={[150, 100]} // faster show/hide
+                        >
+                          <span
+                            onClick={() => setEditingRow(null)}
+                            className="text-green-600 text-xs btn btn-sm"
+                          >
+                            <PencilOff className="w-4" />
+                          </span>
+                        </Tippy>
                       )}
-
-                      <button
-                        className="text-red-600 btn btn-sm btn-ghost"
-                        onClick={() => handleDeleteRow(idx)}
+                      <Tippy
+                        content="মুছে ফেলুন"
+                        animation="scale"
+                        duration={[150, 100]} // faster show/hide
                       >
-                        <Trash2 className="w-4" />
-                      </button>
+                        <button
+                          className="text-red-600 btn btn-sm"
+                          onClick={() => handleDeleteRow(idx)}
+                        >
+                          <Trash2 className="w-4" />
+                        </button>
+                      </Tippy>
+                      <div>
+                        {caseData?.isApproved &&
+                          user?.role === "divCom" &&
+                          orderSheets.length > 0 && (
+                            <div>
+                              <OfficeMessaging
+                                caseData={caseData}
+                                role={user?.role}
+                                refetch={refetch}
+                                index={idx}
+                              />
+                            </div>
+                          )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -573,18 +620,6 @@ const DivComOrders = () => {
             <Save /> সংরক্ষণ করুন
           </button>
         )}
-
-        {caseData?.isApproved &&
-          user?.role === "divCom" &&
-          orderSheets.length > 0 && (
-            <div>
-              <OfficeMessaging
-                caseData={caseData}
-                role={user?.role}
-                refetch={refetch}
-              />
-            </div>
-          )}
       </div>
 
       {showHeaderModal && (
@@ -630,7 +665,7 @@ const DivComOrders = () => {
                 onChange={(e) =>
                   setHeaderInfo({ ...headerInfo, mamlaNo: e.target.value })
                 }
-                className="bg-gray-100 input-bordered w-full input"
+                className="bg-gray-100 mt-1 input-bordered w-full input"
                 required
               />
             </label>
@@ -643,8 +678,10 @@ const DivComOrders = () => {
                 onChange={(e) =>
                   setHeaderInfo({ ...headerInfo, year: e.target.value })
                 }
-                className="bg-gray-100 input-bordered w-full input"
+                className="bg-gray-100 mt-1 input-bordered w-full input"
               >
+                <option value="">বছর নির্বাচন করুন</option>
+
                 {Array.from({ length: 50 }, (_, i) => {
                   const year = 2000 + i;
                   return (
@@ -655,18 +692,31 @@ const DivComOrders = () => {
                 })}
               </select>
             </label>
+            <label>
+              জেলাঃ
+              <select
+                className="mt-1 w-full select-bordered select"
+                value={headerInfo.district?.en || ""}
+                onChange={(e) => {
+                  const selectedDistrict = aclandOptions.find(
+                    (d) => d.district.en === e.target.value
+                  );
+                  setHeaderInfo({
+                    ...headerInfo,
+                    district: selectedDistrict?.district || null,
+                  });
+                }}
+              >
+                <option value="">জেলা নির্বাচন করুন</option>
+                {aclandOptions.map((d, idx) => (
+                  <option key={idx} value={d.district.en}>
+                    {d.district.bn} ({d.district.en})
+                  </option>
+                ))}
+              </select>
+            </label>
 
-            <input
-              type="text"
-              value={headerInfo.district}
-              onChange={(e) =>
-                setHeaderInfo({ ...headerInfo, district: e.target.value })
-              }
-              className="input-bordered w-full input"
-              placeholder="জেলা"
-            />
-
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 mt-2">
               <button
                 className="btn-outline btn"
                 onClick={() => setShowHeaderModal(false)}

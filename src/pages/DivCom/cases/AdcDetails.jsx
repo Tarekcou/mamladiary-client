@@ -1,5 +1,6 @@
 import {
   ArrowDownWideNarrowIcon,
+  CloudUpload,
   Delete,
   DeleteIcon,
   Edit,
@@ -7,22 +8,23 @@ import {
   Plus,
   PlusSquareIcon,
   Send,
+  SquareCheckBig,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import LawyerDetails from "./LawyerDetails";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import { useContext, useMemo, useState } from "react";
 import { AuthContext } from "../../../provider/AuthProvider";
-import AdcOrderDetails from "./AdcOrderDetails";
-import DivComOrders from "./DivComOrders";
 import AdcOrder from "./AdcOrder";
 import { useQuery } from "@tanstack/react-query";
 import axiosPublic from "../../../axios/axiosPublic";
 import { MdWarning } from "react-icons/md";
+import Tippy from "@tippyjs/react";
 const AdcDetails = ({ id }) => {
   const navigate = useNavigate();
   const { user, role } = useContext(AuthContext);
-  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+  const [isCollapseOpen, setIsCollapseOpen] = useState(true);
+  const [addedOrder, setNewAddedOrder] = useState({});
 
   const toggleCollapse = () => setIsCollapseOpen(!isCollapseOpen);
   const {
@@ -40,12 +42,15 @@ const AdcDetails = ({ id }) => {
     },
     enabled: !!id,
   });
-  const handleAddCases = () => {
-    console.log("Adding new cases for ADC");
-    navigate(`/dashboard/${user.role}/cases/order/${user._id}`, {
-      state: { caseData, mode: "add" },
-    });
-  };
+  const isUploaded = (mamlaNo) =>
+    caseData?.responsesFromOffices?.some(
+      (r) =>
+        r.role === "adc" &&
+        r.mamlaNo == mamlaNo &&
+        Array.isArray(r.orderSheets) &&
+        r.orderSheets.length > 0
+    );
+
   const adcMessages = useMemo(() => {
     return (
       caseData?.messagesToOffices?.filter(
@@ -53,10 +58,13 @@ const AdcDetails = ({ id }) => {
       ) || []
     );
   }, [caseData]);
-  console.log(adcMessages);
+  // console.log(adcMessages);
   const adcOrderData =
     caseData?.responsesFromOffices?.filter((r) => r.role === "adc") || [];
-  console.log(adcOrderData);
+  // console.log(adcOrderData);
+  const isAnyOrderSent = adcOrderData[0]?.orderSheets?.some(
+    (order) => order.sentToDivcom === true
+  );
 
   return (
     <>
@@ -70,29 +78,72 @@ const AdcDetails = ({ id }) => {
               <strong>প্রেরণের তারিখ:</strong>{" "}
               {toBanglaNumber(msg.date.split("T")[0])}
             </p>
+            <div
+              tabIndex="0"
+              className="collapse collapse-arrow bg-base-100 my-2 border border-base-300"
+            >
+              <input type="checkbox" />
 
-            <table className="table bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th>ক্রমিক</th>
-                  <th>মামলার নাম</th>
-                  <th>মামলা নং</th>
-                  <th>সাল</th>
-                  <th>জেলা</th>
-                </tr>
-              </thead>
-              <tbody>
-                {msg.mamlaList?.map((m, i) => (
-                  <tr key={i}>
-                    <td>{i + 1}</td>
-                    <td>{m.mamlaName}</td>
-                    <td>{m.mamlaNo}</td>
-                    <td>{m.year}</td>
-                    <td>{m.district.bn}</td>
+              <div className="collapse-title bg-green-100 font-semibold">
+                মামলার তথ্য
+              </div>
+              <table className="collapse-content table bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th>ক্রমিক</th>
+                    <th>মামলার নাম</th>
+                    <th>মামলা নং</th>
+                    <th>সাল</th>
+                    <th>জেলা</th>
+                    <th>কার্যক্রম</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {msg.caseList?.map((m, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>{m.mamlaName}</td>
+                      <td>{m.mamlaNo}</td>
+                      <td>{m.year}</td>
+                      <td>{m.district.bn}</td>
+                      <td>
+                        {user?.role === "adc" && !isUploaded(m.mamlaNo) ? (
+                          <Tippy
+                            className=""
+                            content="মামলার তথ্য যুক্ত করুন"
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
+                          >
+                            <button
+                              onClick={() => {
+                                setNewAddedOrder(m);
+                                setIsCollapseOpen(!isCollapseOpen);
+                              }}
+                              className="flex items-center gap-2 btn btn-sm btn-success"
+                            >
+                              <CloudUpload className="" />{" "}
+                            </button>
+                          </Tippy>
+                        ) : (
+                          <Tippy
+                            className=""
+                            content="এই মামলার তথ্য আপলোড হয়েছে"
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
+                          >
+                            <h1>
+                              {" "}
+                              <SquareCheckBig className="text-success" />
+                            </h1>
+                          </Tippy>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             <div
               tabIndex="0"
               className="collapse collapse-arrow bg-base-100 my-2 border border-base-300"
@@ -159,7 +210,7 @@ const AdcDetails = ({ id }) => {
             </div>
 
             {/* --- Add New Case Collapse --- */}
-            {adcOrderData[0]?.sentToDivcom || user?.role === "adc" ? (
+            {isAnyOrderSent || user?.role === "adc" ? (
               <div
                 className={`collapse collapse-arrow bg-base-100 border border-base-300  ${
                   isCollapseOpen ? "collapse-open" : ""
@@ -190,6 +241,8 @@ const AdcDetails = ({ id }) => {
                     caseData={caseData}
                     officeName={user?.officeName}
                     refetch={refetch}
+                    header={addedOrder}
+                    setIsCollapseOpen={setIsCollapseOpen}
                   />
                 </div>
               </div>

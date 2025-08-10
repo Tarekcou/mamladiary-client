@@ -1,5 +1,8 @@
 import React, { useContext, useState } from "react";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css"; // default tooltip style
+import "tippy.js/animations/scale.css"; // animation
 import axiosPublic from "../../axios/axiosPublic";
 import { AuthContext } from "../../provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +12,7 @@ import { MdDelete, MdSignalWifiStatusbar1Bar } from "react-icons/md";
 import {
   ArrowLeft,
   Check,
+  CheckCircle2,
   Delete,
   DeleteIcon,
   Edit,
@@ -24,22 +28,42 @@ const MyMamla = () => {
   const { user } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
+  const allCasesPath = location.pathname.includes("allCases");
 
   const queryClient = useQueryClient();
   const {
     data: caseData = [],
     isLoading,
+    isError,
     refetch,
   } = useQuery({
-    queryKey: ["nagorikCases", user?._id],
+    queryKey: ["caseData", user?.role, allCasesPath],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/cases`, {
-        params: { submittedBy: user?._id },
-      });
-      // console.log(res.data.nagorikSubmission.status)
+      const params = { role: user.role };
+      // console.log(user.officeName.en);
+      if (user.role === "acLand") {
+        params.officeName = user.officeName.en;
+        params.district = user.district.en;
+      }
+      if (user.role === "adc") {
+        params.district = user.district.en;
+        params.officeName = user.district.en;
+      }
 
+      if (user.role === "divCom" && !allCasesPath) {
+        params.isApproved = false; // optional filter
+        params.status = "submitted";
+      }
+
+      if (user.role === "nagorik" || user.role === "lawyer") {
+        params.userId = user._id;
+      }
+      // console.log("DivComAllCases params:", params);
+      const res = await axiosPublic.get("/cases", { params });
+      // console.log("DivComAllCases response:", res.data);
       return res.data;
     },
+    enabled: !!user,
   });
   const filteredCases = caseData.filter((cas) => {
     const badiNames = cas.nagorikSubmission?.badi
@@ -63,7 +87,32 @@ const MyMamla = () => {
       yearMatch?.includes(searchText.toLowerCase())
     );
   });
+  const handleApprove = async (cas) => {
+    const confirm = await Swal.fire({
+      title: "আপনি কি মামলাটি অনুমোদন করতে চান?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, অনুমোদন করুন",
+    });
 
+    if (!confirm.isConfirmed) return;
+
+    try {
+      const res = await axiosPublic.patch(`/cases/${cas._id}`, {
+        isApproved: true,
+      });
+
+      if (res.data.modifiedCount > 0) {
+        toast.success("মামলাটি অনুমোদিত হয়েছে।");
+        refetch();
+      } else {
+        toast.warning("অনুমোদন ব্যর্থ হয়েছে।");
+      }
+    } catch (error) {
+      console.error("Approval error:", error);
+      toast.error("অনুমোদন করতে সমস্যা হয়েছে।");
+    }
+  };
   // Delete handler with confirmation
   const handleDelete = async (caseId) => {
     const confirm = await Swal.fire({
@@ -218,81 +267,122 @@ const MyMamla = () => {
                       </>
                     ) : (
                       <>
-                        <h1> অনুমোদনের জন্য প্রেরণ করুন </h1>
-                        <button
-                          onClick={() =>
-                            handleStatusChange(
-                              cas._id,
-                              "nagorikSubmission",
-                              "submitted"
-                            )
-                          }
-                          className="bg-blue-500 text-white btn btn-sm"
-                        >
-                          {cas?.nagorikSubmission?.status != "submitted" && (
-                            <h1 className="flex flex-col items-center text-xs">
-                              <SendIcon />
-                            </h1>
-                          )}
-                        </button>
+                        <h1 className="font-bold text-secondary">
+                          {" "}
+                          অনুমোদনের জন্য প্রেরণ করুন{" "}
+                        </h1>
                       </>
                     )}
                   </td>
-                  <td className="flex flex-col justify-center items-center gap-2 h-full">
-                    <button
-                      className="btn btn-sm btn-info"
-                      onClick={() =>
-                        navigate(`/dashboard/${user.role}/cases/${cas._id}`, {
-                          state: { id: cas._id, mode: "view" },
-                        })
-                      }
-                    >
-                      <FcViewDetails className="w-6 text-xl" />
-                    </button>
-                    {/* Edit button */}
-                    {cas?.nagorikSubmission?.status != "submitted" && (
-                      <>
+                  <td className="p-1">
+                    <div className="justify-center items-center gap-2 grid grid-cols-2 h-full">
+                      <Tippy
+                        className=""
+                        content="বিস্তারিত দেখুন "
+                        animation="scale"
+                        duration={[150, 100]} // faster show/hide
+                      >
                         <button
+                          className="btn btn-info btn-sm"
                           onClick={() =>
                             navigate(
-                              `/dashboard/${user.role}/cases/edit/${cas._id}`,
+                              `/dashboard/${user.role}/cases/${cas._id}`,
                               {
-                                state: { caseData: cas },
+                                state: { id: cas._id, mode: "view" },
                               }
                             )
                           }
-                          className="btn btn-sm btn-warning"
                         >
-                          <Edit />
+                          <h1>
+                            <FcViewDetails className="text-2xl" />
+                          </h1>
                         </button>
+                      </Tippy>
 
-                        {/* Delete button */}
-                        <button
-                          onClick={() => handleDelete(cas._id)}
-                          className="btn btn-sm btn-error"
+                      {/* Edit button */}
+                      {cas?.nagorikSubmission?.status != "submitted" &&
+                        user.role == "lawyer" && (
+                          <>
+                            <Tippy
+                              content="প্রেরণ করুন"
+                              animation="scale"
+                              duration={[150, 100]} // faster show/hide
+                            >
+                              <button
+                                onClick={() =>
+                                  handleStatusChange(
+                                    cas._id,
+                                    "nagorikSubmission",
+                                    "submitted"
+                                  )
+                                }
+                                className="bg-blue-500 text-white btn-sm btn"
+                              >
+                                {cas?.nagorikSubmission?.status !=
+                                  "submitted" && (
+                                  <h1 className="flex flex-col items-center text-xs">
+                                    <SendIcon />
+                                  </h1>
+                                )}
+                              </button>
+                            </Tippy>
+                            <Tippy
+                              content="সম্পাদন করুন "
+                              animation="scale"
+                              duration={[150, 100]} // faster show/hide
+                            >
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/${user.role}/cases/edit/${cas._id}`,
+                                    {
+                                      state: { caseData: cas },
+                                    }
+                                  )
+                                }
+                                className="btn btn-warning btn-sm"
+                              >
+                                <h1>
+                                  <Edit />
+                                </h1>
+                              </button>
+                            </Tippy>
+
+                            {/* Delete button */}
+                            <Tippy
+                              content="মুছে ফেলুন "
+                              animation="scale"
+                              duration={[150, 100]} // faster show/hide
+                            >
+                              <button
+                                onClick={() => handleDelete(cas._id)}
+                                className="btn btn-error btn-sm"
+                              >
+                                <h1>
+                                  <DeleteIcon className="text-white text-2xl" />
+                                </h1>
+                              </button>
+                            </Tippy>
+                          </>
+                        )}
+                      {!cas.isApproved && user?.role == "divCom" && (
+                        <Tippy
+                          className=""
+                          content="অনুমোদন দিন"
+                          animation="scale"
+                          duration={[150, 100]} // faster show/hide
                         >
-                          <MdDelete className="text-white text-2xl" />
-                        </button>
-                        {/* <button
-                          onClick={() =>
-                            handleStatusChange(
-                              cas._id,
-                              "nagorikSubmission",
-                              "submitted"
-                            )
-                          }
-                          className="bg-blue-500 text-white btn btn-sm"
-                        >
-                          {cas?.nagorikSubmission?.status != "submitted" && (
-                            <h1 className="flex items-center text-xs">
-                              <SendIcon />
+                          <button
+                            onClick={() => handleApprove(true)}
+                            className="flex items-center w-full text-xs btn btn-sm btn-success"
+                          >
+                            <h1>
+                              <CheckCircle2 />
                             </h1>
-                          )}
-                        </button> */}
-                      </>
-                    )}
-
-                    
+                          </button>
+                        </Tippy>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))
