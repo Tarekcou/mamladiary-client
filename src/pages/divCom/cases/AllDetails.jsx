@@ -40,7 +40,7 @@ const AllDetails = () => {
       allTabs.push({ key: "lawyer", label: "Lawyer" });
     }
 
-    if (caseData.divComReview?.orderSheets?.length > 0) {
+    if (caseData?.divComReview) {
       allTabs.push({ key: "divCom", label: "Divisional Commissioner" });
     }
 

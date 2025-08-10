@@ -40,7 +40,7 @@ const DivComOrders = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["divComOrderSheet", id],
+    queryKey: ["divComOrders", id],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cases/${id}`);
 
@@ -149,11 +149,11 @@ const DivComOrders = () => {
       }/${
         toBanglaNumber(adcMamlaInfo[0].year) || "___"
       } এ বিজ্ঞ অতিরিক্ত জেলা প্রশাসক (রাজস্ব), চট্টগ্রাম কর্তৃক প্রদত্ত বিগত ${
-        adcMamlaInfo[0].year || "___"
+        toBanglaNumber(adcMamlaInfo[0].year) || "___"
       } তারিখের আদেশের বিরুদ্ধে নামজারি রিভিশন মামলা দায়েরের প্রার্থনায় ${
         caseData?.nagorikSubmission?.badi?.[0]?.name || "বাদীর নাম"
       } গং পক্ষে এই আবেদন দাখিল করা হয়েছে। ${
-        caseData?.nagorikSubmission.tamadi
+        caseData?.nagorikSubmission?.tamadi
           ? "অপরদিকে তামাদি আইনের ৫ ধারামতে রিভিশনকারী তামাদি মওকুফের আবেদন করেন।"
           : ""
       }`;
@@ -192,9 +192,8 @@ const DivComOrders = () => {
   };
 
   const handleDeleteRow = async (index) => {
-    console.log(index);
     const confirm = await Swal.fire({
-      title: "আপনি কি ডিলেট  চান?",
+      title: "আপনি কি ডিলেট করতে চান?",
       text: "এই কাজটি অপরিবর্তনীয়!",
       icon: "warning",
       showCancelButton: true,
@@ -202,9 +201,33 @@ const DivComOrders = () => {
     });
 
     if (!confirm.isConfirmed) return;
-    setEditingRow(index);
-    const updated = orderSheets.filter((_, i) => i !== index);
-    setOrderSheets(updated);
+
+    try {
+      // Remove from local state first
+      const updatedOrderSheets = orderSheets.filter((_, i) => i !== index);
+      setOrderSheets(updatedOrderSheets);
+
+      // Prepare updated divComReview
+      const updatedDivComReview = {
+        ...caseData.divComReview,
+        orderSheets: updatedOrderSheets,
+      };
+
+      // Send patch to backend
+      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+        divComReview: updatedDivComReview,
+      });
+
+      if (res.data.modifiedCount > 0) {
+        toast.success("অর্ডার শীট মুছে ফেলা হয়েছে");
+        refetch();
+      } else {
+        toast.error("অর্ডার শীট মুছে ফেলা যায়নি");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("মুছে ফেলার সময় একটি সমস্যা হয়েছে");
+    }
   };
 
   const handleSave = async () => {
@@ -437,11 +460,11 @@ const DivComOrders = () => {
                 return (
                   <tr className="" key={idx}>
                     <td className="mt-5 px-1 py-4 border-r w-2/12 align-top">
-                      <div className="flex flex-col items-center">
+                      <div className="flex flex-col items-center border-b text-center">
                         <input
                           type="date"
                           value={order?.orderDate}
-                          readOnly={!isEditing || user?.role !== "adc"}
+                          readOnly={!isEditing || user?.role !== "divCom"}
                           onChange={(e) =>
                             handleInputChange(idx, "orderDate", e.target.value)
                           }
@@ -452,9 +475,13 @@ const DivComOrders = () => {
                       <textarea
                         value={order.orderNo}
                         placeholder="আদেশের নম্বর"
-                        readOnly={!isEditing || user?.role !== "adc"}
+                        readOnly={!isEditing || user?.role !== "divCom"}
                         onChange={(e) =>
-                          handleInputChange(idx, "orderNo", e.target.value)
+                          handleInputChange(
+                            idx,
+                            "orderNo",
+                            toBanglaNumber(e.target.value)
+                          )
                         }
                         className="w-full overflow-hidden text-center resize-none"
                       />
@@ -529,13 +556,7 @@ const DivComOrders = () => {
                         ref={(el) =>
                           (textareaRefs.current[`${idx}-actionTaken`] = el)
                         }
-                        value={
-                          order.actionTaken && order.actionTaken.trim()
-                            ? order.actionTaken
-                            : generateDefaultActionText(
-                                caseData?.messagesToOffices
-                              )
-                        }
+                        value={order?.actionTaken || ""}
                         placeholder="গৃহীত ব্যবস্থা"
                         readOnly={!isEditing || user?.role !== "divCom"}
                         onChange={(e) => {
@@ -548,7 +569,10 @@ const DivComOrders = () => {
                       />
                     </td>
 
-                    <td id="action" className="space-y-2 p-2 border-r">
+                    <td
+                      id="action"
+                      className="space-x-1 space-y-2 p-2 border-r"
+                    >
                       {!isEditing ? (
                         <Tippy
                           className=""

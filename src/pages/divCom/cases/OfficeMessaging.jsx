@@ -8,6 +8,7 @@ import { createPlainTextMessage } from "../../../utils/createMessage";
 import { Check, Phone, Send } from "lucide-react";
 import Tippy from "@tippyjs/react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
+import { toast } from "sonner";
 
 const MySwal = withReactContent(Swal);
 
@@ -19,9 +20,12 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
   const messages = caseData?.messagesToOffices || [];
 
   const sentRoles = messages.map((msg) => msg.sentTo?.role?.toLowerCase?.());
-  const alreadySentToAcLand = sentRoles.includes("acland");
-  const alreadySentToADC = sentRoles.includes("adc");
-
+  const alreadySentToAcLand = caseData?.divComReview.orderSheets.some(
+    (order) => order?.sentToAcland
+  );
+  const alreadySentToADC = caseData?.divComReview.orderSheets.some(
+    (order) => order?.sentToAdc
+  );
   const badi = caseData.nagorikSubmission?.badi?.[0];
   const bibadi = caseData.nagorikSubmission?.bibadi?.[0];
 
@@ -137,7 +141,7 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
         return `মামলা নং ${toBanglaNumber(m.mamlaNo)} (${
           m.mamlaName
         }) সংক্রান্ত ${
-          role === "acland" ? "সহকারী কমিশনার (ভূমি)" : "অতিরিক্ত জেলা প্রশাসক"
+          role === "acLand" ? "সহকারী কমিশনার (ভূমি)" : "অতিরিক্ত জেলা প্রশাসক"
         } ${m.officeName.bn}, ${m.district.bn} অফিসে ${
           new Date().toISOString().split("T")[0]
         } তারিখে তাগিদ প্রেরণ করা হয়েছে।`;
@@ -146,99 +150,90 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
   };
 
   const handleSend = async () => {
-    const role = sendingTo;
+    if (!sendingTo) {
+      toast.error("দয়া করে প্রেরণের গন্তব্য নির্বাচন করুন।");
+      return;
+    }
+
+    const role = sendingTo; // 'acLand' or 'adc'
+
     const mamla =
       role === "acLand"
         ? caseData.nagorikSubmission?.aclandMamlaInfo
         : caseData.nagorikSubmission?.adcMamlaInfo;
+
     if (!mamla || mamla.length === 0) {
       toast.error("মামলার তথ্য পাওয়া যায়নি।");
       return;
     }
-    const payload = {
-      date: new Date().toISOString(),
 
-      sentTo: {
-        role: role,
-        district: mamla?.[0]?.district || {}, // fallback if not found
-        officeName: mamla?.[0]?.officeName || {}, // Optional: Use default if not present
-      },
+    const actionTakenText = generateDefaultActionText({
+      role,
+      caseList: mamla,
+    });
 
-      parties: {
-        badiList: caseData.nagorikSubmission?.badi || [],
-        bibadiList: caseData.nagorikSubmission?.bibadi || [],
-      },
-
-      caseList: mamla || [],
-    };
-    console.log(mamla);
-    //get users phone no to send whats app message
     try {
-      const userRes = await axiosPublic.get("/users/specific-user", {
-        params: {
-          role,
-          district: mamla[0].district?.en,
-          officeName: mamla?.[0].officeName?.en,
-        },
-      });
-      console.log(userRes.data[0].phone);
-      // DB Up  date message sent to offfices
-      const actionTakenText = generateDefaultActionText({
-        role,
-        caseList: mamla,
-      });
-      console.log(actionTakenText);
-      // Patch the case:
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        messagesToOffices: [payload], // backend will $push
+      const updatedOrderSheets = caseData.divComReview.orderSheets.map(
+        (order, idx) => {
+          if (idx === index) {
+            return {
+              ...order,
+              actionTaken: order.actionTaken
+                ? order.actionTaken + "\n" + actionTakenText
+                : actionTakenText,
+              // Dynamically add sent flag & date based on role:
+              ...(role === "acLand"
+                ? {
+                    sentToAcland: true,
+                    sentToAclandDate: new Date().toISOString(),
+                  }
+                : {}),
+              ...(role === "adc"
+                ? { sentToAdc: true, sentToAdcDate: new Date().toISOString() }
+                : {}),
+            };
+          }
+          return order;
+        }
+      );
+
+      const payload = {
+        messagesToOffices: [
+          {
+            date: new Date().toISOString(),
+            sentTo: {
+              role,
+              district: mamla[0]?.district || {},
+              officeName: mamla[0]?.officeName || {},
+            },
+            parties: {
+              badiList: caseData.nagorikSubmission?.badi || [],
+              bibadiList: caseData.nagorikSubmission?.bibadi || [],
+            },
+            caseList: mamla,
+          },
+        ],
         divComReview: {
           ...caseData.divComReview,
-          orderSheets: caseData.divComReview.orderSheets.map((order, idx) => {
-            if (idx === index) {
-              return {
-                ...order,
-                actionTaken: order.actionTaken
-                  ? order.actionTaken + "\n" + actionTakenText
-                  : actionTakenText,
-              };
-            }
-            return order;
-          }),
+          orderSheets: updatedOrderSheets,
         },
-      });
-      const messageText = mamla
-        .map(
-          (m, i) =>
-            `${i + 1}. মামলার নাম: ${m.mamlaName}, মামলা নং: ${
-              m.mamlaNo
-            }, বছর: ${m.year}, জেলা: ${m.district?.bn}, অফিস: ${
-              m.officeName?.bn
-            }`
-        )
-        .join("\n");
+      };
 
-      const resmsg = await axiosPublic.post("/send-whatsapp", {
-        phone: userRes.data[0]?.phone,
-        message: messageText,
-      });
-
-      console.log(resmsg);
-
-      const stageKey = "divComReview";
-      await axiosPublic.patch(`/cases/${caseData._id}/status`, {
-        stageKey,
-        status: "messaged",
-      });
+      // Patch the updated data
+      const res = await axiosPublic.patch(`/cases/${caseData._id}`, payload);
 
       if (res.data.modifiedCount > 0) {
-        MySwal.fire("সফল", "বার্তা সফলভাবে সংরক্ষণ করা হয়েছে", "success");
+        toast.success("বার্তা সফলভাবে সংরক্ষণ করা হয়েছে");
         refetch();
+      } else {
+        toast.error("বার্তা সংরক্ষণে সমস্যা হয়েছে");
       }
 
       setShowModal(false);
+
       MySwal.fire("সফল", "বার্তা প্রেরণ করা হয়েছে", "success");
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       MySwal.fire("ত্রুটি", "বার্তা প্রেরণ ব্যর্থ হয়েছে", "error");
     }
   };
@@ -255,15 +250,13 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
           >
             <button
               onClick={() => handleOpenModal("acLand")}
-              className="btn btn-primary"
+              className="btn btn-primary btn-sm"
             >
               <Send /> এসিল্যান্ড
             </button>
           </Tippy>
         ) : (
-          <h1 className="flex bg-emerald-700 p-1 rounded-lg text-white text-xs">
-            এসিল্যন্ড বরাবর প্রেরিত
-          </h1>
+          ""
         )}
 
         {!alreadySentToADC ? (
@@ -274,15 +267,13 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
           >
             <button
               onClick={() => handleOpenModal("adc")}
-              className="btn btn-success"
+              className="btn btn-success btn-sm"
             >
               <Send /> এডিসি
             </button>
           </Tippy>
         ) : (
-          <h1 className="bg-emerald-700 p-1 rounded-lg text-white ul">
-            এডিসি বরাবর প্রেরিত
-          </h1>
+          ""
         )}
       </div>
 

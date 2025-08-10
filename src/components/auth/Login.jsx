@@ -9,7 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  console.log(officeType)
+  console.log(officeType);
   const { signIn, isLoading } = useContext(AuthContext);
 
   const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -52,7 +52,7 @@ export default function Login() {
 
     if (officeType === "divCom") phone = "01818424256";
     if (officeType === "adc") phone = "01818424257";
-    if (officeType === "acLand") phone = "01818424258";
+    if (officeType === "acLand") phone = "01818424256";
 
     setFormData({ emailOrphone: phone, password: "12345" });
 
@@ -65,7 +65,7 @@ export default function Login() {
     officeType === "acLand" || officeType === "adc" || officeType === "divCom";
 
   return (
-    <div className="flex md:flex-row flex-col justify-center items-center mx-10 my-10 px-4">
+    <div className="flex lg:flex-row flex-col justify-center items-center mx-10 my-10 px-4">
       <div className="flex-1">
         <LoginLottie />
       </div>

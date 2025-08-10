@@ -39,12 +39,13 @@ import AllMamla from "./pages/divCom/mamlas/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
 import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
-import NewCase from "./pages/divCom/cases/NewCase.jsx";
-import MyMamla from "./pages/nagorik/MyMamla.jsx";
-import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
-import AllDetails from "./pages/divCom/cases/AllDetails.jsx";
-import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
+
 import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
+import MyMamla from "./pages/Nagorik/MyMamla.jsx";
+import NewCase from "./pages/DivCom/cases/NewCase.jsx";
+import DivComOrders from "./pages/DivCom/cases/DivComOrders.jsx";
+import AllDetails from "./pages/DivCom/cases/AllDetails.jsx";
+import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");

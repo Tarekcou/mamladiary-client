@@ -144,8 +144,8 @@ export default function Navbar() {
     <>
       <div className="space-x-2">
         {isSignedIn ? (
-          <div className="flex justify-center items-center gap-3">
-            <h1>
+          <div className="flex justify-center items-center gap-1">
+            <h1 className="text-sm badge badge-soft badge-primary">
               {handleOfficeName(user?.officeName?.bn, user?.name, user.role)}
             </h1>
 

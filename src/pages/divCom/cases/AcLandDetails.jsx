@@ -99,27 +99,48 @@ const AcLandDetails = ({ id }) => {
   };
   const handleSend = async () => {
     const confirm = await Swal.fire({
-      title: "আপনি কি প্রেরণ করতে চান ?",
+      title: "আপনি কি প্রেরণ করতে চান?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, প্ররন করুন",
+      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
     });
 
     if (!confirm.isConfirmed) return;
-    if (acLandCaseData.length === 0) {
+
+    const aclandResp = caseData.responsesFromOffices.find(
+      (resp) => resp.role === "acLand"
+    );
+
+    if (
+      !aclandResp ||
+      !aclandResp.caseEntries ||
+      aclandResp.caseEntries.length === 0
+    ) {
       toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
       return;
     }
+
     try {
-      const res = await axiosPublic.patch(
-        `/cases/${caseData._id}/send-divCom`,
-        {
-          role: user?.role,
-          officeName: user.officeName.en,
-        }
-      );
-      if (res.data.success) {
-        toast.success("অতিরিক্ত বিভাগীয় কমিশনার রাজস্ব আদালতে প্রেরণ হয়েছে!");
+      const updatedCaseEntries = aclandResp.caseEntries.map((entry) => ({
+        ...entry,
+        sentToDivcom: true,
+        sentDate: new Date().toISOString(),
+        // Optionally update actionTaken or other fields if needed
+      }));
+
+      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+        responsesFromOffices: [
+          {
+            role: aclandResp.role,
+            officeName: { en: aclandResp.officeName.en },
+            district: { en: aclandResp.district.en },
+            caseEntries: updatedCaseEntries,
+          },
+        ],
+      });
+
+      if (res.data.modifiedCount > 0) {
+        toast.success("বিভাগীয় কমিশনার  অফিসে সফলভাবে প্রেরণ হয়েছে!");
         refetch();
       } else {
         toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");

@@ -81,14 +81,14 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
       );
 
       if (res.data.success) {
-        toast.success("স্ট্যাটাস সফলভাবে পরিবর্তন করা হয়েছে");
+        toast.success("সফলভাবে প্রেরণ করা হয়েছে");
         refetch();
       } else {
-        toast.error("স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে");
+        toast.error("প্রেরণে ব্যর্থ হয়েছে");
       }
     } catch (err) {
       console.error("Status update error:", err);
-      toast.error("স্ট্যাটাস পরিবর্তনে সমস্যা হয়েছে");
+      toast.error("তথ্য প্রেরণে সমস্যা হয়েছে");
     }
   };
 
@@ -284,7 +284,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
       {(role == "acLand" || role == "lawyer") && (
         <div className="mt-4">
           <h3 className="font-semibold">
-            সহকারী কমিশনার (ভূমি),
+            সহকারী কমিশনার (ভূমি),{" "}
             {nagorikSubmission.aclandMamlaInfo[0].officeName.bn} আদালতের তথ্য
           </h3>
           {nagorikSubmission?.aclandMamlaInfo?.length > 0 ? (
@@ -318,8 +318,8 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
       {(role == "adc" || role == "lawyer") && (
         <div className="mt-4">
           <h3 className="font-semibold">
-            অতিরিক্ত জেলা প্রশাসক(রাজস্ব),
-            {nagorikSubmission?.aclandMamlaInfo[1]?.officeName?.bn} আদালতের তথ্য
+            অতিরিক্ত জেলা প্রশাসক(রাজস্ব),{" "}
+            {nagorikSubmission?.adcMamlaInfo[0]?.officeName?.bn} আদালতের তথ্য
           </h3>
           {nagorikSubmission?.adcMamlaInfo?.length > 0 ? (
             <table className="table table-sm bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
