@@ -42,7 +42,6 @@ import NagorikCaseInfoUpload from "./pages/Nagorik/NagorikCaseInfoUpload.jsx";
 import NewCase from "./pages/divCom/cases/NewCase.jsx";
 import MyMamla from "./pages/Nagorik/MyMamla.jsx";
 import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
-import AllCasesList from "./pages/divCom/cases/AllCasesList.jsx";
 import AllDetails from "./pages/divCom/cases/AllDetails.jsx";
 import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
 import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
