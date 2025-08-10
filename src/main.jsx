@@ -38,7 +38,7 @@ import AddUsers from "./pages/divCom/users/AddUsers.jsx";
 import AllMamla from "./pages/divCom/mamlas/AllMamla.jsx";
 import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
-import NagorikCaseInfoUpload from "./pages/Nagorik/NagorikCaseInfoUpload.jsx";
+import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
 import NewCase from "./pages/divCom/cases/NewCase.jsx";
 import MyMamla from "./pages/nagorik/MyMamla.jsx";
 import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
