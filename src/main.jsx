@@ -9,7 +9,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./provider/AuthProvider.jsx";
 import PrivateRouter from "./routes.jsx/PrivateRouter.jsx";
 
-import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
 import { Toaster, toast } from "sonner";
 import Login from "./components/auth/Login.jsx";
 import Register from "./components/auth/Register.jsx";
@@ -46,6 +45,7 @@ import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
 import AllCasesList from "./pages/divCom/cases/AllCasesList.jsx";
 import AllDetails from "./pages/divCom/cases/AllDetails.jsx";
 import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
+import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
