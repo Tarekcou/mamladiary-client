@@ -9,7 +9,7 @@ import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import { mamlaNames } from "../../../data/mamlaNames";
 import Swal from "sweetalert2";
 
-const NewCase = ({ cas, refetch, setIsCollapseOpen }) => {
+const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
   // console.log(cas);
   const { state } = useLocation();
   const caseData = state?.caseData;
@@ -282,4 +282,4 @@ const NewCase = ({ cas, refetch, setIsCollapseOpen }) => {
   );
 };
 
-export default NewCase;
+export default AcLandCaseUpload;

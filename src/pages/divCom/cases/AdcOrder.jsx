@@ -327,7 +327,7 @@ const AdcOrder = ({ header }) => {
         (resp) => resp.role === "adc"
       );
 
-      const updatedOrderSheets = adcResp.orderSheets.map((order) => ({
+      const updatedOrderSheets = adcResp?.orderSheets?.map((order) => ({
         ...order,
         actionTaken: order.actionTaken
           ? order.actionTaken +

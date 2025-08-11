@@ -19,9 +19,9 @@ import { toast } from "sonner";
 import Swal from "sweetalert2";
 import axiosPublic from "../../../axios/axiosPublic";
 import { MdWarning } from "react-icons/md";
-import NewCase from "./NewCase";
 import Tippy from "@tippyjs/react";
 import { useQuery } from "@tanstack/react-query";
+import AcLandCaseUpload from "./AcLandCaseUpload";
 const AcLandDetails = ({ id }) => {
   const {
     data: caseData,
@@ -97,59 +97,63 @@ const AcLandDetails = ({ id }) => {
       } else toast.error("কিছু সমস্যা হয়েছে, পরে আবার চেষ্টা করুন");
     });
   };
-  const handleSend = async () => {
-    const confirm = await Swal.fire({
-      title: "আপনি কি প্রেরণ করতে চান?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
+const handleSend = async (entry) => {
+  const confirm = await Swal.fire({
+    title: "আপনি কি প্রেরণ করতে চান?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  // Find the acLand response object in caseData
+  const aclandResp = caseData.responsesFromOffices.find(
+    (resp) => resp.role === "acLand"
+  );
+
+  if (
+    !aclandResp ||
+    !aclandResp.caseEntries ||
+    aclandResp.caseEntries.length === 0
+  ) {
+    toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
+    return;
+  }
+
+  try {
+    // PATCH request payload: update only one caseEntry with mamlaNo
+    const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+      responsesFromOffices: [
+        {
+          role: "acLand",
+          officeName: aclandResp.officeName,
+          district: aclandResp.district,
+          caseEntries: [
+            { ...entry,
+              mamlaNo: entry.mamlaNo,         // key to identify which entry to update
+              sentToDivcom: true,
+              sentDate: new Date().toISOString(),
+            },
+          ],
+        },
+      ],
     });
 
-    if (!confirm.isConfirmed) return;
-
-    const aclandResp = caseData.responsesFromOffices.find(
-      (resp) => resp.role === "acLand"
-    );
-
-    if (
-      !aclandResp ||
-      !aclandResp.caseEntries ||
-      aclandResp.caseEntries.length === 0
-    ) {
-      toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
-      return;
+    if (res.data.modifiedCount > 0) {
+      toast.success("প্রেরণ সফল হয়েছে!");
+      refetch();
+    } else {
+      toast.error("মামলা আপডেট হয়নি!");
     }
+  } catch (error) {
+    console.error(error);
+    toast.error("পাঠাতে সমস্যা হয়েছে!");
+  }
+};
 
-    try {
-      const updatedCaseEntries = aclandResp.caseEntries.map((entry) => ({
-        ...entry,
-        sentToDivcom: true,
-        sentDate: new Date().toISOString(),
-        // Optionally update actionTaken or other fields if needed
-      }));
 
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        responsesFromOffices: [
-          {
-            role: aclandResp.role,
-            officeName: { en: aclandResp.officeName.en },
-            district: { en: aclandResp.district.en },
-            caseEntries: updatedCaseEntries,
-          },
-        ],
-      });
 
-      if (res.data.modifiedCount > 0) {
-        toast.success("বিভাগীয় কমিশনার  অফিসে সফলভাবে প্রেরণ হয়েছে!");
-        refetch();
-      } else {
-        toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("পাঠাতে সমস্যা হয়েছে!");
-    }
-  };
 
   return (
     <>
@@ -312,7 +316,7 @@ const AcLandDetails = ({ id }) => {
           </div>
 
           <div className="collapse-content text-sm">
-            <NewCase
+            <AcLandCaseUpload
               cas={addedCase}
               refetch={refetch}
               setIsCollapseOpen={setIsCollapseOpen}
@@ -409,9 +413,10 @@ const AcLandDetails = ({ id }) => {
                     </div>
 
                     {user?.role === "acLand" &&
-                      !acLandCaseData[0].sentToDivcom && (
-                        <div className="space-x-2">
-                          <button
+                      !acLandCaseData[0].sentToDivcom && !entry?.sentToDivcom? (
+                        <div className="flex flex-col  justify-end items-end gap-2">
+                          <div className="flex gap-2">
+                            <button
                             className="btn btn-sm btn-success"
                             onClick={() =>
                               navigate(
@@ -442,8 +447,23 @@ const AcLandDetails = ({ id }) => {
                           >
                             <DeleteIcon className="w-5" />
                           </button>
+
+                          </div>
+                          
+                          
+              <button
+              onClick={() => handleSend(entry)}
+           className="gap-2 mb-4 btn btn-success btn-sm"
+           >
+              <Send /> প্রেরণ করুন
+             </button>
+        
+  
                         </div>
-                      )}
+                      ):
+                      <>
+                      <h1 className="text-xs badge badge-accent">অতিরিক্ত বিভাগীয় কমিশনার(রাজস্ব) আদালতে প্রেরন করা হয়েছে </h1>
+                      </>}
                   </div>
 
                   {/* Tracking No */}
@@ -497,8 +517,8 @@ const AcLandDetails = ({ id }) => {
                     </div>
                   ) : (
                     <>
-                      {entry.orderSheets.map((o) => (
-                        <div className="my-4">
+                    {(entry.orderSheets ?? []).map((o) => (                    
+                          <div className="my-4">
                           <div className="flex gap-2 my-4">
                             <h1 className="underline">আদেশের তারিখঃ</h1>{" "}
                             <h1 className="">{toBanglaNumber(o.date)}</h1>
@@ -546,7 +566,7 @@ const AcLandDetails = ({ id }) => {
               ))
             )}
 
-            {user.role === "acLand" && !acLandCaseData[0].sentToDivcom && (
+            {/* {user.role === "acLand" && !acLandCaseData[0].sentToDivcom && (
               <div className="flex justify-center items-center w-full">
                 <button
                   onClick={() => handleSend()}
@@ -555,7 +575,7 @@ const AcLandDetails = ({ id }) => {
                   <Send /> প্রেরণ করুন
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </>
       ) : (

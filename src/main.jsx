@@ -42,10 +42,10 @@ import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
 
 import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
 import MyMamla from "./pages/Nagorik/MyMamla.jsx";
-import NewCase from "./pages/DivCom/cases/NewCase.jsx";
 import DivComOrders from "./pages/DivCom/cases/DivComOrders.jsx";
 import AllDetails from "./pages/DivCom/cases/AllDetails.jsx";
 import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
+import AcLandCaseUpload from "./pages/DivCom/cases/AcLandCaseUpload.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
@@ -112,10 +112,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               element={<NagorikCaseInfoUpload />}
             />
             <Route path=":role/cases/:id" element={<AllDetails />} />
-            <Route path=":role/cases/new" element={<NewCase />} />
-            <Route path=":role/cases/edit/:id" element={<NewCase />} />
+            <Route path=":role/cases/new" element={<AcLandCaseUpload />} />
+            <Route path=":role/cases/edit/:id" element={<AcLandCaseUpload />} />
 
-            <Route path=":role/cases/order/edit/:id" element={<NewOrder />} />
+            {/* <Route path=":role/cases/order/edit/:id" element={<NewOrder />} /> */}
             <Route path=":role/cases/order/:id" element={<DivComOrders />} />
 
             <Route path=":role/allCases" element={<MyMamla />} />
