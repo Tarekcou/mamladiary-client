@@ -40,10 +40,9 @@ import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
 
 import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
-import DivComOrders from "./pages/DivCom/cases/DivComOrders.jsx";
-import AllDetails from "./pages/DivCom/cases/AllDetails.jsx";
-import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
-import AcLandCaseUpload from "./pages/DivCom/cases/AcLandCaseUpload.jsx";
+import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
+import AllDetails from "./pages/divCom/cases/AllDetails.jsx";
+import AcLandCaseUpload from "./pages/divCom/cases/AcLandCaseUpload.jsx";
 import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
 
 const queryClient = new QueryClient();
