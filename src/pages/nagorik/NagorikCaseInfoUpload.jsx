@@ -13,8 +13,8 @@ import Swal from "sweetalert2";
 export default function NagorikCaseInfoUpload() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { id: editId } = useParams();
-  const isEditMode = Boolean(editId);
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
 
   const [trackingNo, setTrackingNo] = useState("");
   const [tamadi, setTamadi] = useState("");
@@ -61,7 +61,7 @@ export default function NagorikCaseInfoUpload() {
 
   useEffect(() => {
     if (isEditMode) {
-      axiosPublic.get(`/cases/${editId}`).then((res) => {
+      axiosPublic.get(`/cases/${id}`).then((res) => {
         const data = res.data;
         setFormState({
           badi: data.nagorikSubmission?.badi || [],
@@ -83,7 +83,7 @@ export default function NagorikCaseInfoUpload() {
         trackingNo: aclandList[0]?.mamlaNo + aclandList[0]?.year,
       }));
     }
-  }, [editId]);
+  }, [id]);
 
   const handleChange = (field, value) => {
     setFormState((prev) => ({
@@ -249,21 +249,21 @@ export default function NagorikCaseInfoUpload() {
       title: "আপনি কি আপলোড করতে চান ?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, প্ররন করুন",
+      confirmButtonText: "হ্যাঁ, করুন",
     });
 
     if (!confirm.isConfirmed) return;
     try {
       setLoading(true);
       if (isEditMode) {
-        const res = await axiosPublic.patch(`/cases/${editId}`, postData);
+        const res = await axiosPublic.patch(`/cases/nagorik/${id}`, postData);
         // console.log(res.data);
         if (res.data.modifiedCount > 0) {
           toast.success("মামলাটি সফলভাবে হালনাগাদ হয়েছে");
           navigate("/dashboard/lawyer/cases");
         }
       } else {
-        const res = await axiosPublic.post("/cases", postData);
+        const res = await axiosPublic.post("/cases/nagorik", postData);
         console.log(res.data);
         if (res.data.insertedId) {
           toast.success("মামলাটি সফলভাবে দাখিল হয়েছে");

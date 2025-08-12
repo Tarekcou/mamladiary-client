@@ -198,172 +198,180 @@ const AdcOrder = ({ header }) => {
     }
   };
 
-  const handleDeleteRow = async (index) => {
-    const confirm = await Swal.fire({
-      title: "আপনি কি ডিলেট চান?",
-      text: "এই কাজটি অপরিবর্তনীয়!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, করুন!",
-    });
-
-    if (!confirm.isConfirmed) return;
-
-    try {
-      // Assuming each row is a unique object in orderSheets
-      const rowToDelete = orderSheets[index];
-
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        deleteOrderSheet: {
-          role: "adc", // or user.role
-          officeName: user?.officeName,
-          district: user?.district,
-          orderSheet: rowToDelete,
-        },
+    const handleDeleteRow = async (index) => {
+      const confirm = await Swal.fire({
+        title: "আপনি কি ডিলেট চান?",
+        text: "এই কাজটি অপরিবর্তনীয়!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "হ্যাঁ, করুন!",
       });
 
-      if (res.status === 200) {
-        toast.success("সফলভাবে ডিলেট হয়েছে!");
-        setOrderSheets((prev) => prev.filter((_, i) => i !== index));
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("ডিলেট করতে সমস্যা হয়েছে");
-    }
-  };
+      if (!confirm.isConfirmed) return;
 
-  const handleSave = async () => {
-    try {
-      console.log("📦 Saving order sheets:", orderSheets);
-      if (orderSheets.length === 0) {
-        toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
-        return;
-      }
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        responsesFromOffices: [
-          {
+      try {
+        // Assuming each row is a unique object in orderSheets
+        const rowToDelete = orderSheets[index];
+
+        const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/delete`, {
+          deleteOrderSheet: {
+            role: "adc", // or user.role
             officeName: user?.officeName,
             district: user?.district,
-            role: "adc",
-            orderSheets,
+            orderSheet: rowToDelete,
           },
-        ],
-      });
+        });
 
-      console.log(res.data);
-
-      if (res.data.modifiedCount > 0) {
-        toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
-        setEditingRow(null);
-      } else {
-        toast("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
+        if (res.status === 200) {
+          toast.success("সফলভাবে ডিলেট হয়েছে!");
+          setOrderSheets((prev) => prev.filter((_, i) => i !== index));
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("ডিলেট করতে সমস্যা হয়েছে");
       }
-    } catch (error) {
-      console.error("❌ Save failed:", error);
-      toast("সংরক্ষণে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-    }
-  };
+    };
 
-  const handlePrint = () => {
-    window.print();
-  };
-  const handleHeader = async () => {
-    {
-      const { orderSheets, ...rest } = adcCaseData || {};
+    const handleSave = async () => {
+      try {
+        console.log("📦 Saving order sheets:", orderSheets);
+        if (orderSheets.length === 0) {
+          toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
+          return;
+        }
+        const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/add`, {
+          responsesFromOffices: [
+            {
+              officeName: user?.officeName,
+              district: user?.district,
+              role: "adc",
+              orderSheets,
+            },
+          ],
+        });
 
-      const updatedHeader = {
-        ...rest,
-        formNo: headerInfo.formNo,
-        mamlaName: headerInfo.mamlaName,
-        mamlaNo: headerInfo.mamlaNo,
-        year: headerInfo.year,
-        district: headerInfo.district,
-        officeName: headerInfo.district,
-      };
-      console.log(updatedHeader);
+        console.log(res.data);
 
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        adcHeaderData: updatedHeader,
-      });
-      if (res.data.modifiedCount > 0) {
-        setShowHeaderModal(false);
-        toast("হেডার তথ্য সংরক্ষণ হয়েছে");
-        refetch();
-        // location.reload(); // Or refresh divComReview in state if you want live update
-      } else {
-        toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
+        if (res.data.modifiedCount > 0) {
+          toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
+          setEditingRow(null);
+        } else {
+          toast("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
+        }
+      } catch (error) {
+        console.error("❌ Save failed:", error);
+        toast("সংরক্ষণে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
       }
+    };
+
+    const handlePrint = () => {
+      window.print();
+    };
+    const handleHeader = async () => {
+  const { orderSheets, adcHeaderData, ...rest } = adcCaseData || {};
+
+  const updatedFields = {
+    ...rest,
+    formNo: headerInfo.formNo,
+    mamlaName: headerInfo.mamlaName,
+    mamlaNo: headerInfo.mamlaNo,
+    year: headerInfo.year,
+    district: headerInfo.district,
+    officeName: headerInfo.officeName, // Fix: don't assign district to officeName
+  };
+
+  const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/header`, {
+    updatedFields,
+  });
+
+  if (res.data.modifiedCount > 0) {
+    setShowHeaderModal(false);
+    toast("হেডার তথ্য সংরক্ষণ হয়েছে");
+    refetch();
+  } else {
+    toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
+  }
+};
+
+
+    const parseDate = (dateString) => {
+      const date = new Date(dateString);
+      return isNaN(date) ? null : date;
+    };
+    const generateDefaultActionText = (order, date) => {
+      console.log(order);
+      const newText = `মামলা নং ${order.mamlaNo} (${
+        order.mamlaName
+      }) সংক্রান্ত আদেশ অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতে ${
+        date?.split("T")[0] || "___"
+      } তারিখে প্রেরণ করা হয়েছে।`;
+
+      // Append if existing text present
+      return newText;
+    };
+
+    const handleSend = async (order) => {
+  const confirm = await Swal.fire({
+    title: "আপনি কি প্রেরণ করতে চান?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  try {
+    // Find the adc response from caseData
+    const adcResp = caseData.responsesFromOffices.find(
+      (resp) => resp.role === "adc"
+    );
+
+    if (!adcResp) {
+      toast.error("ADC response data not found.");
+      return;
     }
-  };
 
-  const parseDate = (dateString) => {
-    const date = new Date(dateString);
-    return isNaN(date) ? null : date;
-  };
-  const generateDefaultActionText = (order, date) => {
-    console.log(order);
-    const newText = `মামলা নং ${order.mamlaNo} (${
-      order.mamlaName
-    }) সংক্রান্ত আদেশ অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতে ${
-      date?.split("T")[0] || "___"
-    } তারিখে প্রেরণ করা হয়েছে।`;
+    // Prepare updated actionTaken text
+    const updatedActionTaken = order?.actionTaken
+      ? order?.actionTaken +
+        "\n" +
+        generateDefaultActionText(headerInfo, new Date().toISOString())
+      : generateDefaultActionText(headerInfo, new Date().toISOString());
 
-    // Append if existing text present
-    return newText;
-  };
+    // Prepare payload to update only the matching order sheet
+    const payload = {
+      responsesFromOffices: [
+        {
+          role: adcResp.role,
+          officeName: { en: adcResp.officeName.en },
+          district: { en: adcResp.district.en },
+          orderSheets: [
+            {
+              orderNo: order.orderNo,
+              actionTaken: updatedActionTaken,
+              sentToDivcom: true,
+              sentDate: new Date().toISOString(),
+            },
+          ],
+        },
+      ],
+    };
 
-  const handleSend = async (order) => {
-    const confirm = await Swal.fire({
-      title: "আপনি কি প্রেরণ করতে চান?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
-    });
+    // Send PATCH request to backend endpoint for sending order
+    const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/send`, payload);
 
-    if (!confirm.isConfirmed) return;
-
-    try {
-      const adcResp = caseData.responsesFromOffices.find(
-        (resp) => resp.role === "adc"
-      );
-
-      // Create updated action text for THIS order only
-      const updatedActionTaken = order.actionTaken
-        ? order.actionTaken +
-          "\n" +
-          generateDefaultActionText(headerInfo, new Date().toISOString())
-        : generateDefaultActionText(headerInfo, new Date().toISOString());
-
-      // Send only the one orderSheet we are updating
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
-        responsesFromOffices: [
-          {
-            role: adcResp.role,
-            officeName: { en: adcResp.officeName.en },
-            district: { en: adcResp.district.en },
-            orderSheets: [
-              {
-                orderNo: order.orderNo,
-                actionTaken: updatedActionTaken,
-                sentToDivcom: true,
-                sentDate: new Date().toISOString(),
-              },
-            ],
-          },
-        ],
-      });
-
-      if (res.data.modifiedCount > 0) {
-        toast.success(`অর্ডার নং ${order.orderNo} সফলভাবে প্রেরণ হয়েছে!`);
-        refetch();
-      } else {
-        toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("পাঠাতে সমস্যা হয়েছে!");
+    if (res.data.modifiedCount > 0) {
+      toast.success(`অর্ডার নং ${order.orderNo} সফলভাবে প্রেরণ হয়েছে!`);
+      refetch(); // Refresh data after update
+    } else {
+      toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("পাঠাতে সমস্যা হয়েছে!");
+  }
+};
+
 
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
@@ -666,7 +674,7 @@ const AdcOrder = ({ header }) => {
                             duration={[150, 100]} // faster show/hide
                           >
                             <button
-                              onClick={() => handleSend()}
+                              onClick={() => handleSend(order)}
                               className="btn btn-sm btn-success"
                             >
                               <h1>

@@ -123,7 +123,7 @@ const handleSend = async (entry) => {
 
   try {
     // PATCH request payload: update only one caseEntry with mamlaNo
-    const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+    const res = await axiosPublic.patch(`/cases/acLand/${caseData._id}`, {
       responsesFromOffices: [
         {
           role: "acLand",

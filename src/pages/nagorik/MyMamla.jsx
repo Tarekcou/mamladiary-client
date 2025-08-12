@@ -99,7 +99,7 @@ const MyMamla = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      const res = await axiosPublic.patch(`/cases/${cas._id}`, {
+      const res = await axiosPublic.patch(`/cases/divCom/${cas._id}/approve`, {
         isApproved: true,
       });
       console.log(res.data);
@@ -127,7 +127,7 @@ const MyMamla = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      const res = await axiosPublic.delete(`/cases/${caseId}`);
+      const res = await axiosPublic.delete(`/cases/nagorik/${caseId}`);
       if (res.data.result.deletedCount > 0) {
         toast.success("মামলাটি সফলভাবে মুছে ফেলা হয়েছে।");
         refetch();
@@ -139,7 +139,7 @@ const MyMamla = () => {
       toast.error("মামলাটি মুছে ফেলতে সমস্যা হয়েছে।");
     }
   };
-  const handleStatusChange = async (caseId, stageKey, newStatus) => {
+  const handleCaseSent = async (caseId, stageKey, newStatus) => {
     const confirm = await Swal.fire({
       title: "আপনি কি প্রেরন চান?",
       text: "এই কাজটি অপরিবর্তনীয়!",
@@ -150,7 +150,7 @@ const MyMamla = () => {
 
     if (!confirm.isConfirmed) return;
     try {
-      const res = await axiosPublic.patch(`/cases/${caseId}/status`, {
+      const res = await axiosPublic.patch(`/cases/nagorik/sentTodivCom/${caseId}`, {
         stageKey,
         status: newStatus,
       });
@@ -240,8 +240,8 @@ const MyMamla = () => {
                   <td>
                     {cas.nagorikSubmission?.aclandMamlaInfo?.map((info) => (
                       <div key={info.mamlaNo}>
-                        {info.mamlaName} - {info.mamlaNo}/{info.year} (
-                        {info.officeName.bn}- {info.district.bn} )
+                        {info?.mamlaName} - {info?.mamlaNo}/{info.year} (
+                        {info?.officeName?.bn}- {info?.district?.bn} )
                       </div>
                     )) || "-"}
                   </td>
@@ -312,7 +312,7 @@ const MyMamla = () => {
                             >
                               <button
                                 onClick={() =>
-                                  handleStatusChange(
+                                  handleCaseSent(
                                     cas._id,
                                     "nagorikSubmission",
                                     "submitted"

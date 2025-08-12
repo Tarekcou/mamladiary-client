@@ -208,25 +208,26 @@ const DivComOrders = () => {
       setOrderSheets(updatedOrderSheets);
 
       // Prepare updated divComReview
-      const updatedDivComReview = {
-        ...caseData.divComReview,
-        orderSheets: updatedOrderSheets,
-      };
+     const updatedDivComReview = {
+  ...caseData.divComReview,
+  orderSheets: updatedOrderSheets,  // updated array after delete
+};
+
 
       // Send patch to backend
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, {
         divComReview: updatedDivComReview,
       });
 
       if (res.data.modifiedCount > 0) {
-        toast.success("অর্ডার শীট মুছে ফেলা হয়েছে");
+        toast.success("আদেশ টি মুছে ফেলা হয়েছে");
         refetch();
       } else {
-        toast.error("অর্ডার শীট মুছে ফেলা যায়নি");
+        toast.error("আদশ টি মুছে ফেলা যায়নি");
       }
     } catch (err) {
       console.error(err);
-      toast.error("মুছে ফেলার সময় একটি সমস্যা হয়েছে");
+      toast.error("দুঃখিত আদেশ মুছে ফেলা যাচ্ছেনা");
     }
   };
 
@@ -237,7 +238,7 @@ const DivComOrders = () => {
         toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
         return;
       }
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, {
         divComReview: {
           ...divComReview,
           orderSheets,
@@ -245,20 +246,18 @@ const DivComOrders = () => {
       });
       console.log(res.data);
       if (res.data.modifiedCount > 0) {
-        toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
+        toast.success("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
         setEditingRow(null);
       } else {
-        toast("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
+        toast.warning("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
       }
     } catch (error) {
       console.error("❌ Save failed:", error);
-      toast("সংরক্ষণে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      toast.warning("সংরক্ষণে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  
   const handleHeader = async () => {
     {
       const { orderSheets, ...rest } = divComReview || {};
@@ -273,18 +272,21 @@ const DivComOrders = () => {
       };
       console.log(updatedHeader);
 
-      const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
+      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, {
         divComReview: updatedHeader,
       });
       if (res.data.modifiedCount > 0) {
         setShowHeaderModal(false);
-        toast("হেডার তথ্য সংরক্ষণ হয়েছে");
+        toast.success("হেডার তথ্য সংরক্ষণ হয়েছে");
         refetch();
         // location.reload(); // Or refresh divComReview in state if you want live update
       } else {
-        toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
+        toast.warning("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
       }
     }
+  };
+  const handlePrint = () => {
+    window.print();
   };
   // const handleAddOrder = () => {
   //   navigate(`/dashboard/${user?.role}/cases/new`, {

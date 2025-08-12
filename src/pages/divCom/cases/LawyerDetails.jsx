@@ -24,33 +24,34 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
 
   //
 
-  const handleApprove = async (approval) => {
+    const handleApprove = async (cas) => {
+    console.log(cas);
     const confirm = await Swal.fire({
-      title: approval
-        ? "আপনি কি অনুমোদন করতে চান?"
-        : "আপনি কি অনুমোদন বাতিল করতে চান?",
+      title: "আপনি কি মামলাটি অনুমোদন করতে চান?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, করুন",
+      confirmButtonText: "হ্যাঁ, অনুমোদন করুন",
     });
 
     if (!confirm.isConfirmed) return;
+
     try {
-      const res = await axiosPublic.patch(`/cases/${id}`, {
-        isApproved: approval,
+      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}/approve`, {
+        isApproved: true,
       });
+      console.log(res.data);
       if (res.data.modifiedCount > 0) {
-        if (approval) toast.success("মামলাটি অনুমোদিত হয়েছে");
-        else toast.warning("মামলাটির অনুমোদন বাতিল হয়েছে");
+        toast.success("মামলাটি অনুমোদিত হয়েছে।");
         refetch();
       } else {
-        toast.warning("কোনো পরিবর্তন হয়নি");
+        toast.warning("অনুমোদন ব্যর্থ হয়েছে।");
       }
-    } catch (err) {
-      toast.error("অনুমোদন ব্যর্থ হয়েছে");
+    } catch (error) {
+      console.error("Approval error:", error);
+      toast.error("অনুমোদন করতে সমস্যা হয়েছে।");
     }
   };
-  const handleStatusChange = async (caseId, stageKey, newStatus) => {
+  const handleCaseSent = async (caseId, stageKey, newStatus) => {
     const confirm = await Swal.fire({
       title: "আপনি কি প্রেরন চান?",
       text: "এই কাজটি অপরিবর্তনীয়!",
@@ -61,12 +62,12 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
 
     if (!confirm.isConfirmed) return;
     try {
-      const res = await axiosPublic.patch(`/cases/${caseId}/status`, {
+      const res = await axiosPublic.patch(`/cases/nagorik/sentTodivCom/${caseId}`, {
         stageKey,
         status: newStatus,
       });
       // Optimistically update local cache
-      queryClient.setQueryData(["caseData", user._id], (oldCases = []) =>
+      queryClient.setQueryData(["myCases", user._id], (oldCases = []) =>
         oldCases.map((cas) =>
           cas._id === caseId
             ? {
@@ -79,16 +80,17 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
             : cas
         )
       );
+      console.log(res.data);
 
       if (res.data.success) {
-        toast.success("সফলভাবে প্রেরণ করা হয়েছে");
+        toast.success(" সফলভাবে প্রেরণ  করা হয়েছে");
         refetch();
       } else {
-        toast.error("প্রেরণে ব্যর্থ হয়েছে");
+        toast.error(" প্রেরণে  ব্যর্থ হয়েছে");
       }
     } catch (err) {
       console.error("Status update error:", err);
-      toast.error("তথ্য প্রেরণে সমস্যা হয়েছে");
+      toast.error("প্রেরণে সমস্যা হয়েছে");
     }
   };
 
@@ -136,7 +138,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                       transition={{ repeat: Infinity, duration: 0.3 }}
                       className="bg-blue-500 rounded text-white btn btn-sm"
                       onClick={() =>
-                        handleStatusChange(
+                        handleCaseSent(
                           caseData._id,
                           "nagorikSubmission",
                           "submitted"

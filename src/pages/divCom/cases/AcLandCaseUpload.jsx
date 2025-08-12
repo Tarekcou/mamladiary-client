@@ -87,9 +87,8 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
         },
       ],
     };
-
     try {
-      const res = await axiosPublic.patch(`/cases/${id}`, {
+      const res = await axiosPublic.patch(`/cases/acLand/${id}`, {
         responsesFromOffices: [newEntry], // send only this one role group
       });
       console.log(res.data);
