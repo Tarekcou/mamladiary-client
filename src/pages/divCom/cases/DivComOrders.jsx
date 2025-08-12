@@ -181,7 +181,7 @@ const DivComOrders = () => {
         ...prev,
         {
           orderNo: `${prev.length + 1}`,
-          orderDate: "",
+          orderDate: new Date().toISOString().split("T")[0],
           staffNote: "",
           judgeNote: "",
           nextOrderDate: "",
@@ -243,7 +243,7 @@ const DivComOrders = () => {
           orderSheets,
         },
       });
-
+      console.log(res.data);
       if (res.data.modifiedCount > 0) {
         toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
         setEditingRow(null);
@@ -616,7 +616,7 @@ const DivComOrders = () => {
                       <div>
                         {caseData?.isApproved &&
                           user?.role === "divCom" &&
-                          orderSheets.length > 0 && (
+                          orderSheets.length === idx + 1 && (
                             <div>
                               <OfficeMessaging
                                 caseData={caseData}

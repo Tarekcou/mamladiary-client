@@ -243,7 +243,7 @@ export default function NagorikCaseInfoUpload() {
         tamadi: tamadi,
       },
     };
-    console.log("Post Data:", postData);
+    // console.log("Post Data:", postData);
 
     const confirm = await Swal.fire({
       title: "আপনি কি আপলোড করতে চান ?",
@@ -257,12 +257,14 @@ export default function NagorikCaseInfoUpload() {
       setLoading(true);
       if (isEditMode) {
         const res = await axiosPublic.patch(`/cases/${editId}`, postData);
+        // console.log(res.data);
         if (res.data.modifiedCount > 0) {
           toast.success("মামলাটি সফলভাবে হালনাগাদ হয়েছে");
           navigate("/dashboard/lawyer/cases");
         }
       } else {
         const res = await axiosPublic.post("/cases", postData);
+        console.log(res.data);
         if (res.data.insertedId) {
           toast.success("মামলাটি সফলভাবে দাখিল হয়েছে");
           setBadiList([]);

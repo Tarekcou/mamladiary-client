@@ -312,7 +312,7 @@ const AdcOrder = ({ header }) => {
     return newText;
   };
 
-  const handleSend = async () => {
+  const handleSend = async (order) => {
     const confirm = await Swal.fire({
       title: "আপনি কি প্রেরণ করতে চান?",
       icon: "warning",
@@ -327,31 +327,34 @@ const AdcOrder = ({ header }) => {
         (resp) => resp.role === "adc"
       );
 
-      const updatedOrderSheets = adcResp?.orderSheets?.map((order) => ({
-        ...order,
-        actionTaken: order.actionTaken
-          ? order.actionTaken +
-            "\n" +
-            generateDefaultActionText(headerInfo, new Date().toISOString())
-          : generateDefaultActionText(headerInfo, new Date().toISOString()),
-        sentToDivcom: true,
-        sentDate: new Date().toISOString(),
-      }));
+      // Create updated action text for THIS order only
+      const updatedActionTaken = order.actionTaken
+        ? order.actionTaken +
+          "\n" +
+          generateDefaultActionText(headerInfo, new Date().toISOString())
+        : generateDefaultActionText(headerInfo, new Date().toISOString());
 
+      // Send only the one orderSheet we are updating
       const res = await axiosPublic.patch(`/cases/${caseData._id}`, {
         responsesFromOffices: [
           {
             role: adcResp.role,
             officeName: { en: adcResp.officeName.en },
             district: { en: adcResp.district.en },
-            orderSheets: updatedOrderSheets,
+            orderSheets: [
+              {
+                orderNo: order.orderNo,
+                actionTaken: updatedActionTaken,
+                sentToDivcom: true,
+                sentDate: new Date().toISOString(),
+              },
+            ],
           },
         ],
       });
-      console.log(res.data);
 
       if (res.data.modifiedCount > 0) {
-        toast.success("অতিরিক্ত বিভাগীয় কমিশনার রাজস্ব আদালতে প্রেরণ হয়েছে!");
+        toast.success(`অর্ডার নং ${order.orderNo} সফলভাবে প্রেরণ হয়েছে!`);
         refetch();
       } else {
         toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");

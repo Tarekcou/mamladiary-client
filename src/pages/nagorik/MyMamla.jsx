@@ -88,6 +88,7 @@ const MyMamla = () => {
     );
   });
   const handleApprove = async (cas) => {
+    console.log(cas);
     const confirm = await Swal.fire({
       title: "আপনি কি মামলাটি অনুমোদন করতে চান?",
       icon: "question",
@@ -101,7 +102,7 @@ const MyMamla = () => {
       const res = await axiosPublic.patch(`/cases/${cas._id}`, {
         isApproved: true,
       });
-
+      console.log(res.data);
       if (res.data.modifiedCount > 0) {
         toast.success("মামলাটি অনুমোদিত হয়েছে।");
         refetch();
@@ -167,16 +168,17 @@ const MyMamla = () => {
             : cas
         )
       );
+      console.log(res.data);
 
       if (res.data.success) {
-        toast.success("স্ট্যাটাস সফলভাবে পরিবর্তন করা হয়েছে");
+        toast.success(" সফলভাবে প্রেরণ  করা হয়েছে");
         refetch();
       } else {
-        toast.error("স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে");
+        toast.error(" প্রেরণে  ব্যর্থ হয়েছে");
       }
     } catch (err) {
       console.error("Status update error:", err);
-      toast.error("স্ট্যাটাস পরিবর্তনে সমস্যা হয়েছে");
+      toast.error("প্রেরণে সমস্যা হয়েছে");
     }
   };
 
@@ -373,7 +375,7 @@ const MyMamla = () => {
                           duration={[150, 100]} // faster show/hide
                         >
                           <button
-                            onClick={() => handleApprove(true)}
+                            onClick={() => handleApprove(cas)}
                             className="flex items-center w-full text-xs btn btn-sm btn-success"
                           >
                             <h1>

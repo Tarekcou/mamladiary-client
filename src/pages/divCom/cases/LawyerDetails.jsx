@@ -39,9 +39,9 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
       const res = await axiosPublic.patch(`/cases/${id}`, {
         isApproved: approval,
       });
-      console.log(res.data);
       if (res.data.modifiedCount > 0) {
-        toast.success("মামলাটি অনুমোদিত হয়েছে");
+        if (approval) toast.success("মামলাটি অনুমোদিত হয়েছে");
+        else toast.warning("মামলাটির অনুমোদন বাতিল হয়েছে");
         refetch();
       } else {
         toast.warning("কোনো পরিবর্তন হয়নি");

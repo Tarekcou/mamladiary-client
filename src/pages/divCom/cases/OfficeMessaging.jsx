@@ -20,12 +20,11 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
   const messages = caseData?.messagesToOffices || [];
 
   const sentRoles = messages.map((msg) => msg.sentTo?.role?.toLowerCase?.());
-  const alreadySentToAcLand = caseData?.divComReview.orderSheets.some(
-    (order) => order?.sentToAcland
-  );
-  const alreadySentToADC = caseData?.divComReview.orderSheets.some(
-    (order) => order?.sentToAdc
-  );
+  const alreadySentToAcLand =
+    caseData?.divComReview?.orderSheets?.[index]?.sentToAcland;
+  const alreadySentToADC =
+    caseData?.divComReview?.orderSheets?.[index]?.sentToAdc;
+
   const badi = caseData.nagorikSubmission?.badi?.[0];
   const bibadi = caseData.nagorikSubmission?.bibadi?.[0];
 

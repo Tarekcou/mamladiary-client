@@ -92,6 +92,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
       const res = await axiosPublic.patch(`/cases/${id}`, {
         responsesFromOffices: [newEntry], // send only this one role group
       });
+      console.log(res.data);
       if (res.status === 200) {
         toast.success("রেসপন্স সফলভাবে সাবমিট হয়েছে!");
         if (cas) {
