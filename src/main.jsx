@@ -44,7 +44,7 @@ import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
 import AllDetails from "./pages/divCom/cases/AllDetails.jsx";
 import AcLandCaseUpload from "./pages/divCom/cases/AcLandCaseUpload.jsx";
 import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
-import MyMamla from "./pages/Nagorik/MyMamla.jsx";
+import MyMamla from "./pages/nagorik/MyMamla.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
