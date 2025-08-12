@@ -40,7 +40,7 @@ import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
 import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
 
 import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
-import MyMamla from "./pages/Nagorik/MyMamla.jsx";
+import MyMamla from "./pages/nagorik/MyMamla.jsx";
 import DivComOrders from "./pages/DivCom/cases/DivComOrders.jsx";
 import AllDetails from "./pages/DivCom/cases/AllDetails.jsx";
 import NewOrder from "./pages/divCom/cases/NewOrder.jsx";
