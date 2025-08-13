@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   CrossIcon,
   Plus,
+  RotateCcw,
   SendIcon,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -14,6 +15,7 @@ import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../provider/AuthProvider";
 import axiosPublic from "../../axios/axiosPublic";
+import { BsArrowReturnLeft } from "react-icons/bs";
 
 const NagorikDetails = ({ caseData, role, refetch }) => {
   const { user } = useContext(AuthContext);
@@ -23,7 +25,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
   //
 
-    const handleApprove = async (cas) => {
+    const handleApprove = async (approval) => {
     console.log(cas);
     const confirm = await Swal.fire({
       title: "আপনি কি মামলাটি অনুমোদন করতে চান?",
@@ -36,7 +38,8 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
     try {
       const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}/approve`, {
-        isApproved: true,
+        isApproved: approval,
+        isCompleted: false
       });
       console.log(res.data);
       if (res.data.modifiedCount > 0) {
@@ -101,6 +104,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
   const { nagorikSubmission, isApproved, trackingNo, messageToOffices } =
     caseData;
+    const isRefused=caseData?.nagorikSubmission?.status==="refused"
 
   const handleAddOrder = () => {
     navigate(`/dashboard/divCom/cases/order/${caseData._id}`);
@@ -127,7 +131,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
                     অনুমোদনের জন্য অপেক্ষমাণ
                   </h1>
                 ) : (
-                  <div className="flex justify-between items-center w-full">
+                  <div className="flex justify-between items-center  w-full">
                     <h1 className="badge badge-warning">
                       অনুমোদনের জন্য প্রেরণ করুন
                     </h1>
@@ -168,8 +172,8 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
             </div>
 
             {/* Approve Button */}
-            {!isApproved && user?.role === "divCom" ? (
-              <div className="flex justify-end items-start mt-8 w-1/2 text-center">
+            {!isApproved && !isRefused && user?.role === "divCom" ? (
+              <div className="flex justify-end flex-col items-end gap-2   w-1/2 text-center">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   animate={{ y: [0, -3, 0] }}
@@ -177,10 +181,23 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
                   onClick={() => handleApprove(true)}
                   className=""
                 >
-                  <h1 className="btn-block flex justify-center items-center gap-2 btn btn-success">
-                    <CheckCircle /> অনুমোদন দিন
+                  <h1 className="btn-block flex justify-center items-center gap-2 btn btn-sm btn-success">
+                    <CheckCircle />অনুমোদন দিন
                   </h1>
                 </motion.button>
+
+                <button
+                   onClick={() =>
+                        handleCaseSent(
+                          caseData._id,
+                          "nagorikSubmission",
+                          "refused"
+                        )
+                      }
+                        className="flex btn-info btn btn-sm"
+                      >
+                        <RotateCcw /> ফেরত পাঠান 
+                  </button>
               </div>
             ) : (
               <div className="space-y-1 text-center btn-sm">
@@ -282,7 +299,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
       </div>
 
       {/* ACLAND Info */}
-      {(role == "acLand" || role == "lawyer") && (
+      {(role == "acLand" || role == "nagorik") && (
         <div className="mt-4">
           <h3 className="font-semibold">
             সহকারী কমিশনার (ভূমি),{" "}
@@ -318,7 +335,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
       )}
 
       {/* ADC Info */}
-      {(role == "adc" || role == "lawyer") && (
+      {(role == "adc" || role == "nagorik") && (
         <div className="mt-4">
           <h3 className="font-semibold">
             অতিরিক্ত জেলা প্রশাসক(রাজস্ব),{" "}

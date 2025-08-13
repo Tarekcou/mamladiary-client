@@ -11,23 +11,16 @@ const SidebarAcLand = () => {
       <div className="w-full">
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">
-          <Link
+          <NavLink
             to={"/dashboard/acLand"}
-            className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
-          >
+           className={({ isActive }) =>
+             isActive
+                ? "text-blue-800 btn-outline  border-2  lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn  lg:btn-sm w-full border-gray-300"
+            }          >
             এসিল্যান্ড ড্যাশবোর্ড
-          </Link>
+          </NavLink>
 
-          {/* <NavLink
-            to="/dashboard/acLand/newCase"
-            className={({ isActive }) =>
-              isActive
-                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-            }
-          >
-            <Plus /> নতুন মামলা
-          </NavLink> */}
 
           <NavLink
             to="/dashboard/acLand/allCases"
@@ -39,16 +32,7 @@ const SidebarAcLand = () => {
           >
             সকল মামলা
           </NavLink>
-          <NavLink
-            to="/dashboard/acLand/sendCases"
-            className={({ isActive }) =>
-              isActive
-                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-            }
-          >
-            প্রেরিত মামলা
-          </NavLink>
+          
           <NavLink
             to={`/dashboard/${user?.role}/profile`}
             className={({ isActive }) =>

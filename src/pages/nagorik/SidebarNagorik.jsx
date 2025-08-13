@@ -12,14 +12,14 @@ const SidebarNagorik = () => {
         {/* <h2 className="bg-[#004080] px-2 py-1 font-bold text-white">Admin</h2> */}
         <ul className="flex flex-col space-y-1 list-disc list-inside">
           <Link
-            to={"/dashboard"}
+            to={`/dashboard/${user.role}`}
             className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
           >
             নাগরিক ড্যাশবোর্ড
           </Link>
 
           <NavLink
-            to="/dashboard/lawyer/caseUpload"
+            to="/dashboard/nagorik/caseUpload"
             className={({ isActive }) =>
               isActive
                 ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
@@ -30,7 +30,7 @@ const SidebarNagorik = () => {
           </NavLink>
 
           <NavLink
-            to="/dashboard/lawyer/cases"
+            to="/dashboard/nagorik/cases"
             className={({ isActive }) =>
               isActive
                 ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"

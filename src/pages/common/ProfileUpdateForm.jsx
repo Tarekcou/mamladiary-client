@@ -23,7 +23,7 @@ export default function ProfileUpdateForm() {
         email: user.email || "",
         phone: user.phone || "",
         designation: user.designation || "",
-        password: "",
+        password: user.designation || "",
       });
     }
   }, [user]);

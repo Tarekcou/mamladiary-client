@@ -28,16 +28,7 @@ const SidebarAdc = () => {
           >
             আগত মামলা
           </NavLink>
-          <NavLink
-            to="/dashboard/adc/sendCases"
-            className={({ isActive }) =>
-              isActive
-                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-            }
-          >
-            প্রেরিত মামলা
-          </NavLink>
+         
           <NavLink
                       to={`/dashboard/${user?.role}/profile`}
                       className={({ isActive }) =>

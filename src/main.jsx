@@ -36,9 +36,7 @@ import CauseListDashboard from "./pages/divCom/others/CauseListDashboard.jsx";
 import ComplainDetails from "./pages/divCom/others/ComplainDetails.jsx";
 import FeedbackDetails from "./pages/divCom/others/FeedbackDetails.jsx";
 import MonthlyReport from "./pages/divCom/MonthlyReport/MonthlyReport.jsx";
-import AdcDashboard from "./pages/adc/AdcDashboard.jsx";
-import AcLandDashboard from "./pages/acLand/AcLandDashboard.jsx";
-import NagorikDashboard from "./pages/nagorik/NagorikDashboard.jsx";
+
 import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
 import AllCasesList from "./pages/common/AllCasesList.jsx";
 import AllDetails from "./pages/common/AllDetails.jsx";
@@ -103,14 +101,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             {/* OTHER DASHBOARD ROLES */}
             <Route path="adc" element={<Dashboard />} />
             <Route path="acLand" element={<Dashboard />} />
-            <Route path="lawyer" element={<Dashboard />} />
+            <Route path="nagorik" element={<Dashboard />} />
             <Route
-              path="lawyer/caseUpload"
+              path="nagorik/caseUpload"
               element={<NagorikCaseInfoUpload />}
             />
-            <Route path="lawyer/cases" element={<AllCasesList />} />
+            <Route path="nagorik/cases" element={<AllCasesList />} />
             <Route
-              path="lawyer/cases/edit/:id"
+              path="nagorik/cases/edit/:id"
               element={<NagorikCaseInfoUpload />}
             />
             <Route path=":role/cases/:id" element={<AllDetails />} />
@@ -121,6 +119,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path=":role/cases/order/:id" element={<DivComOrders />} />
 
             <Route path=":role/allCases" element={<AllCasesList />} />
+            <Route path=":role/completed-cases" element={<AllCasesList />} />
           </Route>
         </Routes>
         <Toaster richColors position="top-right" />

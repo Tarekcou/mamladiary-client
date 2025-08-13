@@ -28,8 +28,8 @@ const AllCasesList = () => {
   const { user } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
-  const allCasesPath = location.pathname.includes("allCases");
-
+  const completedPath = location.pathname.includes("completed-cases");
+  console.log(completedPath)
   const queryClient = useQueryClient();
   const {
     data: caseData = [],
@@ -37,7 +37,7 @@ const AllCasesList = () => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["caseData", user?.role, allCasesPath],
+    queryKey: ["caseData", user?.role, completedPath],
     queryFn: async () => {
       const params = { role: user.role };
       // console.log(user.officeName.en);
@@ -50,15 +50,17 @@ const AllCasesList = () => {
         params.officeName = user.district.en;
       }
 
-      if (user.role === "divCom" && !allCasesPath) {
-        params.isApproved = false; // optional filter
+      if (user.role === "divCom" ) {
+        params.isApproved = true; // optional filter
         params.status = "submitted";
+        if(completedPath)
+        params.isCompleted=true
       }
 
-      if (user.role === "nagorik" || user.role === "lawyer") {
+      if (user.role === "nagorik" || user.role === "nagorik") {
         params.userId = user._id;
       }
-      // console.log("DivComAllCases params:", params);
+      console.log("DivComAllCases params:", params);
       const res = await axiosPublic.get("/cases", { params });
       // console.log("DivComAllCases response:", res.data);
       return res.data;
@@ -87,6 +89,14 @@ const AllCasesList = () => {
       yearMatch?.includes(searchText.toLowerCase())
     );
   });
+      const isRefused=caseData?.nagorikSubmission?.status==="refused"
+const isMessageToAcland = (cas) =>
+  cas.messagesToOffices?.some((m) => m.sentTo.role === "acLand");
+
+const isMessageToAdc = (cas) =>
+  cas.messagesToOffices?.some((m) => m.sentTo.role === "adc");
+
+
   const handleApprove = async (cas) => {
     console.log(cas);
     const confirm = await Swal.fire({
@@ -181,13 +191,64 @@ const AllCasesList = () => {
       toast.error("প্রেরণে সমস্যা হয়েছে");
     }
   };
+const getCaseStatusLabel = (cas) => {
+  // Completed case
+  if (cas.isCompleted) {
+    return (
+      <h1 className="text-orange-600 font-bold">
+        মামলা টি নিষ্পন্ন হয়েছে
+      </h1>
+    );
+  }
+
+  // Approved case
+  if (cas.isApproved) {
+    return (
+      <h1 className="font-bold text-green-500">
+        অনুমোদিত
+        {isMessageToAcland(cas) && (
+          <span className="text-xs block font-light text-blue-500">
+            ভূমি অফিসে তাগিদ দেয়া হয়েছে
+          </span>
+        )}
+        {isMessageToAdc(cas) && (
+          <span className="text-xs block font-light text-blue-500">
+            ডিসি অফিসে তাগিদ দেয়া হয়েছে
+          </span>
+        )}
+      </h1>
+    );
+  }
+
+  // Submitted but not approved
+  if (cas.nagorikSubmission?.status === "submitted") {
+    return (
+      <>
+        <div className="my-1 badge badge-success flex items-center gap-1">
+          <Check className="w-5" />
+          প্রেরিত
+        </div>
+        <h1 className="font-bold text-red-500">
+          অনুমোদনের জন্য অপেক্ষমাণ
+        </h1>
+      </>
+    );
+  }
+
+  // Default: not submitted yet
+  return (
+    <h1 className="font-bold text-secondary">
+      অনুমোদনের জন্য প্রেরণ করুন
+    </h1>
+  );
+};
 
   if (isLoading) return <p>লোড হচ্ছে...</p>;
 
   return (
     <div className="p-4">
       <h2 className="flex items-center gap-1 mb-4 font-bold text-xl">
-        আমার দাখিলকৃত মামলা সমূহ
+         দাখিলকৃত মামলা সমূহ
       </h2>
 
       {/* Search input */}
@@ -202,7 +263,8 @@ const AllCasesList = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="table bg-base-100 border border-base-content/5 rounded-box w-full">
+        <table className={`table  ${user?.role=="acLand"  && isMessageToAcland? "bg-green-100" :
+         user?.role=="adc" && isMessageToAdc ? "bg-green-100" :"bg-base-100" } border border-base-content/5 rounded-box w-full`}>
           <thead>
             <tr className="text-center">
               <th>ক্রমিক</th>
@@ -253,29 +315,10 @@ const AllCasesList = () => {
                       </div>
                     )) || "-"}
                   </td>
-                  <td className="">
-                    {cas.isApproved ? (
-                      <h1 className="font-bold text-green-500">"অনুমোদিত"</h1>
-                    ) : cas.nagorikSubmission.status == "submitted" ? (
-                      <>
-                        <div className="my-1 badge badge-success">
-                          <Check className="w-5" />
-                          প্রেরিত{" "}
-                        </div>
 
-                        <h1 className="font-bold text-red-500">
-                          "অনুমোদনের জন্য অপেক্ষমাণ"
-                        </h1>
-                      </>
-                    ) : (
-                      <>
-                        <h1 className="font-bold text-secondary">
-                          {" "}
-                          অনুমোদনের জন্য প্রেরণ করুন{" "}
-                        </h1>
-                      </>
-                    )}
-                  </td>
+                  {/* for status update */}
+                  <td>{getCaseStatusLabel(cas)}</td>
+
                   <td className="p-1">
                     <div className="justify-center items-center gap-2 grid grid-cols-2 h-full">
                       <Tippy
@@ -303,7 +346,7 @@ const AllCasesList = () => {
 
                       {/* Edit button */}
                       {cas?.nagorikSubmission?.status != "submitted" &&
-                        user.role == "lawyer" && (
+                        user.role == "nagorik" && (
                           <>
                             <Tippy
                               content="প্রেরণ করুন"

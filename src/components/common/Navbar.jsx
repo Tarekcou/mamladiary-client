@@ -85,7 +85,7 @@ export default function Navbar() {
   //log out
   const handleLogout = () => {
     signOut();
-    navigate("/");
+    // navigate("/");
   };
   const navMenu = (
     <>
@@ -159,10 +159,10 @@ export default function Navbar() {
         ) : (
           <div className="space-x-1">
             <NavLink
-              to="/lawyer/login"
+              to="/nagorik/login"
               onClick={(e) => {
                 e.preventDefault();
-                handleOfficeLogin("lawyer");
+                handleOfficeLogin("nagorik");
               }}
               className={({ isActive }) =>
                 isActive

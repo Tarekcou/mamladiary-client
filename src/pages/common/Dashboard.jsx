@@ -37,7 +37,6 @@ export default function Dashboard() {
          
           break;
         case "nagorik":
-        case "lawyer":
           params.userId = user._id;
           break;
         default:
@@ -98,7 +97,7 @@ export default function Dashboard() {
 
   // Role-wise activity
   const roleActivity = {
-    labels: ["acLand", "adc", "divCom", "nagorik", "lawyer"],
+    labels: ["acLand", "adc", "divCom", "nagorik", "nagorik"],
     datasets: [
       {
         label: "Messages Sent",
@@ -107,7 +106,7 @@ export default function Dashboard() {
           caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "adc")).length,
           caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "divCom")).length,
           caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "nagorik")).length,
-          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "lawyer")).length,
+          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "nagorik")).length,
         ],
         backgroundColor: "rgba(54, 162, 235, 0.6)",
       },
@@ -118,7 +117,7 @@ export default function Dashboard() {
           caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "adc")).length,
           caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "divCom")).length,
           caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "nagorik")).length,
-          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "lawyer")).length,
+          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "nagorik")).length,
         ],
         backgroundColor: "rgba(75, 192, 192, 0.6)",
       },

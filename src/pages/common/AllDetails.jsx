@@ -68,20 +68,22 @@ const AllDetails = () => {
 
   const dynamicTabs = buildTabs();
   // console.log(dynamicTabs);
-const [activeTab, setActiveTab] = useState("nagorik"); // default
+const [activeTab, setActiveTab] = useState(null);
 
 useEffect(() => {
-  if (dynamicTabs.length === 0) return;
+  if (!dynamicTabs || dynamicTabs.length === 0) return;
 
-  // If divCom, show all tabs but default to first
-  if (user.role === "divCom") {
-    setActiveTab(dynamicTabs[0].key);
-  } else {
-    // Set to user role if available in dynamicTabs
-    const userTab = dynamicTabs.find((tab) => tab.key === user.role);
-    setActiveTab(userTab?.key || dynamicTabs[0].key);
+  // Only set if current activeTab is null or no longer valid
+  if (!activeTab || !dynamicTabs.some((tab) => tab.key === activeTab)) {
+    if (user.role === "divCom") {
+      setActiveTab(dynamicTabs[0].key); // default to first tab
+    } else {
+      const userTab = dynamicTabs.find((tab) => tab.key === user.role);
+      setActiveTab(userTab?.key || dynamicTabs[0].key);
+    }
   }
-}, [dynamicTabs, user.role]);
+}, [dynamicTabs, user.role, activeTab]);
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -95,7 +97,7 @@ useEffect(() => {
         );
       case "nagorik":
         return (
-          <NagorikDetails caseData={caseData} role="lawyer" refetch={refetch} />
+          <NagorikDetails caseData={caseData} role="nagorik" refetch={refetch} />
         );
       default:
         return <p>Invalid tab selected.</p>;
@@ -111,7 +113,7 @@ useEffect(() => {
         >
           <ArrowLeft />
         </button>{" "}
-        মামলার বিস্তারিত তথ্য (ভূমিকা অনুযায়ী)
+        মামলার বিস্তারিত তথ্য 
       </h2>
 
       {/* Tabs */}

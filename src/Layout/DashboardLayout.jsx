@@ -47,7 +47,7 @@ const DashboardLayout = () => {
         >
           {storedType == "divCom" ? (
             <SidebarDivCom />
-          ) : storedType == "lawyer" ? (
+          ) : storedType == "nagorik" ? (
             <SidebarNagorik />
           ) : storedType == "adc" ? (
             <SidebarAdc />

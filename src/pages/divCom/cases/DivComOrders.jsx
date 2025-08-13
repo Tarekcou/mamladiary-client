@@ -9,6 +9,8 @@ import {
   Edit2,
   Pencil,
   PencilOff,
+  BookCheck,
+  Play,
 } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import axiosPublic from "../../../axios/axiosPublic";
@@ -317,6 +319,34 @@ const DivComOrders = () => {
       .join("\n");
   };
 
+  
+    const handleComplete = async (approval) => {
+    const confirm = await Swal.fire({
+      title: "আপনি কি মামলাটি নিষ্পন্ন করতে চান?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ,  করুন",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}/complete`, {
+        isCompleted: approval,
+      });
+      console.log(res.data);
+      if (res.data.modifiedCount > 0 || res.data.messages=="Case approved successfully") {
+        toast.success("মামলাটি নিষ্পন্ন হয়েছে।");
+        refetch();
+      } else {
+        toast.warning("নিষ্পন্ন ব্যর্থ হয়েছে।");
+      }
+    } catch (error) {
+      console.error("Approval error:", error);
+      toast.error("নিষ্পন্ন করতে সমস্যা হয়েছে।");
+    }
+  };
+
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
@@ -413,6 +443,14 @@ const DivComOrders = () => {
           আদেশ যুক্ত করুন 
         </h1>
         <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-b border-gray-200">
+          {caseData.isCompleted?
+          <button
+            onClick={()=>handleComplete(false)}
+            className="no-print btn btn-sm btn-info"
+          >
+            <Play /> পুনরায় চালু করুন
+          </button>:
+        <>
           <button
             onClick={handleAddRow}
             className="flex btn-success btn-sm btn"
@@ -428,7 +466,14 @@ const DivComOrders = () => {
           >
             <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
           </button>
+         
           <button
+            onClick={()=>handleComplete(true)}
+            className="no-print btn btn-sm btn-info"
+          >
+            <BookCheck /> মামলা নিষ্পন্ন
+          </button></>}
+           <button
             onClick={handlePrint}
             className="no-print btn btn-sm btn-info"
           >
