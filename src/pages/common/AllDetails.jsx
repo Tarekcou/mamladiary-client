@@ -7,7 +7,7 @@ import DivComDetails from "../divCom/cases/DivComOrders";
 import AcLandDetails from "../acLand/AcLandDetails";
 import { AuthContext } from "../../provider/AuthProvider";
 import AdcDetails from "../adc/AdcDetails";
-import NagorikDetails from "../nagorik/nagorikDetails";
+import NagorikDetails from "../nagorik/NagorikDetails";
 const AllDetails = () => {
   const location = useLocation();
   const { id } = useParams();
