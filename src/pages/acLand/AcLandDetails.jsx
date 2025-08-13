@@ -12,12 +12,12 @@ import {
   SquareCheckBig,
 } from "lucide-react";
 import { useNavigate } from "react-router";
-import { toBanglaNumber } from "../../../utils/toBanglaNumber";
+import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../provider/AuthProvider";
+import { AuthContext } from "../../provider/AuthProvider";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
-import axiosPublic from "../../../axios/axiosPublic";
+import axiosPublic from "../../axios/axiosPublic";
 import { MdWarning } from "react-icons/md";
 import Tippy from "@tippyjs/react";
 import { useQuery } from "@tanstack/react-query";
@@ -186,6 +186,7 @@ const handleSend = async (entry) => {
                     <th>মামলা নং</th>
                     <th>সাল</th>
                     <th>জেলা</th>
+                    <th>অফিস</th>
                     <th>কার্যক্রম</th>
                   </tr>
                 </thead>
@@ -197,6 +198,7 @@ const handleSend = async (entry) => {
                       <td>{toBanglaNumber(m.mamlaNo)}</td>
                       <td>{toBanglaNumber(m.year)}</td>
                       <td>{m.district.bn}</td>
+                      <td>{m.officeName.bn}, <br /> ভূমি অফিস</td>
                       <td>
                         {user?.role === "acLand" && !isUploaded(m.mamlaNo) ? (
                           <Tippy
@@ -216,10 +218,17 @@ const handleSend = async (entry) => {
                             </button>
                           </Tippy>
                         ) : (
-                          <h1>
+                           <Tippy
+                            className=""
+                            content="এই মামলার তথ্য আপলোড হয়েছে"
+                            animation="scale"
+                            duration={[150, 100]} // faster show/hide
+                          >
+                          <h1 className="" >
                             {" "}
-                            <SquareCheckBig className="text-success" />
+                            <SquareCheckBig  className="text-success" />
                           </h1>
+                          </Tippy>
                         )}
                       </td>
                     </tr>

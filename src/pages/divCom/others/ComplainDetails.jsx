@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import axiosPublic from "../../axios/axiosPublic";
+import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { useQuery } from "@tanstack/react-query";
-import { MdDelete } from "react-icons/md";
+import axiosPublic from "../../../axios/axiosPublic";
 
-const FeedbackDetails = () => {
+const ComplainDetails = () => {
   const [expanded, setExpanded] = useState({});
+
   const {
-    data: feedbacks = [],
+    data: complains = [],
     isLoading,
     isError,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["feedbacks"], // good for caching different search results
+    queryKey: ["complains"], // good for caching different search results
     queryFn: async () => {
       try {
-        const response = await axiosPublic.get(`/feedbacks`);
+        const response = await axiosPublic.get(`/complains`);
         console.log("Response data:", response.data);
 
         return response.data;
       } catch (error) {
-        console.error("Error fetching feedbacks data:", error);
+        console.error("Error fetching complains data:", error);
       }
     },
   });
 
+  const toggleExpand = (id) => {
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -38,7 +42,7 @@ const FeedbackDetails = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic.delete(`/feedbacks/${id}`).then((res) => {
+        axiosPublic.delete(`/complains/${id}`).then((res) => {
           // console.log(res);
           if (res.data.deletedCount > 0) {
             Swal.fire({
@@ -52,15 +56,11 @@ const FeedbackDetails = () => {
       }
     });
   };
-
-  const toggleExpand = (id) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
   if (isLoading) return <p className="mt-10 text-center">Loading...</p>;
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 font-bold text-xl">সকল মতামত </h2>
+      <h2 className="mb-4 font-bold text-xl">সকল অভিযোগ</h2>
       <div className="max-w-screen overflow-x-auto">
         <table className="table table-pin-cols table-pin-rows">
           <thead>
@@ -69,19 +69,21 @@ const FeedbackDetails = () => {
               <th>নাম </th>
               <th>ফোন </th>
               <th>ঠিকানা </th>
-
+              <th>মামলা নং </th>
+              <th>মামলার নাম </th>
               <th>বিস্তারিত </th>
-              <th>মুছুন </th>
+              <th>কার্যক্রম </th>
             </tr>
           </thead>
           <tbody>
-            {feedbacks.map((c, i) => (
+            {complains.map((c, i) => (
               <tr key={c._id}>
                 <th>{i + 1}</th>
                 <td>{c.name}</td>
                 <td>{c.phone}</td>
                 <td>{c.location}</td>
-
+                <td>{c.mamlaNo}</td>
+                <td>{c.mamlaName}</td>
                 <td>
                   <div>
                     {expanded[c._id]
@@ -110,4 +112,4 @@ const FeedbackDetails = () => {
   );
 };
 
-export default FeedbackDetails;
+export default ComplainDetails;

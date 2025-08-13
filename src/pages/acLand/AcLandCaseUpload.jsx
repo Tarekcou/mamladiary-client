@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ArrowLeft, Plus } from "lucide-react";
-import { AuthContext } from "../../../provider/AuthProvider";
-import axiosPublic from "../../../axios/axiosPublic";
-import { toBanglaNumber } from "../../../utils/toBanglaNumber";
-import { mamlaNames } from "../../../data/mamlaNames";
+import { AuthContext } from "../../provider/AuthProvider";
+import axiosPublic from "../../axios/axiosPublic";
+import { toBanglaNumber } from "../../utils/toBanglaNumber";
+import { mamlaNames } from "../../data/mamlaNames";
 import Swal from "sweetalert2";
 
 const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {

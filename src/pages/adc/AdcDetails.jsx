@@ -11,13 +11,12 @@ import {
   SquareCheckBig,
 } from "lucide-react";
 import { useNavigate } from "react-router";
-import LawyerDetails from "./LawyerDetails";
-import { toBanglaNumber } from "../../../utils/toBanglaNumber";
+import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { useContext, useMemo, useState } from "react";
-import { AuthContext } from "../../../provider/AuthProvider";
+import { AuthContext } from "../../provider/AuthProvider";
 import AdcOrder from "./AdcOrder";
 import { useQuery } from "@tanstack/react-query";
-import axiosPublic from "../../../axios/axiosPublic";
+import axiosPublic from "../../axios/axiosPublic";
 import { MdWarning } from "react-icons/md";
 import Tippy from "@tippyjs/react";
 const AdcDetails = ({ id }) => {
@@ -95,6 +94,7 @@ const AdcDetails = ({ id }) => {
                     <th>মামলা নং</th>
                     <th>সাল</th>
                     <th>জেলা</th>
+                    <th>অফিস </th>
                     <th>কার্যক্রম</th>
                   </tr>
                 </thead>
@@ -106,6 +106,7 @@ const AdcDetails = ({ id }) => {
                       <td>{m.mamlaNo}</td>
                       <td>{m.year}</td>
                       <td>{m.district.bn}</td>
+                      <td>জেলা প্রশাসকের  <br /> কার্যালয়, {m.officeName.bn}</td>
                       <td>
                         {user?.role === "adc" && !isUploaded(m.mamlaNo) ? (
                           <Tippy

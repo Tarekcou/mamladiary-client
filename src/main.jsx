@@ -11,40 +11,40 @@ import PrivateRouter from "./routes.jsx/PrivateRouter.jsx";
 
 import { Toaster, toast } from "sonner";
 import Login from "./components/auth/Login.jsx";
-import Register from "./components/auth/Register.jsx";
-import ComplainDetails from "./pages/divCom/ComplainDetails.jsx";
-import FeedbackDetails from "./pages/divCom/FeedbackDetails.jsx";
-import CitizenCharter from "./components/sidebar/CitizenCharter.jsx";
-import History from "./components/sidebar/History.jsx";
-import Gallery from "./components/sidebar/Gallery.jsx";
-import CauseListDashboard from "./pages/divCom/CauseListDashboard.jsx";
-import MonthlyReport from "./pages/divCom/MonthlyReport/MonthlyReport.jsx";
-import CauseList from "./components/home/CauseList.jsx";
 import Home from "./components/home/Home.jsx";
+import CauseList from "./components/home/CauseList.jsx";
+import Register from "./components/auth/Register.jsx";
+import History from "./components/sidebar/History.jsx";
+import Calendar from "./components/home/Calendar.jsx";
+import CitizenCharter from "./components/sidebar/CitizenCharter.jsx";
+import Rules from "./components/home/Rules.jsx";
 import Complain from "./components/home/Complain.jsx";
 import Opinion from "./components/home/Opinion.jsx";
-import { Contact } from "lucide-react";
-import Calendar from "./components/home/Calendar.jsx";
-import Rules from "./components/home/Rules.jsx";
-import ManageDivComUser from "./pages/divCom/users/ManageDivComUser.jsx";
-import ManageAdcUser from "./pages/divCom/users/ManageAdcUser.jsx";
-import ManageACLandUser from "./pages/divCom/users/ManageACLandUser.jsx";
-import NagorikDashboard from "./pages/nagorik/NagorikDashboard.jsx";
-import AcLandDashboard from "./pages/acLand/AcLandDashboard.jsx";
+import Gallery from "./components/sidebar/Gallery.jsx";
+import Contact from "./components/home/Contact.jsx";
 import DashboardLayout from "./Layout/DashboardLayout.jsx";
-import AdcDashboard from "./pages/adc/AdcDashboard.jsx";
-import DivComDashboard from "./pages/divCom/DivComDashboard.jsx";
-import AddUsers from "./pages/divCom/users/AddUsers.jsx";
-import AllMamla from "./pages/divCom/mamlas/AllMamla.jsx";
-import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
-import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
-
-import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
+import DivComDashboard from "./pages/divCom/others/DivComDashboard.jsx";
+import MamlaUploadForm from "./pages/DivCom/mamlas/MamlaUploadForm.jsx";
+import AllMamla from "./pages/DivCom/mamlas/AllMamla.jsx";
+import AdcMamla from "./pages/DivCom/mamlas/AdcMamla.jsx";
+import AdcMamlaUploadForm from "./pages/DivCom/mamlas/AdcMamlaUploadForm.jsx";
+import AddUsers from "./pages/DivCom/users/AddUsers.jsx";
+import ManageDivComUser from "./pages/DivCom/users/ManageDivComUser.jsx";
+import ManageAdcUser from "./pages/DivCom/users/ManageAdcUser.jsx";
+import ManageACLandUser from "./pages/DivCom/users/ManageACLandUser.jsx";
+import CauseListDashboard from "./pages/divCom/others/CauseListDashboard.jsx";
+import ComplainDetails from "./pages/divCom/others/ComplainDetails.jsx";
+import FeedbackDetails from "./pages/divCom/others/FeedbackDetails.jsx";
+import MonthlyReport from "./pages/divCom/MonthlyReport/MonthlyReport.jsx";
+import AdcDashboard from "./pages/Adc/AdcDashboard.jsx";
+import AcLandDashboard from "./pages/AcLand/AcLandDashboard.jsx";
+import NagorikDashboard from "./pages/Nagorik/NagorikDashboard.jsx";
+import NagorikCaseInfoUpload from "./pages/Nagorik/NagorikCaseInfoUpload.jsx";
+import AllCasesList from "./pages/common/AllCasesList.jsx";
+import AllDetails from "./pages/common/AllDetails.jsx";
+import AcLandCaseUpload from "./pages/acLand/AcLandCaseUpload.jsx";
 import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
-import AllDetails from "./pages/divCom/cases/AllDetails.jsx";
-import AcLandCaseUpload from "./pages/divCom/cases/AcLandCaseUpload.jsx";
-import NagorikCaseInfoUpload from "./pages/nagorik/NagorikCaseInfoUpload.jsx";
-import MyMamla from "./pages/nagorik/MyMamla.jsx";
+
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
@@ -105,19 +105,19 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               path="lawyer/caseUpload"
               element={<NagorikCaseInfoUpload />}
             />
-            <Route path="lawyer/cases" element={<MyMamla />} />
+            <Route path="lawyer/cases" element={<AllCasesList />} />
             <Route
               path="lawyer/cases/edit/:id"
               element={<NagorikCaseInfoUpload />}
             />
             <Route path=":role/cases/:id" element={<AllDetails />} />
             <Route path=":role/cases/new" element={<AcLandCaseUpload />} />
-            <Route path=":role/cases/edit/:id" element={<AcLandCaseUpload />} />
+            <Route path=":role/cases/edit/:id" element={<AcLandCaseUpload  />} />
 
             {/* <Route path=":role/cases/order/edit/:id" element={<NewOrder />} /> */}
             <Route path=":role/cases/order/:id" element={<DivComOrders />} />
 
-            <Route path=":role/allCases" element={<MyMamla />} />
+            <Route path=":role/allCases" element={<AllCasesList />} />
           </Route>
         </Routes>
         <Toaster richColors position="top-right" />

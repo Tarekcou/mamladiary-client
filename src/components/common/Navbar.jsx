@@ -11,7 +11,7 @@ import menuImage from "../../assets/menuImage.jpg";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../../provider/AuthProvider";
 import SidebarLeft from "../sidebar/SidebarLeft";
-import DashboardSidebar from "../../pages/divCom/SidebarDivCom";
+import DashboardSidebar from "../../pages/divCom/others/SidebarDivCom";
 import bgimage from "../../assets/bg-image.jpg";
 import { FaHome } from "react-icons/fa";
 import Carousel from "./Hero";

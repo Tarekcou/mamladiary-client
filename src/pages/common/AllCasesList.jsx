@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { FcViewDetails } from "react-icons/fc";
 
-const MyMamla = () => {
+const AllCasesList = () => {
   const { user } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
@@ -396,4 +396,4 @@ const MyMamla = () => {
   );
 };
 
-export default MyMamla;
+export default AllCasesList;

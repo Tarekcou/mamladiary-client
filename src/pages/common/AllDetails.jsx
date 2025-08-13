@@ -1,13 +1,13 @@
 import React, { useState, useContext, createContext } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import LawyerDetails from "./LawyerDetails";
 import { ArrowLeft, Edit, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import axiosPublic from "../../../axios/axiosPublic";
-import DivComDetails from "./DivComOrders";
-import AcLandDetails from "./AcLandDetails";
-import { AuthContext } from "../../../provider/AuthProvider";
-import AdcDetails from "./AdcDetails";
+import axiosPublic from "../../axios/axiosPublic";
+import DivComDetails from "../divCom/cases/DivComOrders";
+import AcLandDetails from "../acLand/AcLandDetails";
+import { AuthContext } from "../../provider/AuthProvider";
+import AdcDetails from "../adc/AdcDetails";
+import NagorikDetails from "../nagorik/nagorikDetails";
 const AllDetails = () => {
   const location = useLocation();
   const { id } = useParams();
@@ -37,7 +37,7 @@ const AllDetails = () => {
 
     // Check and push each tab based on data presence
     if (caseData.nagorikSubmission) {
-      allTabs.push({ key: "lawyer", label: "Lawyer" });
+      allTabs.push({ key: "nagorik", label: "Nagorik" });
     }
 
     if (caseData?.divComReview) {
@@ -68,7 +68,7 @@ const AllDetails = () => {
 
   const dynamicTabs = buildTabs();
   // console.log(dynamicTabs);
-  const [activeTab, setActiveTab] = useState(dynamicTabs[0]?.key || "lawyer");
+  const [activeTab, setActiveTab] = useState(dynamicTabs[0]?.key || "nagorik");
 
   const renderContent = () => {
     switch (activeTab) {
@@ -80,9 +80,9 @@ const AllDetails = () => {
         return (
           <AcLandDetails id={caseData._id} role="acLand" refetch={refetch} />
         );
-      case "lawyer":
+      case "nagorik":
         return (
-          <LawyerDetails caseData={caseData} role="lawyer" refetch={refetch} />
+          <NagorikDetails caseData={caseData} role="lawyer" refetch={refetch} />
         );
       default:
         return <p>Invalid tab selected.</p>;

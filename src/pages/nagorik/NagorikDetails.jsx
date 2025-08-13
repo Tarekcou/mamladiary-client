@@ -9,14 +9,13 @@ import {
   SendIcon,
 } from "lucide-react";
 import { toast } from "sonner";
-import { AuthContext } from "../../../provider/AuthProvider";
-import axiosPublic from "../../../axios/axiosPublic";
-import OfficeMessaging from "./OfficeMessaging";
 import { FcCancel } from "react-icons/fc";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+import { AuthContext } from "../../provider/AuthProvider";
+import axiosPublic from "../../axios/axiosPublic";
 
-const LawyerDetails = ({ caseData, role, refetch }) => {
+const NagorikDetails = ({ caseData, role, refetch }) => {
   const { user } = useContext(AuthContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -297,6 +296,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                   <th>মামলা নম্বর</th>
                   <th>সাল</th>
                   <th>জেলা</th>
+                  <th>অফিস</th>
                 </tr>
               </thead>
               <tbody>
@@ -306,6 +306,7 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
                     <td>{m.mamlaNo}</td>
                     <td>{m.year}</td>
                     <td>{m.district.bn}</td>
+                    <td>{m.officeName.bn}</td>
                   </tr>
                 ))}
               </tbody>
@@ -353,4 +354,4 @@ const LawyerDetails = ({ caseData, role, refetch }) => {
   );
 };
 
-export default LawyerDetails;
+export default NagorikDetails;

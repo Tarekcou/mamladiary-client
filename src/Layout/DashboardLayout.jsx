@@ -6,7 +6,7 @@ import Navbar from "../components/common/Navbar";
 import SidebarNagorik from "../pages/nagorik/SidebarNagorik";
 import SidebarAcLand from "../pages/acLand/SidebarAcLand";
 import SidebarAdc from "../pages/adc/SidebarAdc";
-import SidebarDivCom from "../pages/divCom/SidebarDivCom";
+import SidebarDivCom from "../pages/divCom/others/SidebarDivCom";
 
 const DashboardLayout = () => {
   const [isSticky, setIsSticky] = useState(false);

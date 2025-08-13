@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import axiosPublic from "../../axios/axiosPublic";
+import axiosPublic from "../../../axios/axiosPublic";
 import { toast } from "sonner";
 
 const CauseListDashboard = () => {

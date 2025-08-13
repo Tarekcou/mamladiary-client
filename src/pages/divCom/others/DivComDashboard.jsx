@@ -13,18 +13,12 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import axiosPublic from "../../axios/axiosPublic";
-import { AuthContext } from "../../provider/AuthProvider";
-import { districts } from "../../data/districts";
-import { monthNames } from "../../data/months";
 
-const toBanglaNumber = (num) => {
-  const banglaDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-  return String(num)
-    .split("")
-    .map((digit) => (/\d/.test(digit) ? banglaDigits[digit] : digit))
-    .join("");
-};
+import { toBanglaNumber } from "../../../utils/toBanglaNumber";
+import axiosPublic from "../../../axios/axiosPublic";
+import { monthNames } from "../../../data/months";
+import { districts } from "../../../data/districts";
+
 
 const DivComDashboard = () => {
   const [cases, setCases] = useState([]);

@@ -16,13 +16,13 @@ import { toast } from "sonner";
 import { AuthContext } from "../../../provider/AuthProvider";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate, useParams } from "react-router";
-import OfficeMessaging from "./OfficeMessaging";
 import { useQuery } from "@tanstack/react-query";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { mamlaNames } from "../../../data/mamlaNames";
 import { aclandOptions } from "../../../data/aclandOptions";
 import Tippy from "@tippyjs/react";
+import OfficeMessaging from "./OfficeMessaging";
 const DivComOrders = () => {
   const { id } = useParams();
   // console.log(id);
@@ -408,16 +408,11 @@ const DivComOrders = () => {
       `}</style>
 
       <div className="bg-white my-5 pt-10 rounded-xl">
-        <h1 className="flex flex-row justify-between items-center mx-auto w-full text-2xl text-center s card">
-          <button
-            onClick={() => navigate(-1)} // -1 means go back one page
-            className="btn btn-ghost"
-          >
-            <ArrowLeft />
-          </button>{" "}
-          আদেশ যুক্ত করুন <div></div>
+        <h1 className="mx-auto w-full text-2xl text-center mb-10 card">
+          
+          আদেশ যুক্ত করুন 
         </h1>
-        <div className="flex justify-end gap-2 mx-4 my-4">
+        <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-b border-gray-200">
           <button
             onClick={handleAddRow}
             className="flex btn-success btn-sm btn"
