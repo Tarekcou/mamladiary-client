@@ -44,6 +44,8 @@ import AllCasesList from "./pages/common/AllCasesList.jsx";
 import AllDetails from "./pages/common/AllDetails.jsx";
 import AcLandCaseUpload from "./pages/acLand/AcLandCaseUpload.jsx";
 import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
+import Dashboard from "./pages/common/Dashboard.jsx";
+import ProfileUpdateForm from "./pages/common/ProfileUpdateForm.jsx";
 
 
 const queryClient = new QueryClient();
@@ -83,7 +85,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               </PrivateRouter>
             }
           >
-            <Route path="divCom" element={<DivComDashboard />} />
+            <Route path=":role" element={<Dashboard />} />
+            <Route path=":role/profile" element={<ProfileUpdateForm />} />
             <Route path="mamlaUpload" element={<MamlaUploadForm />} />
             <Route path="allMamla" element={<AllMamla />} />
             <Route path="allAdcMamla" element={<AdcMamla />} />
@@ -98,9 +101,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="monthlyReport" element={<MonthlyReport />} />
 
             {/* OTHER DASHBOARD ROLES */}
-            <Route path="adc" element={<AdcDashboard />} />
-            <Route path="acLand" element={<AcLandDashboard />} />
-            <Route path="lawyer" element={<NagorikDashboard />} />
+            <Route path="adc" element={<Dashboard />} />
+            <Route path="acLand" element={<Dashboard />} />
+            <Route path="lawyer" element={<Dashboard />} />
             <Route
               path="lawyer/caseUpload"
               element={<NagorikCaseInfoUpload />}

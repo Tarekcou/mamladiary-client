@@ -124,7 +124,7 @@ export default function Navbar() {
 
         {user && (
           <NavLink
-            to="/dashboard"
+            to={`/dashboard/${user?.role}`}
             className={({ isActive }) =>
               isActive
                 ? "btn-neutral btn lg:btn-sm underline-offset-4 font-semibold bg-[#004080] text-white"

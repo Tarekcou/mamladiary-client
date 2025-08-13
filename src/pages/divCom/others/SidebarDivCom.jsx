@@ -27,14 +27,14 @@ const SidebarDivCom = () => {
             আগত মামলা
           </NavLink>
           <NavLink
-            to="/dashboard/divCom/allCases"
+            to="/dashboard/divCom/completed-cases"
             className={({ isActive }) =>
               isActive
                 ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            সকল আগত মামলা
+            নিষ্পত্তিকৃত মামলা 
           </NavLink>
         </ul>
 

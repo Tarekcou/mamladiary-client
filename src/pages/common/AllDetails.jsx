@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeft, Edit, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -68,7 +68,20 @@ const AllDetails = () => {
 
   const dynamicTabs = buildTabs();
   // console.log(dynamicTabs);
-  const [activeTab, setActiveTab] = useState(dynamicTabs[0]?.key || "nagorik");
+const [activeTab, setActiveTab] = useState("nagorik"); // default
+
+useEffect(() => {
+  if (dynamicTabs.length === 0) return;
+
+  // If divCom, show all tabs but default to first
+  if (user.role === "divCom") {
+    setActiveTab(dynamicTabs[0].key);
+  } else {
+    // Set to user role if available in dynamicTabs
+    const userTab = dynamicTabs.find((tab) => tab.key === user.role);
+    setActiveTab(userTab?.key || dynamicTabs[0].key);
+  }
+}, [dynamicTabs, user.role]);
 
   const renderContent = () => {
     switch (activeTab) {
