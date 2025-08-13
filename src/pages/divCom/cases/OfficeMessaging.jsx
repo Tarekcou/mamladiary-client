@@ -172,7 +172,7 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
     });
 
     try {
-      const updatedOrderSheets = caseData.divComReview.orderSheets.map(
+      const updatedOrderSheets = caseData?.divComReview?.orderSheets.map(
         (order, idx) => {
           if (idx === index) {
             return {
@@ -219,7 +219,10 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
       };
 
       // Patch the updated data
-      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, payload);
+      const res = await axiosPublic.patch(
+        `/cases/divCom/${caseData._id}`,
+        payload
+      );
 
       if (res.data.modifiedCount > 0) {
         toast.success("বার্তা সফলভাবে সংরক্ষণ করা হয়েছে");

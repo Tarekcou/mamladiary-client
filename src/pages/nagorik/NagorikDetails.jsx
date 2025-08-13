@@ -25,8 +25,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
   //
 
-    const handleApprove = async (approval) => {
-    console.log(cas);
+  const handleApprove = async (approval) => {
     const confirm = await Swal.fire({
       title: "আপনি কি মামলাটি অনুমোদন করতে চান?",
       icon: "question",
@@ -37,10 +36,13 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
     if (!confirm.isConfirmed) return;
 
     try {
-      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}/approve`, {
-        isApproved: approval,
-        isCompleted: false
-      });
+      const res = await axiosPublic.patch(
+        `/cases/divCom/${caseData._id}/approve`,
+        {
+          isApproved: approval,
+          isCompleted: false,
+        }
+      );
       console.log(res.data);
       if (res.data.modifiedCount > 0) {
         toast.success("মামলাটি অনুমোদিত হয়েছে।");
@@ -55,7 +57,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
   };
   const handleCaseSent = async (caseId, stageKey, newStatus) => {
     const confirm = await Swal.fire({
-      title: "আপনি কি প্রেরন চান?",
+      title: "আপনি কি প্রেরন করতে চান?",
       text: "এই কাজটি অপরিবর্তনীয়!",
       icon: "warning",
       showCancelButton: true,
@@ -64,10 +66,13 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
     if (!confirm.isConfirmed) return;
     try {
-      const res = await axiosPublic.patch(`/cases/nagorik/sentTodivCom/${caseId}`, {
-        stageKey,
-        status: newStatus,
-      });
+      const res = await axiosPublic.patch(
+        `/cases/nagorik/sentTodivCom/${caseId}`,
+        {
+          stageKey,
+          status: newStatus,
+        }
+      );
       // Optimistically update local cache
       queryClient.setQueryData(["myCases", user._id], (oldCases = []) =>
         oldCases.map((cas) =>
@@ -86,6 +91,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
       if (res.data.success) {
         toast.success(" সফলভাবে প্রেরণ  করা হয়েছে");
+        navigate(-1);
         refetch();
       } else {
         toast.error(" প্রেরণে  ব্যর্থ হয়েছে");
@@ -104,13 +110,13 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
   const { nagorikSubmission, isApproved, trackingNo, messageToOffices } =
     caseData;
-    const isRefused=caseData?.nagorikSubmission?.status==="refused"
+  const isRefused = caseData?.nagorikSubmission?.status === "refused";
 
   const handleAddOrder = () => {
     navigate(`/dashboard/divCom/cases/order/${caseData._id}`);
   };
   return (
-    <div className="bg-white shadow-md mx-auto p-6 max-w-4xl">
+    <div className="bg-base-200 shadow-md mx-auto p-6 max-w-4xl">
       <div>
         <div>
           <h2 className="mb-10 font-bold text-xl text-center underline">
@@ -131,7 +137,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
                     অনুমোদনের জন্য অপেক্ষমাণ
                   </h1>
                 ) : (
-                  <div className="flex justify-between items-center  w-full">
+                  <div className="flex justify-between items-center w-full">
                     <h1 className="badge badge-warning">
                       অনুমোদনের জন্য প্রেরণ করুন
                     </h1>
@@ -173,7 +179,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
 
             {/* Approve Button */}
             {!isApproved && !isRefused && user?.role === "divCom" ? (
-              <div className="flex justify-end flex-col items-end gap-2   w-1/2 text-center">
+              <div className="flex flex-col justify-end items-end gap-2 w-1/2 text-center">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   animate={{ y: [0, -3, 0] }}
@@ -182,22 +188,19 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
                   className=""
                 >
                   <h1 className="btn-block flex justify-center items-center gap-2 btn btn-sm btn-success">
-                    <CheckCircle />অনুমোদন দিন
+                    <CheckCircle />
+                    অনুমোদন দিন
                   </h1>
                 </motion.button>
 
                 <button
-                   onClick={() =>
-                        handleCaseSent(
-                          caseData._id,
-                          "nagorikSubmission",
-                          "refused"
-                        )
-                      }
-                        className="flex btn-info btn btn-sm"
-                      >
-                        <RotateCcw /> ফেরত পাঠান 
-                  </button>
+                  onClick={() =>
+                    handleCaseSent(caseData._id, "nagorikSubmission", "refused")
+                  }
+                  className="flex btn-info btn btn-sm"
+                >
+                  <RotateCcw /> ফেরত পাঠান
+                </button>
               </div>
             ) : (
               <div className="space-y-1 text-center btn-sm">
@@ -207,15 +210,16 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
                     <>
                       <button
                         onClick={handleAddOrder}
-                        className="flex btn-success btn"
+                        className="flex btn-success btn btn-sm"
                       >
-                        <Plus /> নতুন আদেশ দিন
+                        <Plus /> নতুন আদেশ
                       </button>
                       <button
                         onClick={() => handleApprove(false)}
-                        className="flex items-center btn btn-warning"
+                        className="flex items-center btn btn-sm btn-warning"
                       >
-                        <FcCancel className="text-2xl" /> অনুমোদন বাতিল
+                        <FcCancel className="text-2xl" />{" "}
+                        <h1 className="text-xs">অনুমোদন বাতিল</h1>
                       </button>
                     </>
                   )}
@@ -248,7 +252,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
       <div className="mt-4">
         <h3 className="font-semibold">বাদী</h3>
         {nagorikSubmission?.badi?.length > 0 ? (
-          <table className="table table-sm bg-base-100 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
+          <table className="table table-sm bg-base-200 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
             <thead>
               <tr className="bg-base-200 text-center">
                 <th>নাম</th>
@@ -275,7 +279,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
       <div className="my-6">
         <h3 className="font-semibold">বিবাদী</h3>
         {nagorikSubmission?.bibadi?.length > 0 ? (
-          <table className="table table-sm bg-base-100 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
+          <table className="table table-sm bg-base-200 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
             <thead>
               <tr className="bg-base-200 text-center">
                 <th>নাম</th>
@@ -306,7 +310,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
             {nagorikSubmission.aclandMamlaInfo[0].officeName.bn} আদালতের তথ্য
           </h3>
           {nagorikSubmission?.aclandMamlaInfo?.length > 0 ? (
-            <table className="table table-sm bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
+            <table className="table table-sm bg-base-200 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
               <thead>
                 <tr className="bg-base-200">
                   <th>মামলার নাম</th>
@@ -342,7 +346,7 @@ const NagorikDetails = ({ caseData, role, refetch }) => {
             {nagorikSubmission?.adcMamlaInfo[0]?.officeName?.bn} আদালতের তথ্য
           </h3>
           {nagorikSubmission?.adcMamlaInfo?.length > 0 ? (
-            <table className="table table-sm bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
+            <table className="table table-sm bg-base-200 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
               <thead>
                 <tr className="bg-base-200">
                   <th>মামলার নাম</th>

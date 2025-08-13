@@ -197,180 +197,181 @@ const AdcOrder = ({ header }) => {
     }
   };
 
-    const handleDeleteRow = async (index) => {
-      const confirm = await Swal.fire({
-        title: "আপনি কি ডিলেট চান?",
-        text: "এই কাজটি অপরিবর্তনীয়!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "হ্যাঁ, করুন!",
+  const handleDeleteRow = async (index) => {
+    const confirm = await Swal.fire({
+      title: "আপনি কি ডিলেট চান?",
+      text: "এই কাজটি অপরিবর্তনীয়!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, করুন!",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      // Assuming each row is a unique object in orderSheets
+      const rowToDelete = orderSheets[index];
+
+      const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/delete`, {
+        deleteOrderSheet: {
+          role: "adc", // or user.role
+          officeName: user?.officeName,
+          district: user?.district,
+          orderSheet: rowToDelete,
+        },
       });
 
-      if (!confirm.isConfirmed) return;
-
-      try {
-        // Assuming each row is a unique object in orderSheets
-        const rowToDelete = orderSheets[index];
-
-        const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/delete`, {
-          deleteOrderSheet: {
-            role: "adc", // or user.role
-            officeName: user?.officeName,
-            district: user?.district,
-            orderSheet: rowToDelete,
-          },
-        });
-
-        if (res.status === 200) {
-          toast.success("সফলভাবে ডিলেট হয়েছে!");
-          setOrderSheets((prev) => prev.filter((_, i) => i !== index));
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("ডিলেট করতে সমস্যা হয়েছে");
+      if (res.status === 200) {
+        toast.success("সফলভাবে ডিলেট হয়েছে!");
+        setOrderSheets((prev) => prev.filter((_, i) => i !== index));
       }
-    };
-
-    const handleSave = async () => {
-      try {
-        console.log("📦 Saving order sheets:", orderSheets);
-        if (orderSheets.length === 0) {
-          toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
-          return;
-        }
-        const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/add`, {
-          responsesFromOffices: [
-            {
-              officeName: user?.officeName,
-              district: user?.district,
-              role: "adc",
-              orderSheets,
-            },
-          ],
-        });
-
-        console.log(res.data);
-
-        if (res.data.modifiedCount > 0) {
-          toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
-          setEditingRow(null);
-        } else {
-          toast("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
-        }
-      } catch (error) {
-        console.error("❌ Save failed:", error);
-        toast("সংরক্ষণে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-      }
-    };
-
-    const handlePrint = () => {
-      window.print();
-    };
-    const handleHeader = async () => {
-  const { orderSheets, adcHeaderData, ...rest } = adcCaseData || {};
-
-  const updatedFields = {
-    ...rest,
-    formNo: headerInfo.formNo,
-    mamlaName: headerInfo.mamlaName,
-    mamlaNo: headerInfo.mamlaNo,
-    year: headerInfo.year,
-    district: headerInfo.district,
-    officeName: headerInfo.officeName, // Fix: don't assign district to officeName
+    } catch (err) {
+      console.error(err);
+      toast.error("ডিলেট করতে সমস্যা হয়েছে");
+    }
   };
 
-  const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/header`, {
-    updatedFields,
-  });
+  const handleSave = async () => {
+    try {
+      console.log("📦 Saving order sheets:", orderSheets);
+      if (orderSheets.length === 0) {
+        toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
+        return;
+      }
+      const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/add`, {
+        responsesFromOffices: [
+          {
+            officeName: user?.officeName,
+            district: user?.district,
+            role: "adc",
+            orderSheets,
+          },
+        ],
+      });
 
-  if (res.data.modifiedCount > 0) {
-    setShowHeaderModal(false);
-    toast("হেডার তথ্য সংরক্ষণ হয়েছে");
-    refetch();
-  } else {
-    toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
-  }
-};
+      console.log(res.data);
 
-
-    const parseDate = (dateString) => {
-      const date = new Date(dateString);
-      return isNaN(date) ? null : date;
-    };
-    const generateDefaultActionText = (order, date) => {
-      console.log(order);
-      const newText = `মামলা নং ${order.mamlaNo} (${
-        order.mamlaName
-      }) সংক্রান্ত আদেশ অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতে ${
-        date?.split("T")[0] || "___"
-      } তারিখে প্রেরণ করা হয়েছে।`;
-
-      // Append if existing text present
-      return newText;
-    };
-
-    const handleSend = async (order) => {
-  const confirm = await Swal.fire({
-    title: "আপনি কি প্রেরণ করতে চান?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
-  });
-
-  if (!confirm.isConfirmed) return;
-
-  try {
-    // Find the adc response from caseData
-    const adcResp = caseData.responsesFromOffices.find(
-      (resp) => resp.role === "adc"
-    );
-
-    if (!adcResp) {
-      toast.error("ADC response data not found.");
-      return;
+      if (res.data.modifiedCount > 0) {
+        toast("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
+        setEditingRow(null);
+      } else {
+        toast("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
+      }
+    } catch (error) {
+      console.error("❌ Save failed:", error);
+      toast("সংরক্ষণে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     }
+  };
 
-    // Prepare updated actionTaken text
-    const updatedActionTaken = order?.actionTaken
-      ? order?.actionTaken +
-        "\n" +
-        generateDefaultActionText(headerInfo, new Date().toISOString())
-      : generateDefaultActionText(headerInfo, new Date().toISOString());
+  const handlePrint = () => {
+    window.print();
+  };
+  const handleHeader = async () => {
+    const { orderSheets, adcHeaderData, ...rest } = adcCaseData || {};
 
-    // Prepare payload to update only the matching order sheet
-    const payload = {
-      responsesFromOffices: [
-        {
-          role: adcResp.role,
-          officeName: { en: adcResp.officeName.en },
-          district: { en: adcResp.district.en },
-          orderSheets: [
-            {
-              orderNo: order.orderNo,
-              actionTaken: updatedActionTaken,
-              sentToDivcom: true,
-              sentDate: new Date().toISOString(),
-            },
-          ],
-        },
-      ],
+    const updatedFields = {
+      ...rest,
+      formNo: headerInfo.formNo,
+      mamlaName: headerInfo.mamlaName,
+      mamlaNo: headerInfo.mamlaNo,
+      year: headerInfo.year,
+      district: headerInfo.district,
+      officeName: headerInfo.officeName, // Fix: don't assign district to officeName
     };
 
-    // Send PATCH request to backend endpoint for sending order
-    const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/send`, payload);
+    const res = await axiosPublic.patch(`/cases/adc/${caseData._id}/header`, {
+      updatedFields,
+    });
 
     if (res.data.modifiedCount > 0) {
-      toast.success(`অর্ডার নং ${order.orderNo} সফলভাবে প্রেরণ হয়েছে!`);
-      refetch(); // Refresh data after update
+      setShowHeaderModal(false);
+      toast("হেডার তথ্য সংরক্ষণ হয়েছে");
+      refetch();
     } else {
-      toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");
+      toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("পাঠাতে সমস্যা হয়েছে!");
-  }
-};
+  };
 
+  const parseDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date) ? null : date;
+  };
+  const generateDefaultActionText = (order, date) => {
+    console.log(order);
+    const newText = `মামলা নং ${order.mamlaNo} (${
+      order.mamlaName
+    }) সংক্রান্ত আদেশ অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতে ${
+      date?.split("T")[0] || "___"
+    } তারিখে প্রেরণ করা হয়েছে।`;
+
+    // Append if existing text present
+    return newText;
+  };
+
+  const handleSend = async (order) => {
+    const confirm = await Swal.fire({
+      title: "আপনি কি প্রেরণ করতে চান?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      // Find the adc response from caseData
+      const adcResp = caseData.responsesFromOffices.find(
+        (resp) => resp.role === "adc"
+      );
+
+      if (!adcResp) {
+        toast.error("ADC response data not found.");
+        return;
+      }
+
+      // Prepare updated actionTaken text
+      const updatedActionTaken = order?.actionTaken
+        ? order?.actionTaken +
+          "\n" +
+          generateDefaultActionText(headerInfo, new Date().toISOString())
+        : generateDefaultActionText(headerInfo, new Date().toISOString());
+
+      // Prepare payload to update only the matching order sheet
+      const payload = {
+        responsesFromOffices: [
+          {
+            role: adcResp.role,
+            officeName: { en: adcResp.officeName.en },
+            district: { en: adcResp.district.en },
+            orderSheets: [
+              {
+                orderNo: order.orderNo,
+                actionTaken: updatedActionTaken,
+                sentToDivcom: true,
+                sentDate: new Date().toISOString(),
+              },
+            ],
+          },
+        ],
+      };
+
+      // Send PATCH request to backend endpoint for sending order
+      const res = await axiosPublic.patch(
+        `/cases/adc/${caseData._id}/send`,
+        payload
+      );
+
+      if (res.data.modifiedCount > 0) {
+        toast.success(`অর্ডার নং ${order.orderNo} সফলভাবে প্রেরণ হয়েছে!`);
+        refetch(); // Refresh data after update
+      } else {
+        toast.error("মামলা প্রেরণে সমস্যা হয়েছে।");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("পাঠাতে সমস্যা হয়েছে!");
+    }
+  };
 
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
@@ -423,55 +424,68 @@ const AdcOrder = ({ header }) => {
   return (
     <>
       <style>{`
-        @media print {
-          body {
-            margin: 0;
-            padding: 0;
-          }
-          body * {
-            visibility: hidden;
-          }
-          #printable-area, #printable-area * {
-            visibility: visible;
-          }
-          #printable-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 5mm;
-            box-sizing: border-box;
-            background: white;
-          }
-          .no-print {
-            display: none !important;
-          }
-          textarea, input {
-            border: none;
-            outline: none;
-            resize: none;
-            background: none;
-            color: black;
-          }
-          #action {
-            display: none;
-          }
-        }
+     @media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hide everything except the printable area */
+  body * {
+    visibility: hidden;
+  }
+    body > *:not(#printable-area) {
+    visibility: hidden !important ;
+  }
+  #printable-area,
+  #printable-area * {
+    visibility: visible;
+  }
+
+  /* Ensure A4 size */
+  #printable-area {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto; /* center on page */
+    padding: 4mm;
+    box-sizing: border-box;
+    background: white;
+    position: relative; /* no absolute to avoid weird clipping */
+    page-break-inside: avoid;
+  }
+
+  /* Force tables to fit */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* prevent overflow */
+  }
+
+  .no-print, #action {
+    display: none !important;
+  }
+
+  textarea, input {
+    border: none !important;
+    outline: none !important;
+    resize: none !important;
+    background: none !important;
+    color: black !important;
+  }
+
+  /* Optional: avoid page breaking inside rows */
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+
+
       `}</style>
 
-      <div className="bg-white my-5 pt-10 rounded-xl">
-        {/* <h1 className="flex flex-row justify-between items-center mx-auto w-full text-2xl text-center s card">
-          <button
-            onClick={() => navigate(-1)} // -1 means go back one page
-            className="btn btn-ghost"
-          >
-            <ArrowLeft />
-          </button>{" "}
-          আদেশ যুক্ত করুন <div></div>
-        </h1> */}
+      <div className="bg-base-200/30 my-5 pt-10 rounded-xl">
         <div className="flex justify-end gap-2 mx-4 my-4">
-          {user.role == "adc" && (
+          {user.role == "adc" && !adcCaseData.sentToDivcom && (
             <>
               <button
                 onClick={handleAddRow}
@@ -497,7 +511,9 @@ const AdcOrder = ({ header }) => {
         </div>
 
         <div id="printable-area" className="p-4">
-          {renderCaseHeader()}
+          <div className="header">
+            {renderCaseHeader()} {/* header info */}
+          </div>
 
           <table className="border w-full text-sm text-center table-auto">
             <thead>
@@ -708,7 +724,7 @@ const AdcOrder = ({ header }) => {
 
       {showHeaderModal && (
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/40">
-          <div className="space-y-4 bg-white p-6 rounded-md w-[400px]">
+          <div className="space-y-4 bg-base-200 p-6 rounded-md w-[400px]">
             <h2 className="font-semibold text-lg">হেডার তথ্য হালনাগাদ</h2>
 
             <input

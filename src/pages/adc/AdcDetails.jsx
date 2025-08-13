@@ -72,21 +72,21 @@ const AdcDetails = ({ id }) => {
       </h4>
       {adcMessages.length > 0 ? (
         adcMessages.map((msg, idx) => (
-          <div key={idx} className="bg-white shadow-sm mb-4 p-4 rounded">
+          <div key={idx} className="bg-base-200 shadow-sm mb-4 p-4 rounded">
             <p className="mb-2 font-medium text-gray-700">
               <strong>প্রেরণের তারিখ:</strong>{" "}
               {toBanglaNumber(msg.date.split("T")[0])}
             </p>
             <div
               tabIndex="0"
-              className="collapse collapse-arrow bg-base-100 my-2 border border-base-300"
+              className="collapse collapse-arrow bg-base-200 my-2 border border-base-300"
             >
               <input type="checkbox" />
 
               <div className="collapse-title bg-green-100 font-semibold">
                 মামলার তথ্য
               </div>
-              <table className="collapse-content table bg-base-100 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
+              <table className="collapse-content table bg-base-200 shadow mt-2 border border-base-content/5 rounded-box w-full overflow-x-auto">
                 <thead>
                   <tr className="bg-gray-100">
                     <th>ক্রমিক</th>
@@ -106,7 +106,9 @@ const AdcDetails = ({ id }) => {
                       <td>{m.mamlaNo}</td>
                       <td>{m.year}</td>
                       <td>{m.district.bn}</td>
-                      <td>জেলা প্রশাসকের  <br /> কার্যালয়, {m.officeName.bn}</td>
+                      <td>
+                        জেলা প্রশাসকের <br /> কার্যালয়, {m.officeName.bn}
+                      </td>
                       <td>
                         {user?.role === "adc" && !isUploaded(m.mamlaNo) ? (
                           <Tippy
@@ -147,7 +149,7 @@ const AdcDetails = ({ id }) => {
 
             <div
               tabIndex="0"
-              className="collapse collapse-arrow bg-base-100 my-2 border border-base-300"
+              className="collapse collapse-arrow bg-base-200 my-2 border border-base-300"
             >
               <input type="checkbox" />
 
@@ -158,7 +160,7 @@ const AdcDetails = ({ id }) => {
                 <div className="p-2">
                   <h3 className="font-semibold">বাদী</h3>
                   {msg?.parties?.badiList.length > 0 ? (
-                    <table className="table table-sm bg-base-100 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
+                    <table className="table table-sm bg-base-200 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
                       <thead>
                         <tr className="bg-base-200 text-center">
                           <th>নাম</th>
@@ -184,7 +186,7 @@ const AdcDetails = ({ id }) => {
                 <div className="p-2">
                   <h3 className="font-semibold">বিবাদী</h3>
                   {msg?.parties?.bibadiList.length > 0 ? (
-                    <table className="table table-sm bg-base-100 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
+                    <table className="table table-sm bg-base-200 shadow border border-base-content/5 rounded-box w-full overflow-x-auto">
                       <thead>
                         <tr className="bg-base-200 text-center">
                           <th>নাম</th>
@@ -213,7 +215,7 @@ const AdcDetails = ({ id }) => {
             {/* --- Add New Case Collapse --- */}
             {isAnyOrderSent || user?.role === "adc" ? (
               <div
-                className={`collapse collapse-arrow bg-base-100 border border-base-300  ${
+                className={`collapse collapse-arrow bg-base-200 border border-base-300  ${
                   isCollapseOpen ? "collapse-open" : ""
                 }`}
               >

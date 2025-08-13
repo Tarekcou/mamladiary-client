@@ -355,7 +355,7 @@ const NewOrder = () => {
           />
           <h3 className="mb-2 font-semibold">আদেশপত্র</h3>
           {formData.orderSheets.map((order, idx) => (
-            <div key={idx} className="bg-white mb-4 p-3 border rounded-md">
+            <div key={idx} className="bg-base-200 mb-4 p-3 border rounded-md">
               <div>
                 <input
                   type="date"

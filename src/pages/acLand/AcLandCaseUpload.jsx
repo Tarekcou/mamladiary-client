@@ -91,7 +91,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
       const res = await axiosPublic.patch(`/cases/acLand/${id}`, {
         responsesFromOffices: [newEntry], // send only this one role group
       });
-      console.log(res.data);
+      // console.log(res.data);
       if (res.status === 200) {
         toast.success("রেসপন্স সফলভাবে সাবমিট হয়েছে!");
         if (cas) {
@@ -106,21 +106,22 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
       toast.error("রেসপন্স সাবমিট করতে সমস্যা হয়েছে।");
     }
   };
-
   return (
     <>
       <h2 className="flex justify-start items-center my-4 font-bold text-xl">
-        <button
-          onClick={() => navigate(-1)} // -1 means go back one page
-          className="btn btn-ghost"
-        >
-          <ArrowLeft />{" "}
-        </button>
+        {isEditMode && (
+          <button
+            onClick={() => navigate(-1)} // -1 means go back one page
+            className="btn btn-ghost"
+          >
+            <ArrowLeft />{" "}
+          </button>
+        )}
         {isEditMode ? "মামলা সম্পাদনা করুন" : "নতুন মামলা তথ্য যুক্ত করুন"}
       </h2>
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow mx-auto p-6 rounded-xl max-w-4xl"
+        className="bg-base-200 shadow mx-auto p-6 border rounded-xl max-w-4xl"
       >
         <div className="gap-4 grid grid-cols-2 mb-5">
           <label>
@@ -194,7 +195,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
           </>
         )}
 
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <h3 className="mb-2 font-semibold">ডকুমেন্টস</h3>
           {documents.map((doc, idx) => (
             <div key={idx} className="gap-2 grid grid-cols-2 mb-2">
@@ -225,13 +226,13 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
           >
             নতুন ডকুমেন্ট
           </button>
-        </div>
+        </div> */}
 
         {selectedCaseName === "মিস কেইস" && (
           <div className="mt-6">
             <h3 className="mb-2 font-semibold">আদেশপত্রসমূহ</h3>
             {orderSheets.map((order, idx) => (
-              <div key={idx} className="mb-4 p-3 border rounded-md">
+              <div key={idx} className="mb-4 p-2 rounded-md">
                 <input
                   type="date"
                   className="mb-2 input-bordered w-full input"

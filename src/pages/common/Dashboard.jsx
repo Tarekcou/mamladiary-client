@@ -34,7 +34,6 @@ export default function Dashboard() {
           params.district = user.district?.en;
           break;
         case "divCom":
-         
           break;
         case "nagorik":
           params.userId = user._id;
@@ -50,10 +49,15 @@ export default function Dashboard() {
 
   // Filter by search text
   const filteredCases = caseData.filter((cas) => {
-    const badiNames = cas.nagorikSubmission?.badi?.map((b) => b.name).join(" ") || "";
-    const bibadiNames = cas.nagorikSubmission?.bibadi?.map((b) => b.name).join(" ") || "";
+    const badiNames =
+      cas.nagorikSubmission?.badi?.map((b) => b.name).join(" ") || "";
+    const bibadiNames =
+      cas.nagorikSubmission?.bibadi?.map((b) => b.name).join(" ") || "";
     const trackingNo = cas.trackingNo?.toString() || "";
-    const yearMatch = cas.nagorikSubmission?.aclandMamlaInfo?.map((info) => info.year).join(" ") || "";
+    const yearMatch =
+      cas.nagorikSubmission?.aclandMamlaInfo
+        ?.map((info) => info.year)
+        .join(" ") || "";
     return (
       badiNames.toLowerCase().includes(searchText.toLowerCase()) ||
       bibadiNames.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -102,22 +106,42 @@ export default function Dashboard() {
       {
         label: "Messages Sent",
         data: [
-          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "acLand")).length,
-          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "adc")).length,
-          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "divCom")).length,
-          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "nagorik")).length,
-          caseData.filter((c) => c.messagesToOffices?.some((m) => m.sentTo.role === "nagorik")).length,
+          caseData.filter((c) =>
+            c.messagesToOffices?.some((m) => m.sentTo.role === "acLand")
+          ).length,
+          caseData.filter((c) =>
+            c.messagesToOffices?.some((m) => m.sentTo.role === "adc")
+          ).length,
+          caseData.filter((c) =>
+            c.messagesToOffices?.some((m) => m.sentTo.role === "divCom")
+          ).length,
+          caseData.filter((c) =>
+            c.messagesToOffices?.some((m) => m.sentTo.role === "nagorik")
+          ).length,
+          caseData.filter((c) =>
+            c.messagesToOffices?.some((m) => m.sentTo.role === "nagorik")
+          ).length,
         ],
         backgroundColor: "rgba(54, 162, 235, 0.6)",
       },
       {
         label: "Responses Received",
         data: [
-          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "acLand")).length,
-          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "adc")).length,
-          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "divCom")).length,
-          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "nagorik")).length,
-          caseData.filter((c) => c.responsesFromOffices?.some((r) => r.role === "nagorik")).length,
+          caseData.filter((c) =>
+            c.responsesFromOffices?.some((r) => r.role === "acLand")
+          ).length,
+          caseData.filter((c) =>
+            c.responsesFromOffices?.some((r) => r.role === "adc")
+          ).length,
+          caseData.filter((c) =>
+            c.responsesFromOffices?.some((r) => r.role === "divCom")
+          ).length,
+          caseData.filter((c) =>
+            c.responsesFromOffices?.some((r) => r.role === "nagorik")
+          ).length,
+          caseData.filter((c) =>
+            c.responsesFromOffices?.some((r) => r.role === "nagorik")
+          ).length,
         ],
         backgroundColor: "rgba(75, 192, 192, 0.6)",
       },
@@ -150,39 +174,41 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">📊 Dashboard</h1>
+    <div className="space-y-6 p-6">
+      <h1 className="font-bold text-2xl">📊 Dashboard</h1>
 
       {/* Search */}
       <input
         type="text"
         placeholder="Search by badi, bibadi, year, tracking no..."
-        className="border p-2 w-full rounded"
+        className="p-2 border rounded w-full"
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+      <div className="gap-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4">
         {Object.entries(stats).map(([key, value]) => (
-          <div key={key} className="p-4 bg-white shadow rounded">
-            <h2 className="text-lg capitalize">{key.replace(/([A-Z])/g, " $1")}</h2>
-            <p className="text-2xl font-bold">{value}</p>
+          <div key={key} className="bg-base-200 shadow p-4 rounded">
+            <h2 className="text-lg capitalize">
+              {key.replace(/([A-Z])/g, " $1")}
+            </h2>
+            <p className="font-bold text-2xl">{value}</p>
           </div>
         ))}
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      <div className="gap-6 grid grid-cols-1 md:grid-cols-2 mt-4">
         {/* Role activity */}
-        <div className="bg-white p-4 shadow rounded">
-          <h2 className="text-lg font-semibold mb-2">Role-wise Activity</h2>
+        <div className="bg-base-200 shadow p-4 rounded">
+          <h2 className="mb-2 font-semibold text-lg">Role-wise Activity</h2>
           <Bar data={roleActivity} />
         </div>
 
         {/* Cases per year */}
-        <div className="bg-white p-4 shadow rounded">
-          <h2 className="text-lg font-semibold mb-2">Cases per Year</h2>
+        <div className="bg-base-200 shadow p-4 rounded">
+          <h2 className="mb-2 font-semibold text-lg">Cases per Year</h2>
           <Line data={casesPerYear} />
         </div>
       </div>

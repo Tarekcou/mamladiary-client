@@ -113,7 +113,7 @@ export default function CaseSearchForm({ handleSubmit }) {
               alt="logo"
             /> */}
             <p> {t("case search")}</p>
-            <SearchLottie className="bg-white border" />
+            <SearchLottie className="bg-base-200 border" />
           </div>
           <div className=" "></div>
           <div className="space-y-4 p-4 font-semibold text-lg">

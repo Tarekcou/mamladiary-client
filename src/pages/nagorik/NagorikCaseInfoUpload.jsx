@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { CoinsIcon, Plus, X } from "lucide-react";
+import { ArrowLeft, CoinsIcon, Plus, X } from "lucide-react";
 import axiosPublic from "../../axios/axiosPublic";
 import { districts } from "../../data/districts";
 import { mamlaNames } from "../../data/mamlaNames";
@@ -57,6 +57,7 @@ export default function NagorikCaseInfoUpload() {
     adcMamlaInfo: [],
     tamadi: "",
     isApproved: false,
+    isCompleted: false,
   });
 
   useEffect(() => {
@@ -183,7 +184,7 @@ export default function NagorikCaseInfoUpload() {
         district: "",
         officeName: "",
       });
-      console.log(adcInput);
+      // console.log(adcInput);
       setIsAllIAdcinfoAdded(true);
     } else {
       setIsAllIAdcinfoAdded(false);
@@ -230,6 +231,7 @@ export default function NagorikCaseInfoUpload() {
       trackingNo: trackingNo,
       createdAt: new Date().toISOString(),
       isApproved: formState.isApproved || false,
+      isCompleted: formState.isCompleted || false,
       submittedBy: {
         id: user._id,
         name: user.name,
@@ -260,7 +262,7 @@ export default function NagorikCaseInfoUpload() {
         // console.log(res.data);
         if (res.data.modifiedCount > 0) {
           toast.success("মামলাটি সফলভাবে হালনাগাদ হয়েছে");
-          navigate("/dashboard/lawyer/cases");
+          navigate(-1);
         }
       } else {
         const res = await axiosPublic.post("/cases/nagorik", postData);
@@ -272,7 +274,7 @@ export default function NagorikCaseInfoUpload() {
           setAclandList([]);
           setAdcList([]);
           setTrackingNo("");
-          navigate("/dashboard/lawyer/allCases");
+          navigate("/dashboard/nagorik/cases");
         }
       }
     } catch (err) {
@@ -284,431 +286,437 @@ export default function NagorikCaseInfoUpload() {
   };
   // console.log(aclandInput);
   return (
-    <form onSubmit={handleSubmit} className="bg-gray-100 shadow-md mx-auto p-6">
-      <h2 className="bg-[#004080] mb-4 py-2 font-bold text-white text-xl text-center">
+    <>
+      <h2 className="flex justify-between items-center bg-[#004080] mb-4 py-2 font-bold text-white text-xl text-center">
+        <button
+          onClick={() => navigate(-1)} // -1 means go back one page
+          className="mx-2 btn btn-ghost"
+        >
+          <ArrowLeft />
+        </button>{" "}
         {isEditMode ? "মামলা হালনাগাদ" : "নতুন মামলা দাখিল"}
+        <div></div>
       </h2>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-100 shadow-md mx-auto p-6"
+      >
+        {/* Acland Input */}
+        <div className="mt-4">
+          <label className="block mb-1 font-semibold">
+            সহকারী কমিশনার (ভূমি) আদালতের তথ্য:
+          </label>
+          <div className="gap-4 grid grid-cols-2 text-sm">
+            {/* Mamla Name */}
+            <label>
+              মামলার নাম:
+              <select
+                value={aclandInput.mamlaName}
+                onChange={(e) =>
+                  setAclandInput({ ...aclandInput, mamlaName: e.target.value })
+                }
+                className="mt-1 w-full select-bordered select"
+              >
+                <option value="">মামলার নাম নির্বাচন করুন</option>
 
-      {/* Tracking No */}
-      {/* <div>
-        <label className="label">ট্র্যাকিং নম্বর</label>
-        <input
-          type="text"
-          className="input-bordered w-full input"
-          value={trackingNo}
-          readOnly
-        />
-      </div> */}
+                {(aclandList.some((a) => a.mamlaName.includes("নামজারি"))
+                  ? mamlaNames // show all if at least one "নামজারি" is added
+                  : mamlaNames.filter((name) => name.includes("নামজারি"))
+                ) // otherwise only "নামজারি"-related
+                  .map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+              </select>
+            </label>
 
-      {/* Acland Input */}
-      <div className="mt-4">
-        <label className="block mb-1 font-semibold">
-          সহকারী কমিশনার (ভূমি) আদালতের তথ্য:
-        </label>
-        <div className="gap-4 grid grid-cols-2 text-sm">
-          {/* Mamla Name */}
-          <label>
-            মামলার নাম:
-            <select
-              value={aclandInput.mamlaName}
-              onChange={(e) =>
-                setAclandInput({ ...aclandInput, mamlaName: e.target.value })
-              }
-              className="mt-1 w-full select-bordered select"
-            >
-              <option value="">মামলার নাম নির্বাচন করুন</option>
+            {/* Mamla No */}
+            <label>
+              মামলা নম্বর:
+              <input
+                type="number"
+                className="mt-1 input-bordered w-full input"
+                value={aclandInput.mamlaNo}
+                onChange={(e) =>
+                  setAclandInput({ ...aclandInput, mamlaNo: e.target.value })
+                }
+              />
+            </label>
 
-              {(aclandList.some((a) => a.mamlaName.includes("নামজারি"))
-                ? mamlaNames // show all if at least one "নামজারি" is added
-                : mamlaNames.filter((name) => name.includes("নামজারি"))
-              ) // otherwise only "নামজারি"-related
-                .map((name) => (
-                  <option key={name} value={name}>
-                    {name}
+            {/* Year */}
+            <label>
+              বছর:
+              <select
+                className="mt-1 w-full select-bordered select"
+                value={aclandInput.year}
+                onChange={(e) =>
+                  setAclandInput({ ...aclandInput, year: e.target.value })
+                }
+              >
+                <option value="">সাল নির্বচন করুন</option>
+                {Array.from({ length: 50 }, (_, i) => {
+                  const y = 2000 + i;
+                  return (
+                    <option key={y} value={y}>
+                      {toBanglaNumber(y)}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+
+            {/* District */}
+            <label>
+              জেলা
+              <select
+                className="mt-1 w-full select-bordered select"
+                value={aclandInput.district?.en || ""}
+                onChange={(e) => {
+                  const selectedDistrict = aclandOptions.find(
+                    (d) => d.district.en === e.target.value
+                  );
+                  setAclandInput({
+                    ...aclandInput,
+                    district: selectedDistrict?.district || null,
+                    officeName: null, // Reset office
+                  });
+                }}
+              >
+                <option value="">জেলা নির্বাচন করুন</option>
+                {aclandOptions.map((d, idx) => (
+                  <option key={idx} value={d.district.en}>
+                    {d.district.bn}
                   </option>
                 ))}
-            </select>
-          </label>
+              </select>
+            </label>
 
-          {/* Mamla No */}
-          <label>
-            মামলা নম্বর:
-            <input
-              type="number"
-              className="mt-1 input-bordered w-full input"
-              value={aclandInput.mamlaNo}
-              onChange={(e) =>
-                setAclandInput({ ...aclandInput, mamlaNo: e.target.value })
-              }
-            />
-          </label>
-
-          {/* Year */}
-          <label>
-            বছর:
-            <select
-              className="mt-1 w-full select-bordered select"
-              value={aclandInput.year}
-              onChange={(e) =>
-                setAclandInput({ ...aclandInput, year: e.target.value })
-              }
-            >
-              <option value="">সাল নির্বচন করুন</option>
-              {Array.from({ length: 50 }, (_, i) => {
-                const y = 2000 + i;
-                return (
-                  <option key={y} value={y}>
-                    {toBanglaNumber(y)}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
-
-          {/* District */}
-          <label>
-            জেলা
-            <select
-              className="mt-1 w-full select-bordered select"
-              value={aclandInput.district?.en || ""}
-              onChange={(e) => {
-                const selectedDistrict = aclandOptions.find(
-                  (d) => d.district.en === e.target.value
-                );
-                setAclandInput({
-                  ...aclandInput,
-                  district: selectedDistrict?.district || null,
-                  officeName: null, // Reset office
-                });
-              }}
-            >
-              <option value="">জেলা নির্বাচন করুন</option>
-              {aclandOptions.map((d, idx) => (
-                <option key={idx} value={d.district.en}>
-                  {d.district.bn}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          {/* Office */}
-          <label>
-            অফিস
-            <select
-              className="mt-1 w-full select-bordered select"
-              value={aclandInput.officeName?.en || ""}
-              disabled={!aclandInput.district}
-              onChange={(e) => {
-                const selectedOffice = aclandOptions
+            {/* Office */}
+            <label>
+              অফিস
+              <select
+                className="mt-1 w-full select-bordered select"
+                value={aclandInput.officeName?.en || ""}
+                disabled={!aclandInput.district}
+                onChange={(e) => {
+                  const selectedOffice = aclandOptions
+                    .find((d) => d.district.en === aclandInput.district?.en)
+                    ?.offices.find((o) => o.en === e.target.value);
+                  setAclandInput({
+                    ...aclandInput,
+                    officeName: selectedOffice || null,
+                  });
+                }}
+              >
+                <option value="">অফিস নির্বাচন করুন</option>
+                {aclandOptions
                   .find((d) => d.district.en === aclandInput.district?.en)
-                  ?.offices.find((o) => o.en === e.target.value);
-                setAclandInput({
-                  ...aclandInput,
-                  officeName: selectedOffice || null,
-                });
-              }}
-            >
-              <option value="">অফিস নির্বাচন করুন</option>
-              {aclandOptions
-                .find((d) => d.district.en === aclandInput.district?.en)
-                ?.offices.map((office) => (
-                  <option key={office.en} value={office.en}>
-                    {office.bn}
-                  </option>
-                )) || []}
-            </select>
-          </label>
+                  ?.offices.map((office) => (
+                    <option key={office.en} value={office.en}>
+                      {office.bn}
+                    </option>
+                  )) || []}
+              </select>
+            </label>
 
-          {/* Union */}
-          <label>
-            মৌজা:
-            <input
-              className="input-bordered w-full input"
-              placeholder="মৌজার তথ্য"
-              value={aclandInput.mouza || ""}
-              onChange={(e) =>
-                setAclandInput({ ...aclandInput, mouza: e.target.value })
-              }
-              disabled={!aclandInput.district}
-            />
-          </label>
+            {/* Union */}
+            <label>
+              মৌজা:
+              <input
+                className="input-bordered w-full input"
+                placeholder="মৌজার তথ্য"
+                value={aclandInput.mouza || ""}
+                onChange={(e) =>
+                  setAclandInput({ ...aclandInput, mouza: e.target.value })
+                }
+                disabled={!aclandInput.district}
+              />
+            </label>
+          </div>
+
+          {/* Add Button */}
+          <button
+            type="button"
+            onClick={addAcland}
+            className="bg-[#004080] mt-2 text-white btn btn-sm"
+          >
+            <Plus /> যুক্ত করুন
+          </button>
+
+          {/* Validation Message */}
+          {!isAllIAcLandinfoAdded && (
+            <p className="mt-2 text-red-500 text-sm">সকল তথ্য যুক্ত করুন</p>
+          )}
+
+          {/* List */}
+          {aclandList.map((item, index) => (
+            <div key={index} className="mx-1 p-3 text-white badge badge-info">
+              {item.mamlaName} | {item.mamlaNo} | {item.year} |{" "}
+              {item.district?.bn || "নির্বাচিত নয়"} |{" "}
+              {item.officeName?.bn || ""}
+              <X
+                className="cursor-pointer"
+                size={14}
+                onClick={() => removeAcland(index)}
+              />
+            </div>
+          ))}
         </div>
 
-        {/* Add Button */}
-        <button
-          type="button"
-          onClick={addAcland}
-          className="bg-[#004080] mt-2 text-white btn btn-sm"
-        >
-          <Plus /> যুক্ত করুন
-        </button>
+        {/* ADC Input */}
+        <div className="mt-6">
+          <label className="block mb-1 font-semibold">ADC আদালতের তথ্য:</label>
+          <div className="gap-4 grid grid-cols-2 text-sm">
+            <label>
+              মামলার নাম:
+              <select
+                value={adcInput.mamlaName}
+                onChange={(e) =>
+                  setAdcInput({ ...adcInput, mamlaName: e.target.value })
+                }
+                className="mt-1 w-full select-bordered select"
+              >
+                <option value="">মামলার নাম নির্বচন করুন</option>
+                {(adcList.some((a) => a.mamlaName.includes("আপিল" || "রিভিশন"))
+                  ? mamlaNames // show all if at least one "নামজারি" is added
+                  : mamlaNames.filter((name) =>
+                      name.includes("আপিল" || "রিভিশন")
+                    )
+                ) // otherwise only "নামজারি"-related
+                  .map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+              </select>
+            </label>
 
-        {/* Validation Message */}
-        {!isAllIAcLandinfoAdded && (
-          <p className="mt-2 text-red-500 text-sm">সকল তথ্য যুক্ত করুন</p>
-        )}
+            <label>
+              মামলা নম্বর:
+              <input
+                type="number"
+                className="mt-1 input-bordered w-full input"
+                value={adcInput.mamlaNo}
+                onChange={(e) =>
+                  setAdcInput({ ...adcInput, mamlaNo: e.target.value })
+                }
+              />
+            </label>
 
-        {/* List */}
-        {aclandList.map((item, index) => (
-          <div key={index} className="mx-1 p-3 text-white badge badge-info">
-            {item.mamlaName} | {item.mamlaNo} | {item.year} |{" "}
-            {item.district?.bn || "নির্বাচিত নয়"} | {item.officeName?.bn || ""}
-            <X
-              className="cursor-pointer"
-              size={14}
-              onClick={() => removeAcland(index)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* ADC Input */}
-      <div className="mt-6">
-        <label className="block mb-1 font-semibold">ADC আদালতের তথ্য:</label>
-        <div className="gap-4 grid grid-cols-2 text-sm">
-          <label>
-            মামলার নাম:
-            <select
-              value={adcInput.mamlaName}
-              onChange={(e) =>
-                setAdcInput({ ...adcInput, mamlaName: e.target.value })
-              }
-              className="mt-1 w-full select-bordered select"
-            >
-              <option value="">মামলার নাম নির্বচন করুন</option>
-              {(adcList.some((a) => a.mamlaName.includes("আপিল" || "রিভিশন"))
-                ? mamlaNames // show all if at least one "নামজারি" is added
-                : mamlaNames.filter((name) => name.includes("আপিল" || "রিভিশন"))
-              ) // otherwise only "নামজারি"-related
-                .map((name) => (
-                  <option key={name} value={name}>
-                    {name}
+            <label>
+              বছর:
+              <select
+                value={adcInput.year}
+                onChange={(e) =>
+                  setAdcInput({ ...adcInput, year: e.target.value })
+                }
+                className="mt-1 w-full select-bordered select"
+              >
+                <option value="">সাল নির্বচন করুন</option>
+                {Array.from({ length: 50 }, (_, i) => {
+                  const y = 2000 + i;
+                  return (
+                    <option key={y} value={y}>
+                      {toBanglaNumber(y)}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+            <label>
+              জেলা
+              <select
+                className="mt-1 w-full select-bordered select"
+                value={adcInput.district?.en || ""}
+                onChange={(e) => {
+                  const selectedDistrict = aclandOptions.find(
+                    (d) => d.district.en === e.target.value
+                  );
+                  setAdcInput({
+                    ...adcInput,
+                    district: selectedDistrict?.district || null,
+                    officeName: selectedDistrict?.district || null, // Reset office
+                  });
+                }}
+              >
+                <option value="">জেলা নির্বাচন করুন</option>
+                {aclandOptions.map((d, idx) => (
+                  <option key={idx} value={d.district.en}>
+                    {d.district.bn}
                   </option>
                 ))}
-            </select>
-          </label>
-
-          <label>
-            মামলা নম্বর:
-            <input
-              type="number"
-              className="mt-1 input-bordered w-full input"
-              value={adcInput.mamlaNo}
-              onChange={(e) =>
-                setAdcInput({ ...adcInput, mamlaNo: e.target.value })
-              }
-            />
-          </label>
-
-          <label>
-            বছর:
-            <select
-              value={adcInput.year}
-              onChange={(e) =>
-                setAdcInput({ ...adcInput, year: e.target.value })
-              }
-              className="mt-1 w-full select-bordered select"
-            >
-              <option value="">সাল নির্বচন করুন</option>
-              {Array.from({ length: 50 }, (_, i) => {
-                const y = 2000 + i;
-                return (
-                  <option key={y} value={y}>
-                    {toBanglaNumber(y)}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
-          <label>
-            জেলা
-            <select
-              className="mt-1 w-full select-bordered select"
-              value={adcInput.district?.en || ""}
-              onChange={(e) => {
-                const selectedDistrict = aclandOptions.find(
-                  (d) => d.district.en === e.target.value
-                );
-                setAdcInput({
-                  ...adcInput,
-                  district: selectedDistrict?.district || null,
-                  officeName: selectedDistrict?.district || null, // Reset office
-                });
-              }}
-            >
-              <option value="">জেলা নির্বাচন করুন</option>
-              {aclandOptions.map((d, idx) => (
-                <option key={idx} value={d.district.en}>
-                  {d.district.bn}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <button
-          type="button"
-          onClick={addAdc}
-          className="bg-[#004080] mt-2 text-white btn btn-sm"
-        >
-          <Plus /> যুক্ত করুন
-        </button>
-        {!isAllIAdcinfoAdded && (
-          <p className="mt-2 text-red-500 text-sm">সকল তথ্য যুক্ত করুন</p>
-        )}
-
-        <div className="flex flex-wrap gap-2 mt-2">
-          {adcList.map((item, index) => (
-            <div key={index} className="gap-2 p-3 text-white badge badge-info">
-              {item.mamlaName} | {item.mamlaNo} | {item.year} |{" "}
-              {item.district.bn}
-              <X
-                className="cursor-pointer"
-                size={14}
-                onClick={() => removeAdc(index)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* tamadi */}
-      <div>
-        <label>
-          তামাদি:
-          <input
-            className="input-bordered w-full input"
-            placeholder="তামাদি তথ্য"
-            value={tamadi || ""}
-            onChange={(e) => setTamadi(e.target.value)}
-          />
-        </label>
-      </div>
-
-      {/* Badi */}
-      <div className="col-span-2 mt-4">
-        <label className="block mb-1 font-semibold">বাদির তথ্য:</label>
-        <div className="flex flex-wrap gap-2">
-          <div className="flex gap-4 w-full">
-            <input
-              type="text"
-              placeholder="নাম"
-              className="input-bordered w-full input"
-              value={badiInput.name}
-              onChange={(e) =>
-                setBadiInput({ ...badiInput, name: e.target.value })
-              }
-            />
-            <input
-              type="number"
-              placeholder="ফোন"
-              className="input-bordered w-full input"
-              value={badiInput.phone}
-              onChange={(e) =>
-                setBadiInput({ ...badiInput, phone: e.target.value })
-              }
-            />
+              </select>
+            </label>
           </div>
-          <input
-            type="text"
-            placeholder="ঠিকানা"
-            className="input-bordered w-full input"
-            value={badiInput.address}
-            onChange={(e) =>
-              setBadiInput({ ...badiInput, address: e.target.value })
-            }
-          />
           <button
             type="button"
-            onClick={addBadi}
-            className="bg-[#004080] text-white btn"
+            onClick={addAdc}
+            className="bg-[#004080] mt-2 text-white btn btn-sm"
           >
             <Plus /> যুক্ত করুন
           </button>
+          {!isAllIAdcinfoAdded && (
+            <p className="mt-2 text-red-500 text-sm">সকল তথ্য যুক্ত করুন</p>
+          )}
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            {adcList.map((item, index) => (
+              <div
+                key={index}
+                className="gap-2 p-3 text-white badge badge-info"
+              >
+                {item.mamlaName} | {item.mamlaNo} | {item.year} |{" "}
+                {item.district.bn}
+                <X
+                  className="cursor-pointer"
+                  size={14}
+                  onClick={() => removeAdc(index)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2 my-2">
-          {badiList.map((p) => (
-            <div
-              key={p.phone}
-              className="mx-1 p-3 text-white badge badge-success"
-            >
-              {p.name} | {p.phone} | {p.address}
-              <X
-                className="cursor-pointer"
-                size={14}
-                onClick={() => removeParty("badi", p.phone)}
+
+        {/* tamadi */}
+        <div>
+          <label>
+            তামাদি:
+            <input
+              className="input-bordered w-full input"
+              placeholder="তামাদি তথ্য"
+              value={tamadi || ""}
+              onChange={(e) => setTamadi(e.target.value)}
+            />
+          </label>
+        </div>
+
+        {/* Badi */}
+        <div className="col-span-2 mt-4">
+          <label className="block mb-1 font-semibold">বাদির তথ্য:</label>
+          <div className="flex flex-wrap gap-2">
+            <div className="flex gap-4 w-full">
+              <input
+                type="text"
+                placeholder="নাম"
+                className="input-bordered w-full input"
+                value={badiInput.name}
+                onChange={(e) =>
+                  setBadiInput({ ...badiInput, name: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                placeholder="ফোন"
+                className="input-bordered w-full input"
+                value={badiInput.phone}
+                onChange={(e) =>
+                  setBadiInput({ ...badiInput, phone: e.target.value })
+                }
               />
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bibadi */}
-      <div className="col-span-2 mt-6">
-        <label className="block mb-1 font-semibold">বিবাদির তথ্য:</label>
-        <div className="flex flex-wrap gap-2">
-          <div className="flex gap-4 w-full">
             <input
               type="text"
-              placeholder="নাম"
+              placeholder="ঠিকানা"
               className="input-bordered w-full input"
-              value={bibadiInput.name}
+              value={badiInput.address}
               onChange={(e) =>
-                setBibadiInput({ ...bibadiInput, name: e.target.value })
+                setBadiInput({ ...badiInput, address: e.target.value })
               }
             />
-            <input
-              type="number"
-              placeholder="ফোন"
-              className="input-bordered w-full input"
-              value={bibadiInput.phone}
-              onChange={(e) =>
-                setBibadiInput({ ...bibadiInput, phone: e.target.value })
-              }
-            />
-          </div>
-          <input
-            type="text"
-            placeholder="ঠিকানা"
-            className="input-bordered w-full input"
-            value={bibadiInput.address}
-            onChange={(e) =>
-              setBibadiInput({ ...bibadiInput, address: e.target.value })
-            }
-          />
-          <button
-            type="button"
-            onClick={addBibadi}
-            className="bg-[#004080] text-white btn"
-          >
-            <Plus /> যুক্ত করুন
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {bibadiList.map((p) => (
-            <div
-              key={p.phone}
-              className="gap-2 p-3 text-white badge badge-error"
+            <button
+              type="button"
+              onClick={addBadi}
+              className="bg-[#004080] text-white btn"
             >
-              {p.name} | {p.phone} | {p.address}
-              <X
-                className="cursor-pointer"
-                size={14}
-                onClick={() => removeParty("bibadi", p.phone)}
+              <Plus /> যুক্ত করুন
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 my-2">
+            {badiList.map((p) => (
+              <div
+                key={p.phone}
+                className="mx-1 p-3 text-white badge badge-success"
+              >
+                {p.name} | {p.phone} | {p.address}
+                <X
+                  className="cursor-pointer"
+                  size={14}
+                  onClick={() => removeParty("badi", p.phone)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bibadi */}
+        <div className="col-span-2 mt-6">
+          <label className="block mb-1 font-semibold">বিবাদির তথ্য:</label>
+          <div className="flex flex-wrap gap-2">
+            <div className="flex gap-4 w-full">
+              <input
+                type="text"
+                placeholder="নাম"
+                className="input-bordered w-full input"
+                value={bibadiInput.name}
+                onChange={(e) =>
+                  setBibadiInput({ ...bibadiInput, name: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                placeholder="ফোন"
+                className="input-bordered w-full input"
+                value={bibadiInput.phone}
+                onChange={(e) =>
+                  setBibadiInput({ ...bibadiInput, phone: e.target.value })
+                }
               />
             </div>
-          ))}
+            <input
+              type="text"
+              placeholder="ঠিকানা"
+              className="input-bordered w-full input"
+              value={bibadiInput.address}
+              onChange={(e) =>
+                setBibadiInput({ ...bibadiInput, address: e.target.value })
+              }
+            />
+            <button
+              type="button"
+              onClick={addBibadi}
+              className="bg-[#004080] text-white btn"
+            >
+              <Plus /> যুক্ত করুন
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {bibadiList.map((p) => (
+              <div
+                key={p.phone}
+                className="gap-2 p-3 text-white badge badge-error"
+              >
+                {p.name} | {p.phone} | {p.address}
+                <X
+                  className="cursor-pointer"
+                  size={14}
+                  onClick={() => removeParty("bibadi", p.phone)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-6 text-center">
-        <button
-          type="submit"
-          className="bg-[#004080] px-6 text-white btn"
-          disabled={loading}
-        >
-          {isEditMode ? "আপডেট করুন" : "আপলোড করুন"}
-        </button>
-      </div>
-    </form>
+        <div className="mt-6 text-center">
+          <button
+            type="submit"
+            className="bg-[#004080] px-6 text-white btn"
+            disabled={loading}
+          >
+            {isEditMode ? "আপডেট করুন" : "আপলোড করুন"}
+          </button>
+        </div>
+      </form>
+    </>
   );
 }

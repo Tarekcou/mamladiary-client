@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { MdAdd, MdDelete } from "react-icons/md";
+import React, { useState, useEffect, useRef } from "react";
+import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import Swal from "sweetalert2";
 import { aclandOptions } from "../../../data/aclandOptions";
 import useCrud from "../../../hooks/userCrud";
 
@@ -10,6 +9,8 @@ const ManageAdcUser = () => {
   const [role, setRole] = useState("");
   const [districtIndex, setDistrictIndex] = useState("");
   const [officeName, setOfficeName] = useState("");
+
+  const modalRef = useRef(null);
 
   const {
     items: users,
@@ -31,10 +32,22 @@ const ManageAdcUser = () => {
     setOfficeName("");
   };
 
+  // Prefill form when editing
+  useEffect(() => {
+    if (editingItem) {
+      setSection(editingItem.section || "");
+      setRole(editingItem.role || "");
+      const foundDistrictIndex = aclandOptions.findIndex(
+        (d) => d.district.bn === editingItem?.district?.bn
+      );
+      setDistrictIndex(foundDistrictIndex !== -1 ? foundDistrictIndex : "");
+      setOfficeName(editingItem.officeName?.en || "");
+    }
+  }, [editingItem]);
+
   const handleSubmitUser = async (e) => {
     e.preventDefault();
     const form = e.target;
-
     const selectedDistrict = aclandOptions[districtIndex];
     const selectedOffice =
       selectedDistrict?.offices.find((o) => o.en === officeName) || null;
@@ -57,32 +70,20 @@ const ManageAdcUser = () => {
       await createItem(payload);
     }
 
-    form.reset();
     resetForm();
-    document.getElementById("my_modal_5").close();
+    form.reset();
+    modalRef.current.close();
   };
 
   const handleUserEdit = (user) => {
     handleEdit(user);
-    setSection(user.section || "");
-    setRole(user.role || "");
-
-    const foundDistrictIndex = aclandOptions.findIndex(
-      (d) => d.district.bn === user?.district?.bn
-    );
-    setDistrictIndex(foundDistrictIndex !== -1 ? foundDistrictIndex : "");
-    setOfficeName(user.officeName?.en || "");
-
-    document.getElementById("my_modal_5").showModal();
+    modalRef.current.showModal();
   };
 
   return (
     <div className="p-6 w-full">
       <div className="flex justify-between mb-4">
         <h1 className="font-bold text-2xl">সকল ব্যবহারকারী ({users.length})</h1>
-        {/* <button className="btn-outline btn" onClick={() => document.getElementById("my_modal_5").showModal()}>
-          <MdAdd /> নতুন যুক্ত করুন
-        </button> */}
       </div>
 
       <div className="overflow-x-auto">
@@ -136,7 +137,7 @@ const ManageAdcUser = () => {
       </div>
 
       {/* MODAL */}
-      <dialog id="my_modal_5" className="modal-bottom modal sm:modal-middle">
+      <dialog ref={modalRef} className="modal-bottom modal sm:modal-middle">
         <div className="modal-box">
           <h3 className="mb-4 font-bold text-lg">
             {isEditMode ? "ইউজার আপডেট করুন" : "নতুন ইউজার যুক্ত করুন"}
@@ -187,7 +188,48 @@ const ManageAdcUser = () => {
               className="input-bordered w-full input"
             />
 
-            {/* You can add district and office dropdowns here if needed */}
+            {/* District */}
+            <select
+              name="district"
+              className="bg-gray-100 w-full select-bordered select"
+              required
+              value={districtIndex}
+              onChange={(e) => {
+                const index =
+                  e.target.value === "" ? "" : Number(e.target.value);
+                setDistrictIndex(index);
+                setOfficeName(""); // reset office
+              }}
+            >
+              <option value="">জেলা নির্বাচন করুন</option>
+              {aclandOptions.map((districtObj, index) => (
+                <option key={index} value={index}>
+                  {districtObj.district.bn} ({districtObj.district.en})
+                </option>
+              ))}
+            </select>
+
+            {/* Office (only for AC Land role) */}
+            {role === "acland" && (
+              <select
+                name="officeName"
+                className="bg-gray-100 w-full select-bordered select"
+                required
+                value={officeName}
+                onChange={(e) => setOfficeName(e.target.value)}
+              >
+                <option value="" disabled>
+                  অফিস নির্বাচন করুন
+                </option>
+                {(aclandOptions[districtIndex]?.offices || []).map(
+                  (office, index) => (
+                    <option key={index} value={office.en}>
+                      {office.bn}
+                    </option>
+                  )
+                )}
+              </select>
+            )}
 
             <div className="justify-between modal-action">
               <button type="submit" className="btn btn-primary">
@@ -197,7 +239,7 @@ const ManageAdcUser = () => {
                 type="button"
                 onClick={() => {
                   resetForm();
-                  document.getElementById("my_modal_5").close();
+                  modalRef.current.close();
                 }}
                 className="btn"
               >

@@ -210,11 +210,10 @@ const DivComOrders = () => {
       setOrderSheets(updatedOrderSheets);
 
       // Prepare updated divComReview
-     const updatedDivComReview = {
-  ...caseData.divComReview,
-  orderSheets: updatedOrderSheets,  // updated array after delete
-};
-
+      const updatedDivComReview = {
+        ...caseData.divComReview,
+        orderSheets: updatedOrderSheets, // updated array after delete
+      };
 
       // Send patch to backend
       const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, {
@@ -248,7 +247,7 @@ const DivComOrders = () => {
       });
       console.log(res.data);
       if (res.data.modifiedCount > 0) {
-        toast.success("✅ সফলভাবে সংরক্ষণ করা হয়েছে");
+        toast.success(" সফলভাবে সংরক্ষণ করা হয়েছে");
         setEditingRow(null);
       } else {
         toast.warning("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
@@ -259,7 +258,6 @@ const DivComOrders = () => {
     }
   };
 
-  
   const handleHeader = async () => {
     {
       const { orderSheets, ...rest } = divComReview || {};
@@ -319,8 +317,7 @@ const DivComOrders = () => {
       .join("\n");
   };
 
-  
-    const handleComplete = async (approval) => {
+  const handleComplete = async (approval) => {
     const confirm = await Swal.fire({
       title: "আপনি কি মামলাটি নিষ্পন্ন করতে চান?",
       icon: "question",
@@ -331,11 +328,17 @@ const DivComOrders = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}/complete`, {
-        isCompleted: approval,
-      });
+      const res = await axiosPublic.patch(
+        `/cases/divCom/${caseData._id}/complete`,
+        {
+          isCompleted: approval,
+        }
+      );
       console.log(res.data);
-      if (res.data.modifiedCount > 0 || res.data.messages=="Case approved successfully") {
+      if (
+        res.data.modifiedCount > 0 ||
+        res.data.messages == "Case approved successfully"
+      ) {
         toast.success("মামলাটি নিষ্পন্ন হয়েছে।");
         refetch();
       } else {
@@ -421,6 +424,7 @@ const DivComOrders = () => {
             box-sizing: border-box;
             background: white;
           }
+
           .no-print {
             display: none !important;
           }
@@ -437,43 +441,53 @@ const DivComOrders = () => {
         }
       `}</style>
 
-      <div className="bg-white my-5 pt-10 rounded-xl">
-        <h1 className="mx-auto w-full text-2xl text-center mb-10 card">
-          
-          আদেশ যুক্ত করুন 
-        </h1>
-        <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-b border-gray-200">
-          {caseData.isCompleted?
+      <div className="bg-base-200/50 my-5 rounded-xl">
+        <h2 className="flex justify-between items-center mb-4 py-2 font-bold text-xl text-center">
           <button
-            onClick={()=>handleComplete(false)}
-            className="no-print btn btn-sm btn-info"
+            onClick={() => navigate(-1)} // -1 means go back one page
+            className="mx-2 btn btn-ghost"
           >
-            <Play /> পুনরায় চালু করুন
-          </button>:
-        <>
-          <button
-            onClick={handleAddRow}
-            className="flex btn-success btn-sm btn"
-          >
-            <Plus /> নতুন আদেশ
+            {/* <ArrowLeft /> */}
           </button>
-          {/* {divComReview.orderSheets && (
+          <h1 className="text-2xl">আদেশ যুক্ত করুন</h1>{" "}
+          <div className="  ">{}</div>
+        </h2>
+        <h1 className="mx-auto mb-10 w-full text-2xl text-center card"></h1>
+        <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-gray-200 border-b">
+          {caseData.isCompleted ? (
+            <button
+              onClick={() => handleComplete(false)}
+              className="no-print btn btn-sm btn-info"
+            >
+              <Play /> পুনরায় চালু করুন
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleAddRow}
+                className="flex btn-success btn-sm btn"
+              >
+                <Plus /> নতুন আদেশ
+              </button>
+              {/* {divComReview.orderSheets && (
             
           )} */}
+              <button
+                onClick={() => setShowHeaderModal(true)}
+                className="mb-2 btn-outline btn btn-sm"
+              >
+                <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
+              </button>
+
+              <button
+                onClick={() => handleComplete(true)}
+                className="btn-outline text-red-600 no-print btn btn-sm"
+              >
+                <BookCheck /> মামলা নিষ্পন্ন
+              </button>
+            </>
+          )}
           <button
-            onClick={() => setShowHeaderModal(true)}
-            className="mb-2 btn-outline btn btn-sm"
-          >
-            <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
-          </button>
-         
-          <button
-            onClick={()=>handleComplete(true)}
-            className="no-print btn btn-sm btn-info"
-          >
-            <BookCheck /> মামলা নিষ্পন্ন
-          </button></>}
-           <button
             onClick={handlePrint}
             className="no-print btn btn-sm btn-info"
           >
@@ -690,7 +704,7 @@ const DivComOrders = () => {
 
       {showHeaderModal && (
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/40">
-          <div className="space-y-4 bg-white p-6 rounded-md w-[400px]">
+          <div className="space-y-4 bg-base-200 p-6 rounded-md w-[400px]">
             <h2 className="font-semibold text-lg">হেডার তথ্য হালনাগাদ</h2>
 
             <input

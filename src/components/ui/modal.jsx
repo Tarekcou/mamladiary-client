@@ -27,7 +27,7 @@ const Modal = ({ children, onClose }) => {
           animate="visible"
           exit="hidden"
           transition={{ duration: 0.3 }}
-          className="relative bg-white shadow-2xl p-6 rounded-2xl w-full max-w-2xl"
+          className="relative bg-base-200 shadow-2xl p-6 rounded-2xl w-full max-w-2xl"
         >
           <button
             onClick={onClose}

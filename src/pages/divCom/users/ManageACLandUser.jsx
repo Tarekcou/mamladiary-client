@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdAdd, MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { aclandOptions } from "../../../data/aclandOptions";
 import useCrud from "../../../hooks/userCrud";
+import { AuthContext } from "../../../provider/AuthProvider";
 
 const roles = ["acland", "adc", "divCom", "nagorik"];
 
@@ -12,7 +13,7 @@ const ManageAdcUser = () => {
   const [role, setRole] = useState("");
   const [districtIndex, setDistrictIndex] = useState("");
   const [officeName, setOfficeName] = useState("");
-
+  const { user } = useContext(AuthContext);
   const {
     items: users,
     createItem,
@@ -33,13 +34,24 @@ const ManageAdcUser = () => {
     setOfficeName("");
   };
 
+  useEffect(() => {
+    if (user) {
+      const foundDistrictIndex = aclandOptions.findIndex(
+        (d) => d.district.bn === user?.district?.bn
+      );
+      setDistrictIndex(foundDistrictIndex !== -1 ? foundDistrictIndex : "");
+      setOfficeName(user.officeName?.en || "");
+    }
+  }, [user]);
+
   const handleSubmitUser = async (e) => {
     e.preventDefault();
     const form = e.target;
 
     const selectedDistrict = aclandOptions[districtIndex];
-    const selectedOffice =
-      selectedDistrict?.offices.find((o) => o.en === officeName) || null;
+    const selectedOffice = selectedDistrict?.offices.find(
+      (o) => o.en === officeName
+    );
 
     const payload = {
       name: form.name.value,
@@ -65,7 +77,7 @@ const ManageAdcUser = () => {
   };
 
   const handleUserEdit = (user) => {
-    handleEdit(user);
+    handleEdit(user); // sets editingItem
     setSection(user.section || "");
     setRole(user.role || "");
 
@@ -98,7 +110,6 @@ const ManageAdcUser = () => {
               <th>পাসওয়ার্ড</th>
               <th>রোল</th>
               <th>জেলা</th>
-              <th>ভূমি অফিস</th>
               <th>অফিস</th>
               <th>একশন</th>
             </tr>
@@ -113,8 +124,7 @@ const ManageAdcUser = () => {
                 <td>{user.password}</td>
                 <td>{user.role}</td>
                 <td>{user?.district?.bn}</td>
-                <td>{user?.acLand?.bn}</td>
-                <td>{user.officeName?.bn || "-"}</td>
+                <td>{user.officeName?.bn + " ভূমি অফিস " || "-"}</td>
                 <td className="space-y-2">
                   <div className="flex justify-center gap-2">
                     <FaEdit
@@ -190,6 +200,44 @@ const ManageAdcUser = () => {
               placeholder="রোল"
               className="input-bordered w-full input"
             />
+            <select
+              name="district"
+              className="bg-gray-100 w-full select-bordered select"
+              required
+              value={districtIndex} // use state
+              onChange={(e) => {
+                const index =
+                  e.target.value === "" ? "" : Number(e.target.value);
+                setDistrictIndex(index);
+                setOfficeName(""); // reset office when district changes
+              }}
+            >
+              <option value="">জেলা নির্বাচন করুন</option>
+              {aclandOptions.map((districtObj, index) => (
+                <option key={index} value={index}>
+                  {districtObj.district.bn} ({districtObj.district.en})
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="officeName"
+              className="bg-gray-100 w-full select-bordered select"
+              required
+              value={officeName}
+              onChange={(e) => setOfficeName(e.target.value)}
+            >
+              <option value="" disabled>
+                অফিস নির্বাচন করুন
+              </option>
+              {(aclandOptions[districtIndex]?.offices || []).map(
+                (office, index) => (
+                  <option key={index} value={office.en}>
+                    {office.bn}
+                  </option>
+                )
+              )}
+            </select>
 
             {/* You can add district and office dropdowns here if needed */}
 

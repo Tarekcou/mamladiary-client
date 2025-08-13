@@ -108,8 +108,8 @@ const Message = ({ caseData, role }) => {
         <h3 className="pb-1 border-b font-bold text-base text-center">
           আদেশ ও অনুরোধ
         </h3>
-        <p className="mt-2 whitespace-pre-wrap">আদেশ বিবরণী: {staffNote}</p>
-        <p className="mt-2 whitespace-pre-wrap"> {judgeNote}</p>
+        {/* <p className="mt-2 whitespace-pre-wrap">আদেশ বিবরণী: {staffNote}</p>
+        <p className="mt-2 whitespace-pre-wrap"> {judgeNote}</p> */}
         <p className="mt-2">
           এই মামলার নথি যাচাই করে প্রয়োজনীয় ব্যবস্থা গ্রহণ করার জন্য অনুরোধ করা
           হলো।

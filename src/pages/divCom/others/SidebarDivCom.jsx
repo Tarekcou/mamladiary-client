@@ -34,7 +34,7 @@ const SidebarDivCom = () => {
                 : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
             }
           >
-            নিষ্পত্তিকৃত মামলা 
+            নিষ্পত্তিকৃত মামলা
           </NavLink>
         </ul>
 
@@ -42,7 +42,7 @@ const SidebarDivCom = () => {
 
         <div
           tabIndex="0"
-          className="collapse collapse-arrow bg-base-100 border border-base-300"
+          className="collapse collapse-arrow bg-base-200 border border-base-300"
         >
           <input type="checkbox" />
 
@@ -95,7 +95,7 @@ const SidebarDivCom = () => {
 
         <div
           tabIndex="0"
-          className="collapse collapse-arrow bg-base-100 border border-base-300"
+          className="collapse collapse-arrow bg-base-200 border border-base-300"
         >
           <input type="checkbox" />
 
@@ -153,7 +153,7 @@ const SidebarDivCom = () => {
         {/* পুরাতন মামলার তথ্য  */}
         <div
           tabIndex="0"
-          className="collapse collapse-arrow bg-base-100 border border-base-300"
+          className="collapse collapse-arrow bg-base-200 border border-base-300"
         >
           <input type="checkbox" />
 

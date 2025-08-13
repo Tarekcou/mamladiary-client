@@ -1,18 +1,12 @@
-import React, {
-  createContext,
-  use,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axiosPublic from "../axios/axiosPublic";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setLoading] = useState(true);
@@ -26,25 +20,17 @@ const AuthProvider = ({ children }) => {
     setButtonSpin(true);
     setLoading(true);
     try {
-      let res;
-
-      res = await axiosPublic.post("/users/login", formData, {
+      const res = await axiosPublic.post("/users/login", formData, {
         params: { loginStatus },
       });
-      console.log(res.data);
       if (res?.data.status === "success") {
         toast.success("লগ ইন সফল হয়েছে!");
-
         setIsSignedIn(true);
         setUser(res.data.user);
-
-        // Save user + type
         localStorage.setItem("user", JSON.stringify(res.data.user));
         localStorage.setItem("userType", loginStatus);
-
-        setUserFlags(loginStatus); // set booleans
-
-        navigation(`/dashboard/${loginStatus}`);
+        setUserFlags(loginStatus);
+        navigate(`/dashboard/${loginStatus}`);
       }
     } catch (error) {
       toast.warning(error?.response?.data?.message || "লগ ইন ব্যর্থ হয়েছে!");
@@ -54,33 +40,28 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
   const setUserFlags = (type) => {
     setDivComLogin(false);
     setAdcLogin(false);
     setAcLandLogin(false);
     setNagorikLogin(false);
 
-    localStorage.removeItem("isDivCom");
-    localStorage.removeItem("isAdc");
-    localStorage.removeItem("isAcLand");
-    localStorage.removeItem("isNagorik");
+    ["isDivCom", "isAdc", "isAcLand", "isNagorik"].forEach((key) =>
+      localStorage.removeItem(key)
+    );
 
-    if (type === "nagorik") {
-      setNagorikLogin(true);
-      localStorage.setItem("isNagorik", true);
-    } else if (type === "divCom") {
-      setDivComLogin(true);
-      localStorage.setItem("isDivCom", true);
-    } else if (type === "adc") {
-      setAdcLogin(true);
-      localStorage.setItem("isAdc", true);
-    } else if (type === "acLand") {
-      setAcLandLogin(true);
-      localStorage.setItem("isAcLand", true);
-    }
+    if (type === "nagorik") setNagorikLogin(true);
+    else if (type === "divCom") setDivComLogin(true);
+    else if (type === "adc") setAdcLogin(true);
+    else if (type === "acLand") setAcLandLogin(true);
+
+    localStorage.setItem(
+      `is${type.charAt(0).toUpperCase() + type.slice(1)}`,
+      true
+    );
   };
 
-  // signout
   const signOut = () => {
     localStorage.clear();
     setUser(null);
@@ -90,15 +71,13 @@ const AuthProvider = ({ children }) => {
     setAcLandLogin(false);
     setNagorikLogin(false);
     toast.info("সাইন আউট !");
-    navigation("/");
+    navigate("/");
   };
 
-  // register
-  // AuthProvider
-  const resigter = async (formData) => {
+  const register = async (formData) => {
     try {
       const res = await axiosPublic.post("/users", formData);
-      return res.data; // return only response
+      return res.data;
     } catch (error) {
       console.error("Error during registration:", error);
       return { error: true };
@@ -109,27 +88,17 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     const storedUser = localStorage.getItem("user");
     const storedType = localStorage.getItem("userType");
-
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsSignedIn(true);
-      setUserFlags(storedType); // Restore user-type flags
+      setUserFlags(storedType);
     }
-
     setLoading(false);
   }, []);
 
-  const checkUser = () => {
-    if (isNagorikLogin) {
-      localStorage.setItem("isNagorik", true);
-    } else if (isAcLandLogin) localStorage.setItem("isAcLand", true);
-    else if (isAdcLogin) localStorage.setItem("isAdc", true);
-    else if (isDivComLogin) localStorage.setItem("isDivCom", true);
-  };
-
   const authData = {
     signIn,
-    resigter,
+    register,
     signOut,
     isSignedIn,
     setIsSignedIn,
@@ -137,7 +106,6 @@ const AuthProvider = ({ children }) => {
     user,
     isLoading,
     setLoading,
-    // isAdmin,
     isDivComLogin,
     isAcLandLogin,
     isAdcLogin,
@@ -145,6 +113,7 @@ const AuthProvider = ({ children }) => {
     isButtonSpin,
     setButtonSpin,
   };
+
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
   );

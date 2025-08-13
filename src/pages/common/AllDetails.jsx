@@ -36,9 +36,6 @@ const AllDetails = () => {
     const allTabs = [];
 
     // Check and push each tab based on data presence
-    if (caseData.nagorikSubmission) {
-      allTabs.push({ key: "nagorik", label: "Nagorik" });
-    }
 
     if (caseData?.divComReview) {
       allTabs.push({ key: "divCom", label: "Divisional Commissioner" });
@@ -59,6 +56,9 @@ const AllDetails = () => {
     if (hasAdc) {
       allTabs.push({ key: "adc", label: "ADC (Revenue)" });
     }
+    if (caseData.nagorikSubmission) {
+      allTabs.push({ key: "nagorik", label: "Nagorik" });
+    }
 
     // 🔒 Filter based on strict role permission
     if (user.role === "divCom") return allTabs;
@@ -68,22 +68,21 @@ const AllDetails = () => {
 
   const dynamicTabs = buildTabs();
   // console.log(dynamicTabs);
-const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
 
-useEffect(() => {
-  if (!dynamicTabs || dynamicTabs.length === 0) return;
+  useEffect(() => {
+    if (!dynamicTabs || dynamicTabs.length === 0) return;
 
-  // Only set if current activeTab is null or no longer valid
-  if (!activeTab || !dynamicTabs.some((tab) => tab.key === activeTab)) {
-    if (user.role === "divCom") {
-      setActiveTab(dynamicTabs[0].key); // default to first tab
-    } else {
-      const userTab = dynamicTabs.find((tab) => tab.key === user.role);
-      setActiveTab(userTab?.key || dynamicTabs[0].key);
+    // Only set if current activeTab is null or no longer valid
+    if (!activeTab || !dynamicTabs.some((tab) => tab.key === activeTab)) {
+      if (user.role === "divCom") {
+        setActiveTab(dynamicTabs[0].key); // default to first tab
+      } else {
+        const userTab = dynamicTabs.find((tab) => tab.key === user.role);
+        setActiveTab(userTab?.key || dynamicTabs[0].key);
+      }
     }
-  }
-}, [dynamicTabs, user.role, activeTab]);
-
+  }, [dynamicTabs, user.role, activeTab]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -97,7 +96,11 @@ useEffect(() => {
         );
       case "nagorik":
         return (
-          <NagorikDetails caseData={caseData} role="nagorik" refetch={refetch} />
+          <NagorikDetails
+            caseData={caseData}
+            role="nagorik"
+            refetch={refetch}
+          />
         );
       default:
         return <p>Invalid tab selected.</p>;
@@ -105,7 +108,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="bg-base-100 shadow mx-auto px-4 py-6 rounded max-w-5xl">
+    <div className="bg-base-200 shadow mx-auto px-4 py-6 rounded max-w-5xl">
       <h2 className="flex items-center mb-4 font-bold text-xl">
         <button
           onClick={() => navigate(-1)} // -1 means go back one page
@@ -113,7 +116,7 @@ useEffect(() => {
         >
           <ArrowLeft />
         </button>{" "}
-        মামলার বিস্তারিত তথ্য 
+        মামলার বিস্তারিত তথ্য
       </h2>
 
       {/* Tabs */}
