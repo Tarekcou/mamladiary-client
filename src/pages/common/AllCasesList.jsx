@@ -238,12 +238,17 @@ const AllCasesList = () => {
     );
   };
 
-  if (isLoading) return <p>লোড হচ্ছে...</p>;
+  if (isLoading)
+    return (
+      <p className="flex justify-center items-center w-full h-full">
+        লোড হচ্ছে...
+      </p>
+    );
 
   return (
     <div className="p-4">
       <h2 className="flex items-center gap-1 mb-4 font-bold text-xl">
-        দাখিলকৃত মামলা সমূহ
+        মামলা সমূহ
       </h2>
 
       {/* Search input */}
@@ -257,12 +262,12 @@ const AllCasesList = () => {
         />
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="rounded-md overflow-x-auto">
         <table
-          className={`table   border border-base-content/8 rounded-box w-full`}
+          className={`table    border border-base-content/8 rounded-box w-full`}
         >
           <thead>
-            <tr className="text-center">
+            <tr className="bg-gray-100 text-center">
               <th>ক্রমিক</th>
               <th>ট্র্যাকিং নম্বর</th>
               <th>বাদী</th>

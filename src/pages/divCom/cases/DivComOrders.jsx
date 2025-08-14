@@ -442,7 +442,7 @@ const DivComOrders = () => {
       `}</style>
 
       <div className="bg-base-200/50 my-5 rounded-xl">
-        <h2 className="flex justify-between items-center mb-4 py-2 font-bold text-xl text-center">
+        <div className="flex justify-between items-center mb-4 py-2 font-bold text-xl text-center">
           <button
             onClick={() => navigate(-1)} // -1 means go back one page
             className="mx-2 btn btn-ghost"
@@ -451,7 +451,7 @@ const DivComOrders = () => {
           </button>
           <h1 className="text-2xl">আদেশ যুক্ত করুন</h1>{" "}
           <div className="  ">{}</div>
-        </h2>
+        </div>
         <h1 className="mx-auto mb-10 w-full text-2xl text-center card"></h1>
         <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-gray-200 border-b">
           {caseData.isCompleted ? (

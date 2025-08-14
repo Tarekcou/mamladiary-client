@@ -223,7 +223,12 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
         `/cases/divCom/${caseData._id}`,
         payload
       );
+      const res2 = await axiosPublic.post("/send-whatsapp", {
+        message: "hello",
+        phone: "+8801818424256",
+      });
 
+      console.log(res2.data);
       if (res.data.modifiedCount > 0) {
         toast.success("বার্তা সফলভাবে সংরক্ষণ করা হয়েছে");
         refetch();

@@ -15,9 +15,8 @@ const DashboardLayout = () => {
   const path = location.pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const storedType = localStorage.getItem("userType");
-  console.log(storedType);
   useEffect(() => {
-    const handleScroll = () => setIsSticky(window.scrollY > 260);
+    const handleScroll = () => setIsSticky(true);
     const handleResize = () => setScreenWidth(window.innerWidth);
 
     window.addEventListener("scroll", handleScroll);
@@ -33,51 +32,33 @@ const DashboardLayout = () => {
   const mainWidth = layoutWidth * (10 / 12);
   return (
     <div className="flex flex-col shadow-xl mx-auto w-full md:w-10/12 min-h-screen">
-      {/* <Header /> */}
       <Navbar />
 
       <div className="relative flex flex-grow">
+        {/* Sidebar */}
         <div
-          className={`hidden lg:block  
-         
-          `}
+          className="hidden lg:block top-16 z-40 sticky shadow-md overflow-y-auto"
           style={{
             width: `${sidebarWidth}px`,
+            height: "calc(100vh - 4rem)", // 4rem = 64px navbar height
           }}
         >
-          {storedType == "divCom" ? (
+          {storedType === "divCom" ? (
             <SidebarDivCom />
-          ) : storedType == "nagorik" ? (
+          ) : storedType === "nagorik" ? (
             <SidebarNagorik />
-          ) : storedType == "adc" ? (
+          ) : storedType === "adc" ? (
             <SidebarAdc />
           ) : (
             <SidebarAcLand />
           )}
-
-          {/* {path.includes("dashboard") ? <DashboardSidebar /> : <SidebarLeft />} */}
         </div>
 
-        {/* {isSticky && (
-          <div
-            className="hidden lg:block"
-            style={{
-              width: `${sidebarWidth}px`,
-              height: "calc(100vh - 64px)", // Adjust for header height
-            }}
-          />
-        )} */}
-
-        {/* for mobile device navbar menu take space */}
-        {/* <div className="md:hidden sm:h-[600px]"></div> */}
-
-        <main className={` md:w-10/12 `}>
+        {/* Main content */}
+        <main className="flex-grow md:w-10/12 overflow-y-auto">
           <Outlet />
         </main>
       </div>
-      {/* Contact/OPinion Form */}
-
-      <div className="z-60">{/* <Footer /> */}</div>
     </div>
   );
 };

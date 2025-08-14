@@ -20,8 +20,8 @@ const SidebarDivCom = () => {
             to="/dashboard/divCom/allCases"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+                ? "text-blue-800 btn-outline  border-2  w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn  w-full border-gray-300"
             }
           >
             আগত মামলা
@@ -30,8 +30,8 @@ const SidebarDivCom = () => {
             to="/dashboard/divCom/completed-cases"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+                ? "text-blue-800 btn-outline  border-2  md:btn-md btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                : "text-gray-700 btn md:btn-md btn-sm w-full border-gray-300"
             }
           >
             নিষ্পত্তিকৃত মামলা
@@ -159,15 +159,6 @@ const SidebarDivCom = () => {
 
           <div className="collapse-title font-semibold"> পুরাতন মামলা</div>
           <ul className="collapse-content flex flex-col gap-1 p-0 list-disc list-inside">
-            <Link
-              to={`/dashboard/${storedType}`}
-              className="bg-[#004080] px-2 py-2 rounded-md font-bold text-white text-center"
-            >
-              ড্যাশবোর্ড
-            </Link>
-            {/* <h2 className="bg-[#004080] px-2 py-2 font-bold text-white text-center">
-            রাজস্ব আদালত মামলা
-          </h2> */}
             <NavLink
               to="/dashboard/mamlaUpload"
               className={({ isActive }) =>
