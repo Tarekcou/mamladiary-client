@@ -9,6 +9,7 @@ import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { useNavigate, useParams } from "react-router";
 import { aclandOptions } from "../../data/aclandOptions";
 import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
 
 export default function NagorikCaseInfoUpload() {
   const { user } = useContext(AuthContext);
@@ -44,9 +45,17 @@ export default function NagorikCaseInfoUpload() {
     mamlaName: "",
     mamlaNo: "",
     year: "",
-    district: "",
-    officeName: "",
+    district: null,
+    officeName: null,
+    adcOrderDate: null,
   });
+  const parseDate = (dateString) => (dateString ? new Date(dateString) : null);
+  const handleInputChange = (field, value) => {
+    setAdcInput({
+      ...adcInput,
+      [field]: value,
+    });
+  };
   const [adcList, setAdcList] = useState([]);
   const [isAllIAcLandinfoAdded, setIsAllIAcLandinfoAdded] = useState(true);
   const [isAllIAdcinfoAdded, setIsAllIAdcinfoAdded] = useState(true);
@@ -221,6 +230,7 @@ export default function NagorikCaseInfoUpload() {
       newAdcInput.mamlaName &&
       newAdcInput.mamlaNo &&
       newAdcInput.year &&
+      newAdcInput.adcOrderDate &&
       newAdcInput.officeName
         ? [...adcList, newAdcInput]
         : adcList;
@@ -229,9 +239,10 @@ export default function NagorikCaseInfoUpload() {
 
     const postData = {
       trackingNo: trackingNo,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString().split("T")[0],
       isApproved: formState.isApproved || false,
       isCompleted: formState.isCompleted || false,
+      completionDate: null,
       submittedBy: {
         id: user._id,
         name: user.name,
@@ -245,7 +256,7 @@ export default function NagorikCaseInfoUpload() {
         tamadi: tamadi,
       },
     };
-    // console.log("Post Data:", postData);
+    // console.log("Post Data:", postData, isEditMode);
 
     const confirm = await Swal.fire({
       title: "আপনি কি আপলোড করতে চান ?",
@@ -266,7 +277,7 @@ export default function NagorikCaseInfoUpload() {
         }
       } else {
         const res = await axiosPublic.post("/cases/nagorik", postData);
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.insertedId) {
           toast.success("মামলাটি সফলভাবে দাখিল হয়েছে");
           setBadiList([]);
@@ -279,7 +290,7 @@ export default function NagorikCaseInfoUpload() {
       }
     } catch (err) {
       console.error("Upload failed:", err);
-      toast.warning("আপলোড ব্যর্থ হয়েছে");
+      toast.warning("আপলোড ব্যর্থ হয়েছে, সকল তথ্য যুক্ত করুন");
     } finally {
       setLoading(false);
     }
@@ -547,6 +558,23 @@ export default function NagorikCaseInfoUpload() {
                   </option>
                 ))}
               </select>
+            </label>
+
+            {/* DatePicker */}
+            <label className="flex flex-col">
+              এডিসি আদেশের তারিখ
+              <DatePicker
+                selected={parseDate(adcInput.adcOrderDate)}
+                placeholder="এডিসি আদেশের তারিখ"
+                className="mt-1 input-bordered text-center input"
+                onChange={(date) =>
+                  handleInputChange(
+                    "adcOrderDate",
+                    date?.toISOString().split("T")[0] // save as yyyy-mm-dd
+                  )
+                }
+                dateFormat="yyyy-MM-dd"
+              />
             </label>
           </div>
           <button

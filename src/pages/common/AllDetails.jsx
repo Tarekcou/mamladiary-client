@@ -103,43 +103,63 @@ const AllDetails = () => {
           />
         );
       default:
-        return <p>Invalid tab selected.</p>;
+        return (
+          <p className="flex justify-center items-center text-center">
+            Loading...
+          </p>
+        );
     }
   };
-
+  if (isLoading) <h1>লোড হচ্ছে... </h1>;
   return (
-    <div className="bg-base-200 shadow mx-auto px-4 py-6 rounded max-w-5xl">
-      <h2 className="flex items-center mb-4 font-bold text-xl">
-        <button
-          onClick={() => navigate(-1)} // -1 means go back one page
-          className="btn btn-ghost"
-        >
-          <ArrowLeft />
-        </button>{" "}
-        মামলার বিস্তারিত তথ্য
-      </h2>
+    <>
+      <style>{`
+      @media print {
+  #printable-area {
+    width: 216mm;
+    height: 356mm; /* legal page */
+    padding: 5mm;
+  }
+  .print-full {
+    height: 100%;
+  }
+}
 
-      {/* Tabs */}
-      <div role="tablist" className="mb-4 tabs-border tabs tabs-box">
-        {dynamicTabs.map((tab) => (
+      `}</style>
+      <div
+        id="printable-area"
+        className="bg-base-200 mx-auto px-4 py-6 rounded min-h-screen"
+      >
+        <h2 className="flex items-center mb-4 font-bold text-xl no-print">
           <button
-            key={tab.key}
-            role="tab"
-            onClick={() => setActiveTab(tab.key)}
-            className={`tab tab-bordered ${
-              activeTab === tab.key ? "tab-active text-primary" : ""
-            }`}
+            onClick={() => navigate(-1)} // -1 means go back one page
+            className="btn btn-ghost"
           >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+            <ArrowLeft />
+          </button>{" "}
+          মামলার বিস্তারিত তথ্য
+        </h2>
 
-      {/* Tab content */}
-      <div className="bg-gray-50 border border-gray-200 rounded">
-        {renderContent()}
+        {/* Tabs */}
+        <div role="tablist" className="mb-4 tabs- no-print tabs tabs-box">
+          {dynamicTabs.map((tab) => (
+            <button
+              key={tab.key}
+              role="tab"
+              onClick={() => setActiveTab(tab.key)}
+              className={`tab tab-bordered ${
+                activeTab === tab.key ? "tab-active text-primary" : ""
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab content */}
+        <div className="bg-gray-50 rounded min-h-full">{renderContent()}</div>
       </div>
-    </div>
+    </>
   );
 };
 

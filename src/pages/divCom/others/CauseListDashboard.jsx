@@ -9,14 +9,15 @@ const CauseListDashboard = () => {
 
   // Get today in YYYY-MM-DD format
   const localDate = new Date();
-  const today = `${localDate.getFullYear()}-${String(
-    localDate.getMonth() + 1
-  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
-
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Asia/Dhaka",
+  });
+  console.log(today);
   useEffect(() => {
     const fetchTodayCases = async () => {
       try {
         const res = await axiosPublic.get(`/allMamla/${today}`);
+        console.log(res.data);
         // Filter cases where case.date matches today's date
         setCases(res.data); // update your state with the fetched data
       } catch (error) {

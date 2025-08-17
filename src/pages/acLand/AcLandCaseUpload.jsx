@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ArrowLeft, Plus } from "lucide-react";
@@ -13,7 +13,9 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
   // console.log(cas);
   const { state } = useLocation();
   const caseData = state?.caseData;
-  const id = state?.id;
+  // const id = state?.id;
+  const { id } = useParams();
+  // console.log(id, cas);
   const mode = state?.mode;
   const entryIndex = state?.entryIndex;
   const { user } = useContext(AuthContext);
@@ -29,6 +31,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
     mamlaNo: "",
     year: "",
     caseHistory: "",
+    remarks: "",
   });
 
   const [documents, setDocuments] = useState(initialDocuments);
@@ -44,6 +47,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
         mamlaNo: entry.mamlaNo || cas.mamlaNo || "",
         year: entry.year || cas.year || "",
         caseHistory: entry.caseHistory || "",
+        remarks: entry?.remarks || "",
       });
       setDocuments(entry.documents || initialDocuments);
       setOrderSheets(entry.orderSheets || initialOrderSheets);
@@ -81,7 +85,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
           year: formData.year,
           caseHistory:
             selectedCaseName === "মিস কেইস" ? undefined : formData.caseHistory,
-          remarks: "সম্পূর্ণ তথ্য প্রদান করা হয়েছে",
+          remarks: formData.remarks || "সম্পূর্ণ তথ্য প্রদান করা হয়েছে",
           documents,
           ...(selectedCaseName === "মিস কেইস" && { orderSheets }),
         },
@@ -99,10 +103,10 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
           setIsCollapseOpen(false);
           setFormData({});
         }
-        navigate(-1);
+        // navigate(-1);
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       toast.error("রেসপন্স সাবমিট করতে সমস্যা হয়েছে।");
     }
   };
@@ -192,6 +196,16 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
                 onChange={(e) => handleChange("caseHistory", e.target.value)}
               />
             </label>
+
+            <label>
+              মন্তব্য:
+              <textarea
+                onChange={(e) => handleChange("remarks", e.target.value)}
+                value={FormData?.remarks || ""}
+                rows={3}
+                className="bg-gray-100 mt-1 input-bordered w-full textarea input"
+              />
+            </label>
           </>
         )}
 
@@ -272,6 +286,15 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
           >
             নতুন আদেশপত্র
           </button> */}
+            <label>
+              মন্তব্য:
+              <textarea
+                onChange={(e) => handleChange("remarks", e.target.value)}
+                value={FormData?.remarks || ""}
+                rows={3}
+                className="bg-gray-100 mt-1 input-bordered w-full textarea input"
+              />
+            </label>
           </div>
         )}
 

@@ -12,11 +12,12 @@ import { toast } from "sonner";
 
 const MySwal = withReactContent(Swal);
 
-const OfficeMessaging = ({ caseData, refetch, index }) => {
+const OfficeMessaging = ({ caseData, refetch, index, mamlaNo }) => {
   const [showModal, setShowModal] = useState(false);
   const [messageData, setMessageData] = useState(null);
   const [sendingTo, setSendingTo] = useState("");
-
+  const [comments, setComments] = useState("");
+  console.log(index);
   const messages = caseData?.messagesToOffices || [];
 
   const sentRoles = messages.map((msg) => msg.sentTo?.role?.toLowerCase?.());
@@ -141,13 +142,36 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
           m.mamlaName
         }) সংক্রান্ত ${
           role === "acLand" ? "সহকারী কমিশনার (ভূমি)" : "অতিরিক্ত জেলা প্রশাসক"
-        } ${m.officeName.bn}, ${m.district.bn} অফিসে ${
-          new Date().toISOString().split("T")[0]
-        } তারিখে তাগিদ প্রেরণ করা হয়েছে।`;
+        } ${m.officeName.bn}, ${
+          m.district.bn
+        } অফিসে ${new Date().toLocaleDateString("en-CA", {
+          timeZone: "Asia/Dhaka",
+        })} তারিখে তাগিদ প্রেরণ করা হয়েছে।`;
       })
       .join("\n");
   };
+  const staffNote = caseData.divComReview?.orderSheets?.[0]?.staffNote || "N/A";
+  const judgeNote = caseData.divComReview?.orderSheets?.[0]?.judgeNote || "N/A";
+  // convert local BD number to WhatsApp format
+  const formatPhoneForWhatsApp = (phone) => {
+    if (!phone) return "";
+    let updated = phone.trim();
 
+    // Remove spaces, dashes
+    updated = updated.replace(/[-\s]/g, "");
+
+    // If starts with 0 -> replace with +880
+    if (updated.startsWith("0")) {
+      updated = "+880" + updated.slice(1);
+    }
+
+    // If already starts with +880 -> keep as is
+    else if (!updated.startsWith("+880")) {
+      updated = "+880" + updated; // fallback
+    }
+
+    return updated;
+  };
   const handleSend = async () => {
     if (!sendingTo) {
       toast.error("দয়া করে প্রেরণের গন্তব্য নির্বাচন করুন।");
@@ -155,16 +179,20 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
     }
 
     const role = sendingTo; // 'acLand' or 'adc'
-
     const mamla =
       role === "acLand"
-        ? caseData.nagorikSubmission?.aclandMamlaInfo
-        : caseData.nagorikSubmission?.adcMamlaInfo;
+        ? caseData.nagorikSubmission?.aclandMamlaInfo.filter(
+            (m) => !m?.sentToDivcom
+          )
+        : caseData.nagorikSubmission?.adcMamlaInfo.filter(
+            (m) => !m?.sentToDivcom
+          );
 
     if (!mamla || mamla.length === 0) {
       toast.error("মামলার তথ্য পাওয়া যায়নি।");
       return;
     }
+    // const unsentMamla = mamlaInfo.filter((m) => !m?.sentToDivcom);
 
     const actionTakenText = generateDefaultActionText({
       role,
@@ -172,6 +200,7 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
     });
 
     try {
+      // 1️⃣ Update orderSheets
       const updatedOrderSheets = caseData?.divComReview?.orderSheets.map(
         (order, idx) => {
           if (idx === index) {
@@ -180,7 +209,6 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
               actionTaken: order.actionTaken
                 ? order.actionTaken + "\n" + actionTakenText
                 : actionTakenText,
-              // Dynamically add sent flag & date based on role:
               ...(role === "acLand"
                 ? {
                     sentToAcland: true,
@@ -196,7 +224,45 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
         }
       );
 
+      // 2️⃣ For messagesToOffices
+      const asArray = Array.isArray(mamla) ? mamla : [mamla];
+      const updatedCaseList = asArray.map((m) => ({
+        ...m,
+        comments,
+        staffNote,
+        judgeNote,
+      }));
+
+      // 3️⃣ For nagorikSubmission.aclandMamlaInfo (only for AC Land)
+      const updatedAclandMamlaInfo =
+        role === "acLand"
+          ? caseData?.nagorikSubmission.aclandMamlaInfo.map((m, idx) => {
+              return {
+                ...m,
+
+                sentToAcland: true,
+                sentToAclandDate: new Date().toISOString(),
+              };
+            })
+          : caseData?.nagorikSubmission.aclandMamlaInfo;
+      const updatedAdcMamlaInfo =
+        role === "adc"
+          ? caseData?.nagorikSubmission.adcMamlaInfo.map((m, idx) => {
+              return {
+                ...m,
+
+                sentToAdc: true,
+                sentToAdcDate: new Date().toISOString(),
+              };
+            })
+          : caseData?.nagorikSubmission.adcMamlaInfo;
+
       const payload = {
+        nagorikSubmission: {
+          ...caseData.nagorikSubmission,
+          aclandMamlaInfo: updatedAclandMamlaInfo,
+          adcMamlaInfo: updatedAdcMamlaInfo,
+        },
         messagesToOffices: [
           {
             date: new Date().toISOString(),
@@ -209,6 +275,9 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
               badiList: caseData.nagorikSubmission?.badi || [],
               bibadiList: caseData.nagorikSubmission?.bibadi || [],
             },
+            comments,
+            staffNote,
+            judgeNote,
             caseList: mamla,
           },
         ],
@@ -217,27 +286,32 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
           orderSheets: updatedOrderSheets,
         },
       };
+      // console.log(payload);
 
-      // Patch the updated data
       const res = await axiosPublic.patch(
         `/cases/divCom/${caseData._id}`,
         payload
       );
-      // const res2 = await axiosPublic.post("/send-whatsapp", {
-      //   message: "hello",
-      //   phone: "+8801818424256",
-      // });
 
-      // console.log(res2.data);
-      if (res.data.modifiedCount > 0) {
-        toast.success("বার্তা সফলভাবে সংরক্ষণ করা হয়েছে");
+      // Usage
+      const phone = formatPhoneForWhatsApp(
+        caseData.nagorikSubmission.badi[0].phone
+      );
+
+      const res2 = await axiosPublic.post("/send-whatsapp", {
+        phone,
+        message: actionTakenText,
+      });
+      console.log(res2.data);
+
+      if (res2.data.success) {
+        toast.success("বার্তা সফলভাবে প্রেরণ করা হয়েছে");
         refetch();
       } else {
-        toast.error("বার্তা সংরক্ষণে সমস্যা হয়েছে");
+        toast.error("বার্তা প্রেরণে সমস্যা হয়েছে");
       }
 
       setShowModal(false);
-
       MySwal.fire("সফল", "বার্তা প্রেরণ করা হয়েছে", "success");
     } catch (error) {
       console.error(error);
@@ -292,7 +366,20 @@ const OfficeMessaging = ({ caseData, refetch, index }) => {
             </h2>
 
             <div className="bg-gray-50 p-4 border rounded max-h-[400px] overflow-y-auto text-gray-800">
-              <Message caseData={caseData} role={sendingTo} />
+              <Message caseData={caseData} role={sendingTo} index={index} />
+              <div className="my-5 text-xl text-start">
+                <label className="w-full text-start">
+                  মন্তব্যঃ
+                  <textarea
+                    type="text"
+                    rows={5}
+                    value={comments}
+                    onChange={(e) => setComments(e.target.value)}
+                    placeholder="আপনার মন্তব্য দিন "
+                    className="mb-4 input-bordered w-full textarea input"
+                  />
+                </label>
+              </div>
             </div>
 
             <div className="flex justify-end gap-2">

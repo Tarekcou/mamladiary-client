@@ -1,22 +1,29 @@
 import React from "react";
 
-const Message = ({ caseData, role }) => {
+const Message = ({ caseData, role, index }) => {
   if (!caseData) return null;
 
-  const badi = caseData.nagorikSubmission?.badi;
-  const bibadi = caseData.nagorikSubmission?.bibadi;
+  const badi = caseData.nagorikSubmission?.badi || [];
+  const bibadi = caseData.nagorikSubmission?.bibadi || [];
 
   const mamlaInfo =
     role === "acLand"
-      ? caseData.nagorikSubmission?.aclandMamlaInfo
-      : caseData.nagorikSubmission?.adcMamlaInfo;
-  // console.log(mamlaInfo);
+      ? caseData.nagorikSubmission?.aclandMamlaInfo || []
+      : caseData.nagorikSubmission?.adcMamlaInfo || [];
 
-  const staffNote = caseData.divComReview?.orderSheets?.[0]?.staffNote || "N/A";
-  const judgeNote = caseData.divComReview?.orderSheets?.[0]?.judgeNote || "N/A";
-
-  if (!mamlaInfo)
-    return <p className="text-red-600">মামলার তথ্য পাওয়া যায়নি।</p>;
+  const staffNote =
+    caseData.divComReview?.orderSheets[index]?.staffNote || "N/A";
+  const judgeNote =
+    caseData.divComReview?.orderSheets[index]?.judgeNote || "N/A";
+  // console.log(staffNote);
+  // Filter out sent mamla
+  const unsentMamla = mamlaInfo.filter((m) => !m?.sentToDivcom);
+  console.log(unsentMamla);
+  if (unsentMamla.length === 0) {
+    return (
+      <p className="text-green-600">সব মামলার তথ্য ইতিমধ্যে পাঠানো হয়েছে।</p>
+    );
+  }
 
   return (
     <div className="space-y-4 text-sm leading-relaxed">
@@ -37,14 +44,20 @@ const Message = ({ caseData, role }) => {
               </tr>
             </thead>
             <tbody>
-              {mamlaInfo.map((mamla, i) => (
-                <tr key={i}>
-                  <td> {mamla.mamlaName}</td>
-                  <td> {mamla.mamlaNo}</td>
-                  <td> ({mamla.year})</td>
-                  <td> {mamla.district.bn}</td>
+              {unsentMamla.length > 0 ? (
+                unsentMamla.map((mamla, i) => (
+                  <tr key={i}>
+                    <td>{mamla.mamlaName}</td>
+                    <td>{mamla.mamlaNo}</td>
+                    <td>{mamla.year}</td>
+                    <td>{mamla.district?.bn || "N/A"}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">কোনো মামলার তথ্য পাওয়া যায়নি</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -63,22 +76,23 @@ const Message = ({ caseData, role }) => {
               </th>
             </tr>
             <tr>
-              <th className="">নাম</th>
-              <th className="">ফোন</th>
-              <th className="">ঠিকানা</th>
+              <th>নাম</th>
+              <th>ফোন</th>
+              <th>ঠিকানা</th>
             </tr>
           </thead>
           <tbody>
             {badi.map((b, index) => (
               <tr key={index}>
-                <td className="">{b.name || "N/A"}</td>
-                <td className="">{b.phone || "N/A"}</td>
-                <td className="">{b.address || "N/A"}</td>
+                <td>{b.name || "N/A"}</td>
+                <td>{b.phone || "N/A"}</td>
+                <td>{b.address || "N/A"}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <table className="table table-sm gap-2 mt-2 border border-gray-200 w-full text-center">
+
+        <table className="table table-sm mt-2 border border-gray-200 w-full text-center">
           <thead>
             <tr className="w-full">
               <th className="bg-base-300" colSpan={3}>
@@ -86,17 +100,17 @@ const Message = ({ caseData, role }) => {
               </th>
             </tr>
             <tr>
-              <th className="">নাম</th>
-              <th className="">ফোন</th>
-              <th className="">ঠিকানা</th>
+              <th>নাম</th>
+              <th>ফোন</th>
+              <th>ঠিকানা</th>
             </tr>
           </thead>
           <tbody>
             {bibadi.map((b, index) => (
               <tr key={index}>
-                <td className="">{b.name || "N/A"}</td>
-                <td className="">{b.phone || "N/A"}</td>
-                <td className="">{b.address || "N/A"}</td>
+                <td>{b.name || "N/A"}</td>
+                <td>{b.phone || "N/A"}</td>
+                <td>{b.address || "N/A"}</td>
               </tr>
             ))}
           </tbody>
@@ -108,14 +122,12 @@ const Message = ({ caseData, role }) => {
         <h3 className="pb-1 border-b font-bold text-base text-center">
           আদেশ ও অনুরোধ
         </h3>
-        {/* <p className="mt-2 whitespace-pre-wrap">আদেশ বিবরণী: {staffNote}</p>
-        <p className="mt-2 whitespace-pre-wrap"> {judgeNote}</p> */}
+        <p className="mt-2 whitespace-pre-wrap">আদেশ বিবরণী: {staffNote}</p>
+        <p className="mt-2 whitespace-pre-wrap">{judgeNote}</p>
         <p className="mt-2">
           এই মামলার নথি যাচাই করে প্রয়োজনীয় ব্যবস্থা গ্রহণ করার জন্য অনুরোধ করা
           হলো।
         </p>
-        {/* <p className="mt-4">ধন্যবাদান্তে,</p>
-        <p>[আপনার নাম বা দপ্তর]</p> */}
       </div>
     </div>
   );

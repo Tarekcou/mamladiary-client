@@ -30,7 +30,6 @@ import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
 import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
 import AddUsers from "./pages/divCom/users/AddUsers.jsx";
 import ManageDivComUser from "./pages/divCom/users/ManageDivComUser.jsx";
-import ManageAdcUser from "./pages/divCom/users/ManageAdcUser.jsx";
 import ManageACLandUser from "./pages/divCom/users/ManageACLandUser.jsx";
 import CauseListDashboard from "./pages/divCom/others/CauseListDashboard.jsx";
 import ComplainDetails from "./pages/divCom/others/ComplainDetails.jsx";
@@ -44,7 +43,7 @@ import AcLandCaseUpload from "./pages/acLand/AcLandCaseUpload.jsx";
 import DivComOrders from "./pages/divCom/cases/DivComOrders.jsx";
 import Dashboard from "./pages/common/Dashboard.jsx";
 import ProfileUpdateForm from "./pages/common/ProfileUpdateForm.jsx";
-
+import ManageAdcUser from "./pages/divCom/users/ManageACLandUser.jsx";
 
 const queryClient = new QueryClient();
 const root = document.getElementById("root");
@@ -60,7 +59,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           {/* MAIN LAYOUT ROUTES */}
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/causelist" element={<CauseList />} />
+            <Route path="/causeList" element={<AllMamla />} />
             <Route path="/:officeType/login" element={<Login />} />
             <Route path="/login/:officeType" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -93,7 +92,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="divComUsers" element={<ManageDivComUser />} />
             <Route path="adcUsers" element={<ManageAdcUser />} />
             <Route path="acLandUsers" element={<ManageACLandUser />} />
-            <Route path="causeList" element={<CauseListDashboard />} />
+            <Route path="causeList" element={<AllMamla />} />
             <Route path="complain" element={<ComplainDetails />} />
             <Route path="feedback" element={<FeedbackDetails />} />
             <Route path="monthlyReport" element={<MonthlyReport />} />
@@ -113,7 +112,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             />
             <Route path=":role/cases/:id" element={<AllDetails />} />
             <Route path=":role/cases/new" element={<AcLandCaseUpload />} />
-            <Route path=":role/cases/edit/:id" element={<AcLandCaseUpload  />} />
+            <Route path=":role/cases/edit/:id" element={<AcLandCaseUpload />} />
 
             {/* <Route path=":role/cases/order/edit/:id" element={<NewOrder />} /> */}
             <Route path=":role/cases/order/:id" element={<DivComOrders />} />

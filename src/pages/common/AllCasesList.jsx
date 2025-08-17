@@ -94,7 +94,7 @@ const AllCasesList = () => {
 
   const isMessageToAdc = (cas) =>
     cas.messagesToOffices?.some((m) => m.sentTo.role === "adc");
-  console.log(isMessageToAcland, isMessageToAdc);
+
   const handleApprove = async (cas) => {
     console.log(cas);
     const confirm = await Swal.fire({
@@ -267,7 +267,7 @@ const AllCasesList = () => {
           className={`table    border border-base-content/8 rounded-box w-full`}
         >
           <thead>
-            <tr className="bg-gray-100 text-center">
+            <tr className="bg-gray-200 text-center">
               <th>ক্রমিক</th>
               <th>ট্র্যাকিং নম্বর</th>
               <th>বাদী</th>
@@ -288,12 +288,15 @@ const AllCasesList = () => {
             ) : (
               filteredCases.map((cas, index) => (
                 <tr
+                  onClick={() =>
+                    navigate(`/dashboard/${user.role}/cases/${cas._id}`)
+                  }
                   key={cas._id}
-                  className={`text-center bg-base-50 hover:bg-gray-300 ${
+                  className={`text-center cursor-pointer bg-base-50 hover:bg-gray-200/50 ${
                     (user?.role === "acLand" && isMessageToAcland) ||
                     (user?.role === "adc" && isMessageToAdc) ||
                     (cas?.isApproved && !cas?.isCompleted)
-                      ? "bg-gray-200"
+                      ? "bg-gray-100"
                       : ""
                   }`}
                 >
@@ -325,7 +328,7 @@ const AllCasesList = () => {
                       .map((info) => (
                         <div key={info.mamlaNo}>
                           {info.mamlaName} - {info.mamlaNo}/{info.year} (
-                          {info.district.bn})
+                          {info.district.bn} {info?.adcOrderDate})
                         </div>
                       )) || "-"}
                   </td>
@@ -343,14 +346,16 @@ const AllCasesList = () => {
                       >
                         <button
                           className="flex-1 min-w-[45%] max-w-[48%] btn btn-info btn-sm"
-                          onClick={() =>
+                          onClick={(e) => {
+                            e.stopPropagation();
+
                             navigate(
                               `/dashboard/${user.role}/cases/${cas._id}`,
                               {
                                 state: { id: cas._id, mode: "view" },
                               }
-                            )
-                          }
+                            );
+                          }}
                         >
                           <h1>
                             <FcViewDetails className="text-2xl" />
@@ -368,13 +373,15 @@ const AllCasesList = () => {
                               duration={[150, 100]} // faster show/hide
                             >
                               <button
-                                onClick={() =>
+                                onClick={(e) => {
+                                  e.stopPropagation();
+
                                   handleCaseSent(
                                     cas._id,
                                     "nagorikSubmission",
                                     "submitted"
-                                  )
-                                }
+                                  );
+                                }}
                                 className="flex-1 bg-blue-500 min-w-[45%] max-w-[48%] text-white btn-sm btn"
                               >
                                 {cas?.nagorikSubmission?.status !=
@@ -391,14 +398,16 @@ const AllCasesList = () => {
                               duration={[150, 100]} // faster show/hide
                             >
                               <button
-                                onClick={() =>
+                                onClick={(e) => {
+                                  e.stopPropagation();
+
                                   navigate(
                                     `/dashboard/${user.role}/cases/edit/${cas._id}`,
                                     {
                                       state: { caseData: cas },
                                     }
-                                  )
-                                }
+                                  );
+                                }}
                                 className="flex-1 min-w-[45%] max-w-[48%] btn btn-warning btn-sm"
                               >
                                 <h1>
@@ -413,7 +422,10 @@ const AllCasesList = () => {
                               duration={[150, 100]} // faster show/hide
                             >
                               <button
-                                onClick={() => handleDelete(cas._id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(cas._id);
+                                }}
                                 className="flex-1 min-w-[45%] max-w-[48%] btn btn-error btn-sm"
                               >
                                 <h1>
@@ -430,7 +442,10 @@ const AllCasesList = () => {
                           duration={[150, 100]} // faster show/hide
                         >
                           <button
-                            onClick={() => handleApprove(cas)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApprove(cas);
+                            }}
                             className="flex flex-1 items-center min-w-[45%] max-w-[48%] text-xs btn btn-sm btn-success"
                           >
                             <h1>

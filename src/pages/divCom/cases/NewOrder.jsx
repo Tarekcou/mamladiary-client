@@ -19,7 +19,9 @@ const NewOrder = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Asia/Dhaka",
+  });
   const queryClient = useQueryClient();
 
   const [badi, setBadi] = useState(

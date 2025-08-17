@@ -30,7 +30,6 @@ const AdcOrder = ({ header }) => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
-
   // Fetch the full case data
   const {
     data: caseData,
@@ -57,14 +56,15 @@ const AdcOrder = ({ header }) => {
 
   // Extract adc data using useEffect (not useMemo)
   useEffect(() => {
-    // console.log(caseData);
-    if (caseData?.responsesFromOffices?.length) {
+    // console.log(caseData.responsesFromOffices.length);
+    if (caseData?.responsesFromOffices?.length > 0) {
       const adcData = caseData.responsesFromOffices.find(
         (r) => r.role === "adc"
       );
       if (adcData?.orderSheets) {
         setOrderSheets(adcData.orderSheets);
       }
+      // console.log(adcData);
     }
   }, [caseData]);
   const [showHeaderModal, setShowHeaderModal] = useState(false);
@@ -138,11 +138,18 @@ const AdcOrder = ({ header }) => {
       ref.style.height = `${ref.scrollHeight}px`;
     }
   };
+  const toBanglaDigits = (str = "") =>
+    String(str).replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[d]);
 
+  const formatBanglaISO = (iso) => {
+    if (!iso) return "";
+    const [y, m, d] = iso.split("-");
+    return toBanglaDigits(`${y}-${m}-${d}`); // or `${d}-${m}-${y}` if you prefer
+  };
   const addFirstRow = () => {
     const { aclandMamlaInfo, adcMamlaInfo } = caseData.nagorikSubmission || {};
-    if (!adcCaseData?.orderSheets || orderSheets.length === 0) {
-      const firstStaffNote = `    চট্টগ্রাম জেলার ${
+    if (!caseData?.divComReview?.orderSheets || orderSheets.length === 0) {
+      const firstStaffNote = `    ${aclandMamlaInfo[0]?.district.bn} জেলার ${
         aclandMamlaInfo[0]?.officeName.bn || "___"
       } উপজেলার ভূমি সংক্রান্তে সহকারী কমিশনার (ভূমি), ${
         aclandMamlaInfo[0]?.officeName.bn || "___"
@@ -150,27 +157,29 @@ const AdcOrder = ({ header }) => {
         toBanglaNumber(aclandMamlaInfo[0].mamlaNo) || "___"
       }/${
         toBanglaNumber(aclandMamlaInfo[0].year) || "___"
-      } হতে উদ্ভূত নামজারি আপিল মামলা নং ${
-        toBanglaNumber(adcMamlaInfo[0].mamlaNo) || "___"
-      }/${
-        toBanglaNumber(adcMamlaInfo[0].year) || "___"
-      } এ বিজ্ঞ অতিরিক্ত জেলা প্রশাসক (রাজস্ব), চট্টগ্রাম কর্তৃক প্রদত্ত বিগত ${
-        adcMamlaInfo[0].year || "___"
-      } তারিখের আদেশের বিরুদ্ধে নামজারি রিভিশন মামলা দায়েরের প্রার্থনায় ${
-        adcCaseData?.nagorikSubmission?.badi?.[0]?.name || "বাদীর নাম"
-      } গং পক্ষে এই আবেদন দাখিল করা হয়েছে। ${
-        adcCaseData?.nagorikSubmission?.tamadi
-          ? "অপরদিকে তামাদি আইনের ৫ ধারামতে রিভিশনকারী তামাদি মওকুফের আবেদন করেন।"
+      } খ্রী. তারিখের আদেশের বিরুদ্ধে নামজারি রিভিশন মামলা দায়েরের প্রার্থনায় ${
+        caseData?.nagorikSubmission?.badi?.[0]?.name || "বাদীর নাম"
+      } ${
+        caseData?.nagorikSubmission?.badi?.length > 1 ? "গং পক্ষে" : ""
+      } এই আবেদন দাখিল করা হয়েছে। ${
+        caseData?.nagorikSubmission?.tamadi
+          ? `অপরদিকে তামাদি আইনের ৫ ধারামতে ${
+              caseData?.divComReview?.mamlaName.includes("আপিল")
+                ? "আপিলকারী"
+                : "রিভিশনকারী"
+            } তামাদি মওকুফের আবেদন করেন।`
           : ""
       }`;
 
       const initialOrderSheet = [
         {
           orderNo: "১",
-          orderDate: new Date().toISOString().split("T")[0],
+          orderDate: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Dhaka",
+          }),
           staffNote: firstStaffNote,
           judgeNote: "",
-          nextOrderDate: "",
+          nextDate: "",
           actionTaken: "",
         },
       ];
@@ -190,7 +199,7 @@ const AdcOrder = ({ header }) => {
           orderDate: "",
           staffNote: "",
           judgeNote: "",
-          nextOrderDate: "",
+          nextDate: "",
           actionTaken: "",
         },
       ]);
@@ -341,6 +350,7 @@ const AdcOrder = ({ header }) => {
         responsesFromOffices: [
           {
             role: adcResp.role,
+
             officeName: { en: adcResp.officeName.en },
             district: { en: adcResp.district.en },
             orderSheets: [
@@ -353,6 +363,7 @@ const AdcOrder = ({ header }) => {
             ],
           },
         ],
+        mamlaNo: adcResp.mamlaNo, // 👈 add the mamlaNo being replied
       };
 
       // Send PATCH request to backend endpoint for sending order
@@ -374,9 +385,9 @@ const AdcOrder = ({ header }) => {
   };
 
   const renderCaseHeader = () => (
-    <div className="mb-4 text-[14px] text-black case-info">
+    <div className="mb-4 h-full text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
-        <div>বাংলাদেশ ফরম নং - {headerInfo?.formNo}</div>
+        <div>বাংলাদেশ ফরম নং - ২৭০</div>
         <div className="text-right">
           {badi?.name || "বাদী"} <br /> বনাম <br /> {bibadi?.name || "বিবাদী"}
         </div>
@@ -416,76 +427,76 @@ const AdcOrder = ({ header }) => {
       </div>
 
       <div className="my-4">
-        মামলার ধরন: {headerInfo?.mamlaName} মামলার নংঃ {headerInfo?.mamlaNo} / (
-        {headerInfo?.year}) ({headerInfo?.district?.bn})
+        মামলার ধরন: {headerInfo?.mamlaName} মামলা নং{" "}
+        {toBanglaNumber(headerInfo?.mamlaNo)} /
+        {toBanglaNumber(headerInfo?.year)} ({headerInfo?.district?.bn})
       </div>
     </div>
   );
   return (
     <>
       <style>{`
-     @media print {
+        @media print {
+  textarea::placeholder,
+  input::placeholder {
+    color: transparent !important;
+  }
+
   body {
     margin: 0;
     padding: 0;
+    -webkit-print-color-adjust: exact;
+
   }
 
-  /* Hide everything except the printable area */
-  body * {
-    visibility: hidden;
-  }
-    body > *:not(#printable-area) {
-    visibility: hidden !important ;
-  }
-  #printable-area,
-  #printable-area * {
-    visibility: visible;
+  .no-print {
+    display: none !important; /* hide elements you don't want in print */
   }
 
-  /* Ensure A4 size */
   #printable-area {
-    width: 210mm;
-    height: 297mm;
-    margin: 0 auto; /* center on page */
-    padding: 4mm;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 216mm;  /* Legal width */
+    height: 356mm; /* Legal height */
+    padding: 5mm;
     box-sizing: border-box;
     background: white;
-    position: relative; /* no absolute to avoid weird clipping */
-    page-break-inside: avoid;
   }
 
-  /* Force tables to fit */
+  /* make table fit page */
   table {
+    table-layout: fixed;
     width: 100%;
+    height: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* prevent overflow */
   }
 
-  .no-print, #action {
-    display: none !important;
+  td, th {
+    page-break-inside: auto; /* allow rows to break across pages */
+        page-break-inside: avoid; /* for rows you never want split */
+
+    border: 1px solid black;
   }
 
   textarea, input {
-    border: none !important;
-    outline: none !important;
-    resize: none !important;
-    background: none !important;
-    color: black !important;
+    border: none;
+    outline: none;
+    resize: none;
+    background: none;
+    color: black;
   }
 
-  /* Optional: avoid page breaking inside rows */
-  tr {
-    page-break-inside: avoid;
+  #action {
+    display: none;
   }
 }
 
 
-
       `}</style>
-
-      <div className="bg-base-200/30 my-5 pt-10 rounded-xl">
-        <div className="flex justify-end gap-2 mx-4 my-4">
-          {user.role == "adc" && !adcCaseData.sentToDivcom && (
+      <div className="bg-base-200/30 rounded-xl h-full">
+        <div className="flex justify-end gap-2 mx-4 my-5 pb-2 border-gray-300 border-b no-print">
+          {user?.role == "adc" && !adcCaseData?.sentToDivcom && (
             <>
               <button
                 onClick={handleAddRow}
@@ -510,7 +521,7 @@ const AdcOrder = ({ header }) => {
           </button>
         </div>
 
-        <div id="printable-area" className="p-4">
+        <div id="printable-area" className="p-4 min-h-screen">
           <div className="header">
             {renderCaseHeader()} {/* header info */}
           </div>
@@ -535,16 +546,34 @@ const AdcOrder = ({ header }) => {
                 return (
                   <tr className="" key={idx}>
                     <td className="mt-5 px-1 py-4 border-r w-2/12 align-top">
-                      <div className="flex flex-col items-center">
-                        <input
-                          type="date"
-                          value={order?.orderDate}
-                          readOnly={!isEditing || user?.role !== "adc"}
-                          onChange={(e) =>
-                            handleInputChange(idx, "orderDate", e.target.value)
-                          }
-                          className="w-full text-center input"
-                        />
+                      <div className="flex flex-col items-center border-b">
+                        {isEditing && user?.role === "adc" ? (
+                          <>
+                            <input
+                              type="date"
+                              value={order?.orderDate || ""}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  idx,
+                                  "orderDate",
+                                  e.target.value
+                                )
+                              }
+                              className="w-full text-center input screen-only"
+                              readOnly={!isEditing || user?.role !== "adc"}
+                            />
+                            {/* Bangla mirror for screen */}
+                            <div className="text-sm screen-only">
+                              {formatBanglaISO(order?.orderDate) ||
+                                "তারিখ নির্বাচন করুন"}
+                            </div>
+                          </>
+                        ) : (
+                          // Read-only Bangla on screen
+                          <span className="screen-only">
+                            {formatBanglaISO(order?.orderDate)}
+                          </span>
+                        )}
                       </div>
 
                       <textarea
@@ -558,7 +587,7 @@ const AdcOrder = ({ header }) => {
                       />
                     </td>
 
-                    <td className="p-2 border-r w-7/12 align-top">
+                    <td className="p-2 pt-4 border-r w-7/12 align-top">
                       {/* <p className="font-semibold text-xs text-left">
                         অফিস সহকারীর মন্তব্য
                       </p> */}
@@ -572,7 +601,7 @@ const AdcOrder = ({ header }) => {
                         onChange={(e) =>
                           handleInputChange(idx, "staffNote", e.target.value)
                         }
-                        className="mt-8 w-full overflow-hidden resize-none"
+                        className="w-full overflow-hidden resize-none"
                       />
 
                       {/* <p className="font-semibold text-xs text-left">
@@ -593,32 +622,74 @@ const AdcOrder = ({ header }) => {
 
                       {/* next data */}
                       <div className="flex flex-col justify-end items-end mt-5">
-                        <DatePicker
-                          selected={parseDate(order.nextOrderDate)}
+                        {isEditing && user?.role === "adc" ? (
+                          <>
+                            <DatePicker
+                              selected={parseDate(order.nextDate)}
+                              readOnly={!isEditing || user?.role !== "adc"}
+                              onChange={(date) =>
+                                handleInputChange(
+                                  idx,
+                                  "nextDate",
+                                  date?.toISOString().split("T")[0]
+                                )
+                              }
+                              customInput={
+                                <input
+                                  type="text"
+                                  className="text-center input"
+                                  value={formatBanglaISO(order.nextDate || "")}
+                                />
+                              }
+                              dateFormat="yyyy-MM-dd"
+                              placeholderText="পরবর্তী তারিখ"
+                            />
+                            {/* Bangla mirror for screen */}
+                            <div className="mt-5 w-1/3 text-sm screen-only">
+                              {formatBanglaISO(order?.nextDate) ||
+                                "তারিখ নির্বাচন করুন"}
+                            </div>
+                          </>
+                        ) : (
+                          // Read-only Bangla on screen
+                          <span className="mt-5 w-1/3 screen-only">
+                            {formatBanglaISO(order?.nextDate)}
+                          </span>
+                        )}
+
+                        {/* sorbosesh obostha */}
+                        <input
+                          type="text"
+                          value={order?.lastCondition}
                           readOnly={!isEditing || user?.role !== "adc"}
-                          onChange={(date) =>
+                          onChange={(e) =>
                             handleInputChange(
                               idx,
-                              "nextOrderDate",
-                              date?.toISOString().split("T")[0]
+                              "lastCondition",
+                              e.target.value
                             )
                           }
-                          customInput={
-                            <input
-                              type="text"
-                              className="text-center input"
-                              readOnly={!isEditing || user?.role !== "divCom"}
-                            />
-                          }
-                          dateFormat="yyyy-MM-dd"
-                          placeholderText="পরবর্তী তারিখ "
+                          className="my-3 input-bordered w-1/2 text-center input"
+                          placeholder="সর্বশেষ অবস্থা"
                         />
 
-                        <img
-                          src="/signature.png" // ✅ your image path
-                          alt="স্বাক্ষর"
-                          className="mt-3 mb-5 w-32 h-auto"
-                        />
+                        {order.signatureUrl ? (
+                          <img
+                            src={order.signatureUrl}
+                            alt="স্বাক্ষর"
+                            className="mt-3 mb-5 w-32 h-auto"
+                          />
+                        ) : (
+                          <div
+                            className="mt-3 mb-5 border-b border-black w-32 h-12 no-print"
+                            style={{ display: "inline-block" }}
+                          >
+                            <input
+                              className="mb-5 text-center"
+                              placeholder="স্বাক্ষর"
+                            />
+                          </div>
+                        )}
                       </div>
                     </td>
 
@@ -706,28 +777,29 @@ const AdcOrder = ({ header }) => {
             </tbody>
           </table>
         </div>
-      </div>
-      <div className="flex justify-center items-center gap-2 mb-10">
-        {user.role === "adc" && (
-          <>
-            <button className="btn-outline btn" onClick={handleAddRow}>
-              <Plus className="w-4" /> নতুন আদেশ
-            </button>
-            {editingRow !== null && orderSheets.length > 0 && (
-              <button className="btn btn-success" onClick={handleSave}>
-                <Save /> সংরক্ষণ করুন
-              </button>
-            )}
-          </>
-        )}
-      </div>
 
+        <div className="flex justify-center items-center gap-2 mb-10">
+          {user.role === "adc" && (
+            <>
+              <button className="btn-outline btn" onClick={handleAddRow}>
+                <Plus className="w-4" /> নতুন আদেশ
+              </button>
+
+              {editingRow !== null && orderSheets.length > 0 && (
+                <button className="btn btn-success" onClick={handleSave}>
+                  <Save /> সংরক্ষণ করুন
+                </button>
+              )}
+            </>
+          )}
+        </div>
+      </div>
       {showHeaderModal && (
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/40">
           <div className="space-y-4 bg-base-200 p-6 rounded-md w-[400px]">
             <h2 className="font-semibold text-lg">হেডার তথ্য হালনাগাদ</h2>
 
-            <input
+            {/* <input
               type="text"
               value={headerInfo.formNo}
               onChange={(e) =>
@@ -735,7 +807,7 @@ const AdcOrder = ({ header }) => {
               }
               className="input-bordered w-full input"
               placeholder="ফরম নম্বর"
-            />
+            /> */}
             <label>
               মামলার ধরন:
               <select

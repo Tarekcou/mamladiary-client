@@ -25,6 +25,8 @@ import { mamlaNames } from "../../../data/mamlaNames";
 import { aclandOptions } from "../../../data/aclandOptions";
 import Tippy from "@tippyjs/react";
 import OfficeMessaging from "./OfficeMessaging";
+import { IoLogoWhatsapp } from "react-icons/io5";
+
 const DivComOrders = () => {
   const { id } = useParams();
   // console.log(id);
@@ -59,22 +61,31 @@ const DivComOrders = () => {
 
   const [showHeaderModal, setShowHeaderModal] = useState(false);
 
-  const badi = caseData?.nagorikSubmission?.badi?.[0];
-  const bibadi = caseData?.nagorikSubmission?.bibadi?.[0];
-  const divComReview = caseData?.divComReview || {};
+  const badiArray = caseData?.nagorikSubmission?.badi || [];
+  const bibadiArray = caseData?.nagorikSubmission?.bibadi || [];
+
+  const badiName = badiArray[0]?.name
+    ? badiArray[0].name + (badiArray.length > 1 ? "গং " : "")
+    : "";
+
+  const bibadiName = bibadiArray[0]?.name
+    ? bibadiArray[0].name + (bibadiArray.length > 1 ? "গং " : "")
+    : "";
+  const [divComReview, setDivComReview] = useState(
+    caseData?.divComReview || {}
+  );
 
   const [headerInfo, setHeaderInfo] = useState({
-    formNo: "",
+    formNo: 270,
     mamlaName: "",
     mamlaNo: "",
     year: "",
-    district: { bn: "", en: "" },
+    district: "",
   });
   useEffect(() => {
     if (showHeaderModal && divComReview) {
       setHeaderInfo((prev) => {
         const newInfo = {
-          formNo: divComReview.formNo || "",
           mamlaName: divComReview.mamlaName || "",
           mamlaNo: divComReview.mamlaNo || "",
           year: divComReview.year || "",
@@ -112,7 +123,7 @@ const DivComOrders = () => {
 
   const handleInputChange = (index, field, value) => {
     const updated = [...orderSheets];
-
+    console.log(index, field, value);
     if (field === "judgeNote") {
       // Ensure prefix
       if (!updated[index][field]) {
@@ -135,10 +146,20 @@ const DivComOrders = () => {
     }
   };
 
+  useEffect(() => {
+    if (caseData?.divComReview) {
+      setDivComReview(caseData.divComReview);
+    }
+  }, [caseData]);
+
+  const handleDivComChange = (field, value) => {
+    setDivComReview((prev) => ({ ...prev, [field]: value }));
+  };
+
   const addFirstRow = () => {
     const { aclandMamlaInfo, adcMamlaInfo } = caseData.nagorikSubmission || {};
     if (!caseData?.divComReview?.orderSheets || orderSheets.length === 0) {
-      const firstStaffNote = `    চট্টগ্রাম জেলার ${
+      const firstStaffNote = `    ${aclandMamlaInfo[0]?.district.bn} জেলার ${
         aclandMamlaInfo[0]?.officeName.bn || "___"
       } উপজেলার ভূমি সংক্রান্তে সহকারী কমিশনার (ভূমি), ${
         aclandMamlaInfo[0]?.officeName.bn || "___"
@@ -150,23 +171,33 @@ const DivComOrders = () => {
         toBanglaNumber(adcMamlaInfo[0].mamlaNo) || "___"
       }/${
         toBanglaNumber(adcMamlaInfo[0].year) || "___"
-      } এ বিজ্ঞ অতিরিক্ত জেলা প্রশাসক (রাজস্ব), চট্টগ্রাম কর্তৃক প্রদত্ত বিগত ${
+      } এ বিজ্ঞ অতিরিক্ত জেলা প্রশাসক (রাজস্ব), ${
+        adcMamlaInfo[0]?.officeName.bn
+      } কর্তৃক প্রদত্ত বিগত ${
         toBanglaNumber(adcMamlaInfo[0].year) || "___"
       } তারিখের আদেশের বিরুদ্ধে নামজারি রিভিশন মামলা দায়েরের প্রার্থনায় ${
         caseData?.nagorikSubmission?.badi?.[0]?.name || "বাদীর নাম"
-      } গং পক্ষে এই আবেদন দাখিল করা হয়েছে। ${
+      } ${
+        caseData?.nagorikSubmission?.badi?.length > 1 ? "গং পক্ষে" : ""
+      } এই আবেদন দাখিল করা হয়েছে। ${
         caseData?.nagorikSubmission?.tamadi
-          ? "অপরদিকে তামাদি আইনের ৫ ধারামতে রিভিশনকারী তামাদি মওকুফের আবেদন করেন।"
+          ? `অপরদিকে তামাদি আইনের ৫ ধারামতে ${
+              caseData?.divComReview?.mamlaName.includes("আপিল")
+                ? "আপিলকারী"
+                : "রিভিশনকারী"
+            } তামাদি মওকুফের আবেদন করেন।`
           : ""
       }`;
 
       const initialOrderSheet = [
         {
           orderNo: "১",
-          orderDate: new Date().toISOString().split("T")[0],
+          orderDate: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Dhaka",
+          }),
           staffNote: firstStaffNote,
           judgeNote: "",
-          nextOrderDate: "",
+          nextDate: "",
           actionTaken: "",
         },
       ];
@@ -183,10 +214,12 @@ const DivComOrders = () => {
         ...prev,
         {
           orderNo: `${prev.length + 1}`,
-          orderDate: new Date().toISOString().split("T")[0],
+          orderDate: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Dhaka",
+          }),
           staffNote: "",
           judgeNote: "",
-          nextOrderDate: "",
+          nextDate: "",
           actionTaken: "",
         },
       ]);
@@ -239,16 +272,39 @@ const DivComOrders = () => {
         toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
         return;
       }
+      console.log(divComReview);
+      const reviewData = {
+        ...(divComReview || {}),
+        orderSheets: orderSheets.map(
+          ({ lastCondition, nextDate, ...rest }) => rest
+        ),
+        previousDate: new Date().toLocaleDateString("en-CA", {
+          timeZone: "Asia/Dhaka",
+        }),
+      };
       const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, {
-        divComReview: {
-          ...divComReview,
-          orderSheets,
-        },
+        divComReview: reviewData,
       });
-      console.log(res.data);
+
+      // Prepare summary for main case update
+      const caseUpdate = {
+        lastCondition: reviewData.lastCondition || "",
+        nextDate: reviewData.nextDate || "",
+        previousDate: reviewData.previousDate,
+      };
+
+      // Update main case document
+      const res2 = await axiosPublic.patch(
+        `/mamla/${caseData._id}`,
+        caseUpdate
+      );
+
+      console.log(caseUpdate);
+      // console.log(res.data);
       if (res.data.modifiedCount > 0) {
         toast.success(" সফলভাবে সংরক্ষণ করা হয়েছে");
         setEditingRow(null);
+        refetch();
       } else {
         toast.warning("⚠️ কোনো পরিবর্তন সংরক্ষণ হয়নি");
       }
@@ -285,18 +341,59 @@ const DivComOrders = () => {
       }
     }
   };
+  const toBanglaDigits = (str = "") =>
+    String(str).replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[d]);
+
+  const formatBanglaISO = (iso) => {
+    if (!iso) return "";
+    const [y, m, d] = iso.split("-");
+    return toBanglaDigits(`${y}-${m}-${d}`); // or `${d}-${m}-${y}` if you prefer
+  };
+
   const handlePrint = () => {
     window.print();
   };
-  // const handleAddOrder = () => {
-  //   navigate(`/dashboard/${user?.role}/cases/new`, {
-  //     state: { caseData, mode: "add" },
-  //   });
-
-  // };
+  const handleTagid = () => {
+    document.getElementById("my_modal_5").showModal();
+  };
   const parseDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date) ? null : date;
+  };
+  const [role, setRole] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSendWhatsApp = async () => {
+    let phone = "";
+    let targetUserRes;
+    if (role === "acland") {
+      targetUserRes = await axiosPublic.get("/users/specific-user", {
+        params: {
+          role: role,
+          district: caseData.nagorikSubmission?.aclandMamlaInfo[0]?.district.en,
+          officeName:
+            caseData.nagorikSubmission?.aclandMamlaInfo[0]?.officeName.en,
+        },
+      });
+    } else if (role === "adc") {
+      targetUserRes = await axiosPublic.get("/users/specific-user", {
+        params: {
+          role: role,
+          district: caseData.nagorikSubmission?.adcMamlaInfo[0]?.district.en,
+          officeName:
+            caseData.nagorikSubmission?.adcMamlaInfo[0]?.officeName.en,
+        },
+      });
+      // console.log(targetUserRes);
+    }
+    // console.log(targetUserRes.data);
+    if (!targetUserRes.data) {
+      toast.warning("ফোন নম্বর পাওয়া যায়নি");
+      return;
+    }
+    phone = targetUserRes?.data?.phone;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${phone}?text=${encodedMessage}`, "_blank");
   };
   const generateDefaultActionText = (messages = []) => {
     if (!messages.length) return "";
@@ -353,9 +450,9 @@ const DivComOrders = () => {
   const renderCaseHeader = () => (
     <div className="mb-4 text-[14px] text-black case-info">
       <div className="flex justify-between mb-1">
-        <div>বাংলাদেশ ফরম নং - {toBanglaNumber(divComReview.formNo)}</div>
+        <div>বাংলাদেশ ফরম নং - {toBanglaNumber(270)}</div>
         <div className="text-right">
-          {badi?.name || "বাদী"} <br /> বনাম <br /> {bibadi?.name || "বিবাদী"}
+          {badiName || "বাদী"} <br /> বনাম <br /> {bibadiName || "বিবাদী"}
         </div>
       </div>
 
@@ -393,9 +490,9 @@ const DivComOrders = () => {
       </div>
 
       <div className="my-4">
-        মামলার ধরন: {divComReview.mamlaName} মামলার নংঃ{" "}
-        {toBanglaNumber(divComReview.mamlaNo)} / (
-        {toBanglaNumber(divComReview.year)}) ({divComReview.district?.bn})
+        মামলার ধরন: {divComReview.mamlaName} মামলা নং{" "}
+        {toBanglaNumber(divComReview.mamlaNo)} /
+        {toBanglaNumber(divComReview.year)} ({divComReview.district?.bn})
       </div>
     </div>
   );
@@ -404,45 +501,62 @@ const DivComOrders = () => {
     <>
       <style>{`
         @media print {
-          body {
-            margin: 0;
-            padding: 0;
-          }
-          body * {
-            visibility: hidden;
-          }
-          #printable-area, #printable-area * {
-            visibility: visible;
-          }
-          #printable-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 5mm;
-            box-sizing: border-box;
-            background: white;
-          }
+  textarea::placeholder,
+  input::placeholder {
+    color: transparent !important;
+  }
 
-          .no-print {
-            display: none !important;
-          }
-          textarea, input {
-            border: none;
-            outline: none;
-            resize: none;
-            background: none;
-            color: black;
-          }
-          #action {
-            display: none;
-          }
-        }
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important; /* hide elements you don't want in print */
+  }
+
+  #printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 216mm;  /* Legal width */
+    height: 356mm; /* Legal height */
+    padding: 5mm;
+    box-sizing: border-box;
+    background: white;
+  }
+
+  /* make table fit page */
+  table {
+    table-layout: fixed;
+    width: 100%;
+    height: 80%;
+    border-collapse: collapse;
+  }
+
+  td, th {
+    page-break-inside: avoid;
+    // border: 1px solid black;
+  }
+
+  textarea, input {
+    border: none;
+    outline: none;
+    resize: none;
+    background: none;
+    color: black;
+  }
+
+  #action {
+    display: none;
+  }
+}
+
+
       `}</style>
 
       <div className="bg-base-200/50 my-5 rounded-xl">
-        <div className="flex justify-between items-center mb-4 py-2 font-bold text-xl text-center">
+        <div className="flex justify-between items-center mb-4 py-2 font-bold text-xl text-center no-print">
           <button
             onClick={() => navigate(-1)} // -1 means go back one page
             className="mx-2 btn btn-ghost"
@@ -452,8 +566,7 @@ const DivComOrders = () => {
           <h1 className="text-2xl">আদেশ যুক্ত করুন</h1>{" "}
           <div className="  ">{}</div>
         </div>
-        <h1 className="mx-auto mb-10 w-full text-2xl text-center card"></h1>
-        <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-gray-200 border-b">
+        <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-gray-200 border-b no-print">
           {caseData.isCompleted ? (
             <button
               onClick={() => handleComplete(false)}
@@ -469,16 +582,19 @@ const DivComOrders = () => {
               >
                 <Plus /> নতুন আদেশ
               </button>
-              {/* {divComReview.orderSheets && (
-            
-          )} */}
+
               <button
                 onClick={() => setShowHeaderModal(true)}
                 className="mb-2 btn-outline btn btn-sm"
               >
                 <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
               </button>
-
+              <button
+                onClick={handleTagid}
+                className="flex bg-none btn-dash btn-sm btn"
+              >
+                <IoLogoWhatsapp className="text-xl" /> তাগিদ প্রেরণ
+              </button>
               <button
                 onClick={() => handleComplete(true)}
                 className="btn-outline text-red-600 no-print btn btn-sm"
@@ -516,16 +632,41 @@ const DivComOrders = () => {
                 return (
                   <tr className="" key={idx}>
                     <td className="mt-5 px-1 py-4 border-r w-2/12 align-top">
-                      <div className="flex flex-col items-center border-b text-center">
-                        <input
-                          type="date"
-                          value={order?.orderDate}
-                          readOnly={!isEditing || user?.role !== "divCom"}
-                          onChange={(e) =>
-                            handleInputChange(idx, "orderDate", e.target.value)
-                          }
-                          className="w-full text-center input"
-                        />
+                      <div className="flex flex-col items-center text-center">
+                        {isEditing && user?.role === "divCom" ? (
+                          <>
+                            <input
+                              type="date"
+                              value={order?.orderDate || ""}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  idx,
+                                  "orderDate",
+                                  e.target.value
+                                )
+                              }
+                              className="w-full text-center input screen-only"
+                              readOnly={!isEditing || user?.role !== "divCom"}
+                            />
+                            {/* Bangla mirror for screen */}
+                            <div className="text-sm screen-only">
+                              {formatBanglaISO(order?.orderDate) ||
+                                "তারিখ নির্বাচন করুন"}
+                            </div>
+                          </>
+                        ) : (
+                          // Read-only Bangla on screen
+                          <span className="screen-only">
+                            {formatBanglaISO(order?.orderDate)}
+                          </span>
+                        )}
+
+                        {/* Bangla for print */}
+                        {/* {order?.orderDate && (
+                          <span className="print-only-inline">
+                            {formatBanglaISO(order.orderDate)}
+                          </span>
+                        )} */}
                       </div>
 
                       <textarea
@@ -577,35 +718,56 @@ const DivComOrders = () => {
                       />
 
                       {/* next data */}
-                      <div className="flex flex-col justify-end items-end mt-5">
-                        <DatePicker
-                          selected={parseDate(order.nextOrderDate)}
-                          readOnly={!isEditing || user?.role !== "divCom"}
-                          onChange={(date) =>
-                            handleInputChange(
-                              idx,
-                              "nextOrderDate",
-                              date?.toISOString().split("T")[0]
-                            )
-                          }
-                          customInput={
-                            <input
-                              type="text"
-                              className="text-center input"
-                              readOnly={!isEditing || user?.role !== "divCom"}
-                            />
-                          }
-                          dateFormat="yyyy-MM-dd"
-                          placeholderText="পরবর্তী তারিখ "
-                        />
 
-                        <img
-                          src="/signature.png" // ✅ your image path
-                          alt="স্বাক্ষর"
-                          className="mt-3 mb-5 w-32 h-auto"
+                      <div className="flex flex-col justify-end items-end mt-5">
+                        {isEditing && user?.role === "divCom" ? (
+                          <>
+                            <DatePicker
+                              selected={parseDate(divComReview?.nextDate)}
+                              readOnly={!isEditing || user?.role !== "divCom"}
+                              onChange={(date) =>
+                                handleDivComChange(
+                                  "nextDate",
+                                  date?.toISOString().split("T")[0]
+                                )
+                              }
+                              customInput={
+                                <input
+                                  type="text"
+                                  className="text-center input"
+                                  value={formatBanglaISO(
+                                    divComReview?.nextDate || ""
+                                  )}
+                                />
+                              }
+                              dateFormat="yyyy-MM-dd"
+                              placeholderText="পরবর্তী তারিখ"
+                            />
+                            <div className="mt-5 w-1/3 text-sm screen-only">
+                              {formatBanglaISO(divComReview?.nextDate) ||
+                                "তারিখ নির্বাচন করুন"}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="mt-5 w-1/3 screen-only">
+                            {formatBanglaISO(caseData.divComReview?.nextDate)}
+                          </span>
+                        )}
+
+                        {/* sorbosesh obostha */}
+                        <input
+                          type="text"
+                          value={divComReview?.lastCondition || ""}
+                          readOnly={!isEditing || user?.role !== "divCom"}
+                          onChange={(e) =>
+                            handleDivComChange("lastCondition", e.target.value)
+                          }
+                          className="my-3 input-bordered w-1/3 text-center input"
+                          placeholder="সর্বশেষ অবস্থা"
                         />
                       </div>
                     </td>
+
                     {/* Action taken */}
                     <td className="px-1 pt-4 border-r w-3/12 h-full align-top">
                       <textarea
@@ -679,6 +841,7 @@ const DivComOrders = () => {
                                 role={user?.role}
                                 refetch={refetch}
                                 index={idx}
+                                mamlaNo={order?.mamlaNo}
                               />
                             </div>
                           )}
@@ -707,15 +870,15 @@ const DivComOrders = () => {
           <div className="space-y-4 bg-base-200 p-6 rounded-md w-[400px]">
             <h2 className="font-semibold text-lg">হেডার তথ্য হালনাগাদ</h2>
 
-            <input
+            {/* <input
               type="text"
-              value={headerInfo.formNo}
+              value={270}
               onChange={(e) =>
                 setHeaderInfo({ ...headerInfo, formNo: e.target.value })
               }
               className="input-bordered w-full input"
               placeholder="ফরম নম্বর"
-            />
+            /> */}
             <label>
               মামলার ধরন:
               <select
@@ -811,6 +974,84 @@ const DivComOrders = () => {
           </div>
         </div>
       )}
+
+      {/* tagid modal */}
+      <dialog id="my_modal_5" className="modal">
+        <div className="w-96 modal-box">
+          <h3 className="mb-4 font-bold text-lg">তাগিদ পাঠান</h3>
+
+          {/* Role dropdown */}
+          <label className="block mb-2 font-semibold">পদবি</label>
+          <select
+            className="mb-4 w-full select-bordered select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="">নির্বাচন করুন</option>
+            <option value="acland">সহকারী কমিশনার (ভূমি) আদালত </option>
+            <option value="adc">অতিরিক্ত জেলা প্রশাসক আদালত</option>
+          </select>
+
+          {/* District dropdown */}
+          {role && (
+            <>
+              <label className="block mb-2 font-semibold">জেলা</label>
+              <input
+                type="text"
+                className="mb-4 input-bordered w-full input"
+                value={
+                  role === "acland"
+                    ? caseData?.nagorikSubmission?.aclandMamlaInfo[0]?.district
+                        ?.bn || ""
+                    : caseData?.nagorikSubmission?.adcMamlaInfo[0]?.district
+                        ?.bn || ""
+                }
+                readOnly
+              />
+            </>
+          )}
+
+          {/* Office dropdown if acland */}
+          {role === "acland" && (
+            <>
+              <label className="block mb-2 font-semibold">অফিস</label>
+              <input
+                type="text"
+                className="mb-4 input-bordered w-full input"
+                value={
+                  caseData?.nagorikSubmission?.aclandMamlaInfo[0]?.officeName
+                    ?.bn || ""
+                }
+                readOnly
+              />
+            </>
+          )}
+
+          {/* Message */}
+          <label className="block mb-2 font-semibold">মেসেজ</label>
+          <textarea
+            className="mb-4 textarea-bordered w-full textarea"
+            rows="3"
+            placeholder="তাগিদ মেসেজ লিখুন..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+
+          {/* Actions */}
+          <div className="modal-action">
+            <button
+              className="btn btn-primary"
+              onClick={handleSendWhatsApp}
+              disabled={!message}
+            >
+              <IoLogoWhatsapp className="mr-1" /> প্রেরণ করুন
+            </button>
+            <form method="dialog">
+              <button className="btn">বাতিল</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </>
   );
 };

@@ -64,7 +64,11 @@ const AddUsers = () => {
         নতুন ব্যবহারকারী
       </h3>
 
-      <form ref={formRef} onSubmit={handleSubmitUser} className="space-y-4">
+      <form
+        inputRef={formRef}
+        onSubmit={handleSubmitUser}
+        className="space-y-4"
+      >
         <input
           name="name"
           placeholder="নাম"
