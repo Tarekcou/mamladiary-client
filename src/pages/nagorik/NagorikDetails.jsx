@@ -191,149 +191,143 @@ const NagorikDetails = ({ role }) => {
       `}
       </style>
       <div className="bg-base-200 shadow-sm mx-auto p-6 h-full">
-        <div className="w-full boder">
-          <div>
-            <h2 className="mb-10 font-bold text-xl text-center underline">
-              মামলার বিস্তারিত তথ্য
-            </h2>
-            <div className="flex justify-between w-full">
-              <p>
-                <strong>ট্র্যাকিং নম্বর:</strong> {trackingNo}
-              </p>
+       <div className="w-full">
+  <h2 className="mb-5  font-bold text-xl text-center underline">
+    মামলার বিস্তারিত তথ্য
+  </h2>
+
+  <table className="w-full border-collapse">
+    <tbody>
+      {/* Tracking No + Print */}
+      <tr className="no-print">
+       <td></td>
+        <td className="py-2 text-right">
+          <button
+            onClick={handlePrint}
+            className="no-print btn btn-sm btn-info min-w-max"
+          >
+            <Printer /> প্রিন্ট করুন
+          </button>
+        </td>
+      </tr>
+       {/* Approve / Refuse buttons */}
+      <tr>
+         <td className="py-2">
+          <strong>ট্র্যাকিং নম্বর:</strong> {trackingNo}
+        </td>
+        <td className="py-2 text-right space-x-2 no-print">
+          {!isApproved && !isRefused && user?.role === "divCom" ? (
+            <>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                animate={{ y: [0, -3, 0] }}
+                transition={{ repeat: Infinity, duration: 0.3 }}
+                onClick={() => handleApprove(true)}
+                className="btn btn-sm btn-success min-w-max"
+              >
+                <CheckCircle /> অনুমোদন দিন
+              </motion.button>
               <button
-                onClick={handlePrint}
-                className="my-1 no-print btn btn-sm btn-info"
-              >
-                <Printer /> প্রিন্ট করুন
-              </button>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex flex-col gap-3 w-full">
-                <div className="flex gap-1">
-                  <h1>অনুমোদনের অবস্থা:</h1>{" "}
-                  {isApproved ? (
-                    <h1 className="font-bold badge badge-success">
-                      "অনুমোদিত"
-                    </h1>
-                  ) : nagorikSubmission.status == "submitted" ? (
-                    <h1 className="font-bold badge badge-info">
-                      অনুমোদনের জন্য অপেক্ষমাণ
-                    </h1>
-                  ) : (
-                    <div className="flex justify-between items-center w-full">
-                      <h1 className="badge badge-warning">
-                        অনুমোদনের জন্য প্রেরণ করুন
-                      </h1>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        animate={{ y: [0, -3, 0] }}
-                        transition={{ repeat: Infinity, duration: 0.3 }}
-                        className="bg-blue-500 rounded text-white btn btn-sm"
-                        onClick={() =>
-                          handleCaseSent(
-                            caseData._id,
-                            "nagorikSubmission",
-                            "submitted"
-                          )
-                        }
-                      >
-                        {nagorikSubmission?.status != "submitted" && (
-                          <h1 className="flex items-center p-4 text-sm">
-                            <SendIcon className="w-5" /> প্রেরণ করুন
-                          </h1>
-                        )}
-                      </motion.button>
-                    </div>
-                  )}
-                </div>
-                <h1 className="font-bold">
-                  ভূমি অফিসঃ{" "}
-                  <span className="font-bold text-blue-600 text-lg">
-                    {nagorikSubmission.aclandMamlaInfo[0].officeName.bn}
-                  </span>
-                </h1>
-                <h1 className="font-bold text-lg">
-                  জেলাঃ{" "}
-                  <span className="text-blue-600">
-                    {nagorikSubmission.adcMamlaInfo[0]?.district.bn}
-                  </span>
-                </h1>
-              </div>
-
-              {/* Approve Button */}
-              {!isApproved && !isRefused && user?.role === "divCom" ? (
-                <div className="flex flex-col justify-end items-end gap-2 w-1/2 text-center">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    animate={{ y: [0, -3, 0] }}
-                    transition={{ repeat: Infinity, duration: 0.3 }}
-                    onClick={() => handleApprove(true)}
-                    className=""
-                  >
-                    <h1 className="btn-block flex justify-center items-center gap-2 btn btn-sm btn-success">
-                      <CheckCircle />
-                      অনুমোদন দিন
-                    </h1>
-                  </motion.button>
-
-                  <button
-                    onClick={() =>
-                      handleCaseSent(
-                        caseData._id,
-                        "nagorikSubmission",
-                        "refused"
-                      )
-                    }
-                    className="flex btn-info btn btn-sm"
-                  >
-                    <RotateCcw /> ফেরত পাঠান
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-1 text-center no-print btn-sm">
-                  {!caseData.divComReview &&
-                    isApproved &&
-                    user?.role === "divCom" && (
-                      <>
-                        <button
-                          onClick={handleAddOrder}
-                          className="flex btn-success btn btn-sm"
-                        >
-                          <Plus /> নতুন আদেশ
-                        </button>
-                        <button
-                          onClick={() => handleApprove(false)}
-                          className="flex items-center btn btn-sm btn-warning"
-                        >
-                          <FcCancel className="text-2xl" />{" "}
-                          <h1 className="text-xs">অনুমোদন বাতিল</h1>
-                        </button>
-                      </>
-                    )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 my-2">
-            {/* <button
-                className="btn btn-warning"
                 onClick={() =>
-                  activeTab === "acLand"
-                    ? navigate(
-                        `/dashboard/${activeTab}/cases/edit/${caseData._id}`,
-                        { state: { caseData } }
-                      )
-                    : navigate(
-                        `/dashboard/${activeTab}/cases/order/edit/${caseData._id}`,
-                        { state: { caseData } }
-                      )
+                  handleCaseSent(
+                    caseData._id,
+                    "nagorikSubmission",
+                    "refused"
+                  )
                 }
+                className="btn btn-sm btn-info min-w-max"
               >
-                <Edit className="w-6" />
-              </button> */}
-          </div>
-        </div>
+                <RotateCcw /> ফেরত পাঠান
+              </button>
+            </>
+          ) : (
+            isApproved &&
+            user?.role === "divCom" && (
+              <>
+                <button
+                  onClick={handleAddOrder}
+                  className="btn btn-sm btn-success min-w-max"
+                >
+                  <Plus /> নতুন আদেশ
+                </button>
+                <button
+                  onClick={() => handleApprove(false)}
+                  className="btn btn-sm btn-warning min-w-max"
+                >
+                  <FcCancel className="text-2xl" /> অনুমোদন বাতিল
+                </button>
+              </>
+            )
+          )}
+        </td>
+      </tr>
+
+      {/* অনুমোদনের অবস্থা */}
+      <tr>
+        <td className="py-2">
+          অনুমোদনের অবস্থা:
+          {isApproved ? (
+            <span className="ml-2 font-bold badge badge-success">
+              অনুমোদিত
+            </span>
+          ) : nagorikSubmission.status == "submitted" ? (
+            <span className="ml-2 font-bold badge badge-info">
+              অনুমোদনের জন্য অপেক্ষমাণ
+            </span>
+          ) : (
+            <span className="ml-2 badge badge-warning">
+              অনুমোদনের জন্য প্রেরণ করুন
+            </span>
+          )}
+        </td>
+        <td className="py-2 text-right">
+          {nagorikSubmission?.status != "submitted" && !isApproved && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              animate={{ y: [0, -3, 0] }}
+              transition={{ repeat: Infinity, duration: 0.3 }}
+              className="btn btn-sm bg-blue-500 text-white min-w-max"
+              onClick={() =>
+                handleCaseSent(
+                  caseData._id,
+                  "nagorikSubmission",
+                  "submitted"
+                )
+              }
+            >
+              <SendIcon className="w-5" /> প্রেরণ করুন
+            </motion.button>
+          )}
+        </td>
+      </tr>
+
+      {/* ভূমি অফিস */}
+      <tr>
+        <td className="py-2 font-bold">
+          ভূমি অফিসঃ{" "}
+          <span className="font-bold text-blue-600 text-lg">
+            {nagorikSubmission.aclandMamlaInfo[0].officeName.bn}
+          </span>
+        </td>
+        <td />
+      </tr>
+
+      {/* জেলা */}
+      <tr>
+        <td className="py-2 font-bold">
+          জেলাঃ{" "}
+          <span className="text-blue-600">
+            {nagorikSubmission.adcMamlaInfo[0]?.district.bn}
+          </span>
+        </td>
+        <td />
+      </tr>
+
+     
+    </tbody>
+  </table>
+</div>
+
 
         {/* Badi Table */}
         <div className="mt-4">

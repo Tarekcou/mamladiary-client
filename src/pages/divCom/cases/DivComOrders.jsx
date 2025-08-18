@@ -24,8 +24,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { mamlaNames } from "../../../data/mamlaNames";
 import { aclandOptions } from "../../../data/aclandOptions";
 import Tippy from "@tippyjs/react";
-import OfficeMessaging from "./OfficeMessaging";
 import { IoLogoWhatsapp } from "react-icons/io5";
+import OfficeMessaging from "./OfficeMessaging";
+import { FaPlus } from "react-icons/fa";
+import { mamlaStatus } from "../../../data/mamlaStatus";
 
 const DivComOrders = () => {
   const { id } = useParams();
@@ -82,6 +84,32 @@ const DivComOrders = () => {
     year: "",
     district: "",
   });
+
+    const [options, setOptions] = useState([...new Set(mamlaStatus)]);
+      const [lastCondition, setLastCondition] = useState("");
+      const [customInput, setCustomInput] = useState("");
+      const [showInput, setShowInput] = useState(false);
+    
+      const handleAddCustom = () => {
+        const custom = customInput.trim();
+        if (custom && !options.includes(custom)) {
+          setOptions([...options, custom]);
+        }
+        setLastCondition(custom);
+        console.log(lastCondition)
+        // setFormData((prev) => ({ ...prev, completedMamla: custom }));
+        setCustomInput("");
+        setShowInput(false);
+      };
+    
+      const handleCompletedMamlaChange = (e) => 
+        {
+        const value = e.target.value;
+        setLastCondition(value);
+        console.log(value,lastCondition)
+        // setFormData((prev) => ({ ...prev, completedMamla: value }));
+      };
+
   useEffect(() => {
     if (showHeaderModal && divComReview) {
       setHeaderInfo((prev) => {
@@ -135,6 +163,7 @@ const DivComOrders = () => {
       }
     }
 
+    
     updated[index][field] = value;
     setOrderSheets(updated);
 
@@ -276,7 +305,7 @@ const DivComOrders = () => {
       const reviewData = {
         ...(divComReview || {}),
         orderSheets: orderSheets.map(
-          ({ lastCondition, nextDate, ...rest }) => rest
+          ({  nextDate, ...rest }) => rest
         ),
         previousDate: new Date().toLocaleDateString("en-CA", {
           timeZone: "Asia/Dhaka",
@@ -419,7 +448,7 @@ const DivComOrders = () => {
       title: "আপনি কি মামলাটি নিষ্পন্ন করতে চান?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "হ্যাঁ,  করুন",
+      confirmButtonText: "হ্যাঁ, করুন",
     });
 
     if (!confirm.isConfirmed) return;
@@ -717,7 +746,7 @@ const DivComOrders = () => {
                         className="mt-8 w-full overflow-hidden resize-none"
                       />
 
-                      {/* next data */}
+                      {/* next date */}
 
                       <div className="flex flex-col justify-end items-end mt-5">
                         {isEditing && user?.role === "divCom" ? (
@@ -743,29 +772,78 @@ const DivComOrders = () => {
                               dateFormat="yyyy-MM-dd"
                               placeholderText="পরবর্তী তারিখ"
                             />
-                            <div className="mt-5 w-1/3 text-sm screen-only">
+                            <div className="mt-2 w-1/3 text-sm screen-only">
                               {formatBanglaISO(divComReview?.nextDate) ||
                                 "তারিখ নির্বাচন করুন"}
                             </div>
                           </>
                         ) : (
-                          <span className="mt-5 w-1/3 screen-only">
+                          <span className="mt-2 w-1/3 screen-only">
                             {formatBanglaISO(caseData.divComReview?.nextDate)}
                           </span>
                         )}
 
                         {/* sorbosesh obostha */}
-                        <input
-                          type="text"
-                          value={divComReview?.lastCondition || ""}
-                          readOnly={!isEditing || user?.role !== "divCom"}
-                          onChange={(e) =>
-                            handleDivComChange("lastCondition", e.target.value)
-                          }
-                          className="my-3 input-bordered w-1/3 text-center input"
-                          placeholder="সর্বশেষ অবস্থা"
-                        />
-                      </div>
+                       {/* সর্বশেষ অবস্থা */}
+
+  
+  <div className="flex w-52 items-center my-2  space-x-2">
+    <select
+      value={divComReview?.lastCondition || ""}
+      onChange={(e) =>
+        handleDivComChange("lastCondition", e.target.value)
+      }
+      className=" input-bordered w-full input select"
+      disabled={!isEditing || user?.role !== "divCom"}
+    >
+      <option value="">সর্বশেষ অবস্থা নির্বাচন করুন</option>
+      {options.map((opt, idx) => (
+        <option key={idx} value={opt}>
+          {opt}
+        </option>
+      ))}
+    </select>
+
+    {/* add custom option */}
+    <button
+      type="button"
+      className="bg-gray-200 no-print rounded-full btn"
+      onClick={() => setShowInput(true)}
+            disabled={!isEditing || user?.role !== "divCom"}
+
+    >
+      <FaPlus />
+    </button>
+    
+  </div>
+
+  {showInput && (
+    <div className="flex space-x-2 mt-2">
+      <input
+        type="text"
+        className="input-bordered w-full input input-sm"
+        value={customInput}
+        onChange={(e) => setCustomInput(e.target.value)}
+        placeholder="নতুন অবস্থা লিখুন"
+      />
+      <button
+        type="button"
+        className="btn btn-sm btn-success"
+        onClick={() => {
+          const custom = customInput.trim();
+          if (custom && !options.includes(custom)) {
+            setOptions([...options, custom]);
+          }
+          handleDivComChange("lastCondition", custom); // ✅ update main state
+          setCustomInput("");
+          setShowInput(false);
+        }}
+      >
+        যুক্ত করুন
+      </button>
+    </div>
+  )}
+            </div>
                     </td>
 
                     {/* Action taken */}

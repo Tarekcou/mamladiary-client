@@ -222,13 +222,13 @@ const AllCasesList = () => {
     // Submitted but not approved
     if (cas.nagorikSubmission?.status === "submitted") {
       return (
-        <>
-          <div className="flex items-center gap-1 my-1 badge badge-success">
+        <div className="flex flex-col items-center">
+         {user?.role==="nagorik"&& <div className="flex items-center justify-center border gap-1 my-1 badge badge-success">
             <Check className="w-5" />
             প্রেরিত
-          </div>
+          </div>}
           <h1 className="font-bold text-red-500">অনুমোদনের জন্য অপেক্ষমাণ</h1>
-        </>
+        </div>
       );
     }
 

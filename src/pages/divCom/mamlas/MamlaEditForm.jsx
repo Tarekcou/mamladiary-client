@@ -6,6 +6,7 @@ import { FaPlus, FaTimes } from "react-icons/fa";
 import { districts } from "../../../data/districts";
 import { mamlaNames } from "../../../data/mamlaNames";
 import axiosPublic from "../../../axios/axiosPublic";
+import { Plus, X } from "lucide-react";
 
 const mamlaStatus = [
   "মামলা প্রত্যাহার",
@@ -29,7 +30,7 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
     district: "",
     previousDate: "",
     nextDate: "",
-    completedMamla: "",
+    lastStage: "",
     completionDate: "",
     phoneNumbers: "",
   });
@@ -40,7 +41,18 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
   const [bibadiPhones, setBibadiPhones] = useState([""]);
   const [newBadiNumber, setNewBadiNumber] = useState("");
   const [newBibadiNumber, setNewBibadiNumber] = useState("");
-
+const [badiInput, setBadiInput] = useState({
+    name: "",
+    phone: "",
+    address: "",
+  });
+  const [bibadiInput, setBibadiInput] = useState({
+    name: "",
+    phone: "",
+    address: "",
+  });
+  const [badiList, setBadiList] = useState([]);
+  const [bibadiList, setBibadiList] = useState([]);
   // Populate form with existing mamla
   useEffect(() => {
     if (mamla) {
@@ -53,14 +65,61 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
         nextDate: mamla.nextDate || "",
         completedMamla: mamla.completedMamla || "",
         completionDate: mamla.completionDate || "",
+        lastStage:mamla.lastStage||""
       });
 
-      setBadiPhones(mamla.phoneNumbers?.badi || [""]);
-      setBibadiPhones(mamla.phoneNumbers?.bibadi || [""]);
-      setSelected(mamla.completedMamla || "");
+      setBadiList(mamla.badi||[])
+      setBibadiList(mamla.bibadi||[])
+      setSelected(mamla.lastStage || "");
     }
   }, [mamla]);
+  
+  const addBadi = () => {
+    const isValidPhone = (phone) => /^01[0-9]{9}$/.test(phone);
 
+    if (!badiInput.name || !badiInput.phone) {
+      toast.warning("নাম এবং ফোন নম্বর দিতে হবে");
+      return;
+    }
+
+    if (!isValidPhone(badiInput.phone)) {
+      toast.warning("সঠিক ১১ সংখ্যার ফোন নম্বর দিন");
+      return;
+    }
+
+    if (badiList.some((p) => p.phone === badiInput.phone)) {
+      toast.warning("এই ফোন নম্বরটি ইতোমধ্যে যুক্ত হয়েছে");
+      return;
+    }
+
+    setBadiList([...badiList, badiInput]);
+    setBadiInput({ name: "", phone: "", address: "" });
+  };
+  const addBibadi = () => {
+    const isValidPhone = (phone) => /^01[0-9]{9}$/.test(phone);
+
+    if (!bibadiInput.name || !bibadiInput.phone) {
+      toast.warning("নাম এবং ফোন নম্বর দিতে হবে");
+      return;
+    }
+
+    if (!isValidPhone(bibadiInput.phone)) {
+      toast.warning("সঠিক ১১ সংখ্যার ফোন নম্বর দিন");
+      return;
+    }
+
+    if (bibadiList.some((p) => p.phone === bibadiInput.phone)) {
+      toast.warning("এই ফোন নম্বরটি ইতোমধ্যে যুক্ত হয়েছে");
+      return;
+    }
+
+    setBibadiList([...bibadiList, bibadiInput]);
+    setBibadiInput({ name: "", phone: "", address: "" });
+  };
+  const removeParty = (type, phone) => {
+    if (type === "badi") setBadiList(badiList.filter((p) => p.phone !== phone));
+    else setBibadiList(bibadiList.filter((p) => p.phone !== phone));
+  };
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -218,7 +277,7 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
             জেলা :
             <select
               name="district"
-              value={formData.district}
+              value={formData.district.bn}
               onChange={handleChange}
               className="mt-1 w-full select-bordered select"
             >
@@ -310,102 +369,121 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
             />
           </label>
 
-          {/* update phone */}
-          {/* বাদীর ফোন নম্বর */}
-          <div className="col-span-2 mt-4">
-            <label className="block mb-2 font-medium">
-              বাদীর ফোন নম্বরসমূহ:
-            </label>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {badiPhones.map((number, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 bg-blue-100 px-3 py-1 rounded-full text-blue-800"
-                >
-                  <span>{number}</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updated = badiPhones.filter((_, i) => i !== index);
-                      setBadiPhones(updated.length ? updated : [""]);
-                    }}
-                  >
-                    <FaTimes className="text-red-500 hover:text-red-700" />
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
+         {/* Badi */}
+        <div className="col-span-2 mt-4">
+          <label className="block mb-1 font-semibold">বাদির তথ্য:</label>
+          <div className="flex flex-wrap gap-2">
+            <div className="flex gap-4 w-full">
               <input
                 type="text"
-                value={newBadiNumber}
-                onChange={(e) => setNewBadiNumber(e.target.value)}
-                placeholder="নতুন বাদীর ফোন নম্বর লিখুন"
+                placeholder="নাম"
                 className="input-bordered w-full input"
+                value={badiInput.name}
+                onChange={(e) =>
+                  setBadiInput({ ...badiInput, name: e.target.value })
+                }
               />
-              <button
-                type="button"
-                onClick={() => {
-                  if (newBadiNumber.trim() !== "") {
-                    setBadiPhones([...badiPhones, newBadiNumber.trim()]);
-                    setNewBadiNumber("");
-                  }
-                }}
-                className="btn-outline btn btn-sm"
-              >
-                <FaPlus /> যোগ করুন
-              </button>
+              <input
+                type="number"
+                placeholder="ফোন"
+                className="input-bordered w-full input"
+                value={badiInput.phone}
+                onChange={(e) =>
+                  setBadiInput({ ...badiInput, phone: e.target.value })
+                }
+              />
             </div>
+            <input
+              type="text"
+              placeholder="ঠিকানা"
+              className="input-bordered w-full input"
+              value={badiInput.address}
+              onChange={(e) =>
+                setBadiInput({ ...badiInput, address: e.target.value })
+              }
+            />
+            <button
+              type="button"
+              onClick={addBadi}
+              className="bg-[#004080] text-white btn"
+            >
+              <Plus /> যুক্ত করুন
+            </button>
           </div>
+          <div className="flex flex-wrap gap-2 my-2">
+            {badiList.map((p) => (
+              <div
+                key={p.phone}
+                className="mx-1 p-3 text-white badge badge-success"
+              >
+                {p.name} | {p.phone} | {p.address}
+                <X
+                  className="cursor-pointer"
+                  size={14}
+                  onClick={() => removeParty("badi", p.phone)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
 
-          {/* বিবাদীর ফোন নম্বর */}
-          <div className="col-span-2 mt-4">
-            <label className="block mb-2 font-medium">
-              বিবাদীর ফোন নম্বরসমূহ:
-            </label>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {bibadiPhones.map((number, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full text-green-800"
-                >
-                  <span>{number}</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updated = bibadiPhones.filter(
-                        (_, i) => i !== index
-                      );
-                      setBibadiPhones(updated.length ? updated : [""]);
-                    }}
-                  >
-                    <FaTimes className="text-red-500 hover:text-red-700" />
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
+        {/* Bibadi */}
+        <div className="col-span-2 mt-6">
+          <label className="block mb-1 font-semibold">বিবাদির তথ্য:</label>
+          <div className="flex flex-wrap gap-2">
+            <div className="flex gap-4 w-full">
               <input
                 type="text"
-                value={newBibadiNumber}
-                onChange={(e) => setNewBibadiNumber(e.target.value)}
-                placeholder="নতুন বিবাদীর ফোন নম্বর লিখুন"
+                placeholder="নাম"
                 className="input-bordered w-full input"
+                value={bibadiInput.name}
+                onChange={(e) =>
+                  setBibadiInput({ ...bibadiInput, name: e.target.value })
+                }
               />
-              <button
-                type="button"
-                onClick={() => {
-                  if (newBibadiNumber.trim() !== "") {
-                    setBibadiPhones([...bibadiPhones, newBibadiNumber.trim()]);
-                    setNewBibadiNumber("");
-                  }
-                }}
-                className="btn-outline btn btn-sm"
-              >
-                <FaPlus /> যোগ করুন
-              </button>
+              <input
+                type="number"
+                placeholder="ফোন"
+                className="input-bordered w-full input"
+                value={bibadiInput.phone}
+                onChange={(e) =>
+                  setBibadiInput({ ...bibadiInput, phone: e.target.value })
+                }
+              />
             </div>
+            <input
+              type="text"
+              placeholder="ঠিকানা"
+              className="input-bordered w-full input"
+              value={bibadiInput.address}
+              onChange={(e) =>
+                setBibadiInput({ ...bibadiInput, address: e.target.value })
+              }
+            />
+            <button
+              type="button"
+              onClick={addBibadi}
+              className="bg-[#004080] text-white btn"
+            >
+              <Plus /> যুক্ত করুন
+            </button>
           </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {bibadiList.map((p) => (
+              <div
+                key={p.phone}
+                className="gap-2 p-3 text-white badge badge-error"
+              >
+                {p.name} | {p.phone} | {p.address}
+                <X
+                  className="cursor-pointer"
+                  size={14}
+                  onClick={() => removeParty("bibadi", p.phone)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
         </div>
 
         <div className="mt-6 text-center">
