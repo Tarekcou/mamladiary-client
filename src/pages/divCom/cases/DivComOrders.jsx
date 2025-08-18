@@ -11,6 +11,10 @@ import {
   PencilOff,
   BookCheck,
   Play,
+  Minus,
+  ActivityIcon,
+  Settings,
+  Settings2,
 } from "lucide-react";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
 import axiosPublic from "../../../axios/axiosPublic";
@@ -73,9 +77,9 @@ const DivComOrders = () => {
   const bibadiName = bibadiArray[0]?.name
     ? bibadiArray[0].name + (bibadiArray.length > 1 ? "গং " : "")
     : "";
-  const [divComReview, setDivComReview] = useState(
-    caseData?.divComReview || {}
-  );
+  // const [divComReview, setDivComReview] = useState(
+  //   caseData?.divComReview || {}
+  // );
 
   const [headerInfo, setHeaderInfo] = useState({
     formNo: 270,
@@ -85,30 +89,29 @@ const DivComOrders = () => {
     district: "",
   });
 
-    const [options, setOptions] = useState([...new Set(mamlaStatus)]);
-      const [lastCondition, setLastCondition] = useState("");
-      const [customInput, setCustomInput] = useState("");
-      const [showInput, setShowInput] = useState(false);
-    
-      const handleAddCustom = () => {
-        const custom = customInput.trim();
-        if (custom && !options.includes(custom)) {
-          setOptions([...options, custom]);
-        }
-        setLastCondition(custom);
-        console.log(lastCondition)
-        // setFormData((prev) => ({ ...prev, completedMamla: custom }));
-        setCustomInput("");
-        setShowInput(false);
-      };
-    
-      const handleCompletedMamlaChange = (e) => 
-        {
-        const value = e.target.value;
-        setLastCondition(value);
-        console.log(value,lastCondition)
-        // setFormData((prev) => ({ ...prev, completedMamla: value }));
-      };
+  const [options, setOptions] = useState([...new Set(mamlaStatus)]);
+  const [lastCondition, setLastCondition] = useState("");
+  const [customInput, setCustomInput] = useState("");
+  const [showInput, setShowInput] = useState(false);
+
+  const handleAddCustom = () => {
+    const custom = customInput.trim();
+    if (custom && !options.includes(custom)) {
+      setOptions([...options, custom]);
+    }
+    setLastCondition(custom);
+    console.log(lastCondition);
+    // setFormData((prev) => ({ ...prev, completedMamla: custom }));
+    setCustomInput("");
+    setShowInput(false);
+  };
+
+  const handleCompletedMamlaChange = (e) => {
+    const value = e.target.value;
+    setLastCondition(value);
+    console.log(value, lastCondition);
+    // setFormData((prev) => ({ ...prev, completedMamla: value }));
+  };
 
   useEffect(() => {
     if (showHeaderModal && divComReview) {
@@ -163,7 +166,6 @@ const DivComOrders = () => {
       }
     }
 
-    
     updated[index][field] = value;
     setOrderSheets(updated);
 
@@ -175,15 +177,15 @@ const DivComOrders = () => {
     }
   };
 
-  useEffect(() => {
-    if (caseData?.divComReview) {
-      setDivComReview(caseData.divComReview);
-    }
-  }, [caseData]);
+  // useEffect(() => {
+  //   if (caseData?.divComReview) {
+  //     setDivComReview(caseData.divComReview);
+  //   }
+  // }, [caseData]);
 
-  const handleDivComChange = (field, value) => {
-    setDivComReview((prev) => ({ ...prev, [field]: value }));
-  };
+  // const handleDivComChange = (field, value) => {
+  //   setDivComReview((prev) => ({ ...prev, [field]: value }));
+  // };
 
   const addFirstRow = () => {
     const { aclandMamlaInfo, adcMamlaInfo } = caseData.nagorikSubmission || {};
@@ -301,24 +303,32 @@ const DivComOrders = () => {
         toast("⚠️ আদেশের তথ্য খালি রাখা যাবে না");
         return;
       }
-      console.log(divComReview);
+      const today = new Date().toLocaleDateString("en-CA", {
+        timeZone: "Asia/Dhaka",
+      });
+
       const reviewData = {
-        ...(divComReview || {}),
-        orderSheets: orderSheets.map(
-          ({  nextDate, ...rest }) => rest
-        ),
-        previousDate: new Date().toLocaleDateString("en-CA", {
-          timeZone: "Asia/Dhaka",
-        }),
+        orderSheets: orderSheets.map((order) => ({
+          ...order,
+          lastCondition: order.lastCondition || "",
+          nextDate: order.nextDate || "",
+          previousDate: today,
+        })),
+        lastCondition: orderSheets.at(-1)?.lastCondition || "",
+        nextDate: orderSheets.at(-1)?.nextDate || "",
+        previousDate: today,
       };
+
+      console.log(reviewData);
+
       const res = await axiosPublic.patch(`/cases/divCom/${caseData._id}`, {
         divComReview: reviewData,
       });
 
       // Prepare summary for main case update
       const caseUpdate = {
-        lastCondition: reviewData.lastCondition || "",
-        nextDate: reviewData.nextDate || "",
+        lastCondition: reviewData.lastCondition,
+        nextDate: reviewData.nextDate,
         previousDate: reviewData.previousDate,
       };
 
@@ -395,7 +405,7 @@ const DivComOrders = () => {
   const handleSendWhatsApp = async () => {
     let phone = "";
     let targetUserRes;
-    if (role === "acland") {
+    if (role === "acLand") {
       targetUserRes = await axiosPublic.get("/users/specific-user", {
         params: {
           role: role,
@@ -413,7 +423,7 @@ const DivComOrders = () => {
             caseData.nagorikSubmission?.adcMamlaInfo[0]?.officeName.en,
         },
       });
-      // console.log(targetUserRes);
+      console.log(targetUserRes.data);
     }
     // console.log(targetUserRes.data);
     if (!targetUserRes.data) {
@@ -432,7 +442,7 @@ const DivComOrders = () => {
         if (!msg.caseList || !Array.isArray(msg.caseList)) return []; // skip if missing
         return msg.caseList.map((m) => {
           return `মামলা নং ${m.mamlaNo} (${m.mamlaName}) সংক্রান্ত ${
-            msg.sentTo === "acland"
+            msg.sentTo === "acLand"
               ? "সহকারী কমিশনার (ভূমি)"
               : "অতিরিক্ত জেলা প্রশাসক"
           } অফিসে ${
@@ -519,9 +529,10 @@ const DivComOrders = () => {
       </div>
 
       <div className="my-4">
-        মামলার ধরন: {divComReview.mamlaName} মামলা নং{" "}
-        {toBanglaNumber(divComReview.mamlaNo)} /
-        {toBanglaNumber(divComReview.year)} ({divComReview.district?.bn})
+        মামলার ধরন: {caseData?.divComReview.mamlaName} মামলা নং{" "}
+        {toBanglaNumber(caseData?.divComReview.mamlaNo)} /
+        {toBanglaNumber(caseData?.divComReview.year)} (
+        {caseData?.divComReview.district?.bn})
       </div>
     </div>
   );
@@ -585,15 +596,8 @@ const DivComOrders = () => {
       `}</style>
 
       <div className="bg-base-200/50 my-5 rounded-xl">
-        <div className="flex justify-between items-center mb-4 py-2 font-bold text-xl text-center no-print">
-          <button
-            onClick={() => navigate(-1)} // -1 means go back one page
-            className="mx-2 btn btn-ghost"
-          >
-            {/* <ArrowLeft /> */}
-          </button>
+        <div className="flex justify-center items-center mb-4 py-2 font-bold text-xl text-center no-print">
           <h1 className="text-2xl">আদেশ যুক্ত করুন</h1>{" "}
-          <div className="  ">{}</div>
         </div>
         <div className="flex justify-end gap-2 mx-4 my-4 pb-5 border-gray-200 border-b no-print">
           {caseData.isCompleted ? (
@@ -649,8 +653,11 @@ const DivComOrders = () => {
                 <th className="p-2 border w-2/12">তারিখ ও নম্বর</th>
                 <th className="p-2 border w-7/12">আদেশ ও সাক্ষর</th>
                 <th className="p-2 border w-3/12">গৃহীত ব্যবস্থা</th>
-                <th id="action" className="p-2 border w-[50px]">
-                  X
+                <th
+                  id="action"
+                  className="flex items-center mx-auto p-2 w-[50px] text-center"
+                >
+                  <Settings2 />
                 </th>
               </tr>
             </thead>
@@ -661,7 +668,7 @@ const DivComOrders = () => {
                 return (
                   <tr className="" key={idx}>
                     <td className="mt-5 px-1 py-4 border-r w-2/12 align-top">
-                      <div className="flex flex-col items-center text-center">
+                      <div className="flex flex-col items-center text-center underline underline-offset-4">
                         {isEditing && user?.role === "divCom" ? (
                           <>
                             <input
@@ -699,7 +706,7 @@ const DivComOrders = () => {
                       </div>
 
                       <textarea
-                        value={order.orderNo}
+                        value={toBanglaNumber(order.orderNo)}
                         placeholder="আদেশের নম্বর"
                         readOnly={!isEditing || user?.role !== "divCom"}
                         onChange={(e) =>
@@ -709,7 +716,7 @@ const DivComOrders = () => {
                             toBanglaNumber(e.target.value)
                           )
                         }
-                        className="w-full overflow-hidden text-center resize-none"
+                        className="border-0 focus:outline-none focus:ring-0 w-full overflow-hidden text-center resize-none"
                       />
                     </td>
 
@@ -748,102 +755,129 @@ const DivComOrders = () => {
 
                       {/* next date */}
 
-                      <div className="flex flex-col justify-end items-end mt-5">
-                        {isEditing && user?.role === "divCom" ? (
-                          <>
-                            <DatePicker
-                              selected={parseDate(divComReview?.nextDate)}
-                              readOnly={!isEditing || user?.role !== "divCom"}
-                              onChange={(date) =>
-                                handleDivComChange(
-                                  "nextDate",
-                                  date?.toISOString().split("T")[0]
-                                )
-                              }
-                              customInput={
-                                <input
-                                  type="text"
-                                  className="text-center input"
-                                  value={formatBanglaISO(
-                                    divComReview?.nextDate || ""
-                                  )}
+                      <div className="flex w-full">
+                        <div className="w-2/5"></div>
+                        <div className="flex flex-col justify-end items-end mt-5 w-3/5">
+                          <div className="w-full">
+                            {isEditing && user?.role === "divCom" ? (
+                              <>
+                                <DatePicker
+                                  selected={parseDate(order?.nextDate)}
+                                  readOnly={
+                                    !isEditing || user?.role !== "divCom"
+                                  }
+                                  onChange={(date) =>
+                                    handleInputChange(
+                                      idx,
+                                      "nextDate",
+                                      date?.toISOString().split("T")[0]
+                                    )
+                                  }
+                                  customInput={
+                                    <input
+                                      type="text"
+                                      className="p-2 w-full text-center input"
+                                      value={formatBanglaISO(
+                                        order?.nextDate || ""
+                                      )}
+                                    />
+                                  }
+                                  dateFormat="yyyy-MM-dd"
+                                  placeholderText="পরবর্তী তারিখ"
                                 />
-                              }
-                              dateFormat="yyyy-MM-dd"
-                              placeholderText="পরবর্তী তারিখ"
-                            />
-                            <div className="mt-2 w-1/3 text-sm screen-only">
+                                {/* <div className="mt-2 w-1/3 text-sm screen-only">
                               {formatBanglaISO(divComReview?.nextDate) ||
                                 "তারিখ নির্বাচন করুন"}
+                            </div> */}
+                              </>
+                            ) : (
+                              <h1 className="flex justify-end items-end mt-2 w-full screen-only">
+                                পরবর্তী তারিখঃ{" "}
+                                {formatBanglaISO(order?.nextDate)}
+                              </h1>
+                            )}
+                          </div>
+
+                          {/* sorbosesh obostha */}
+                          {/* সর্বশেষ অবস্থা */}
+
+                          {isEditing && user?.role === "divCom" ? (
+                            <div className="flex items-center space-x-2 my-2">
+                              <select
+                                value={order?.lastCondition || ""}
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    idx,
+                                    "lastCondition",
+                                    e.target.value
+                                  )
+                                }
+                                className="input-bordered w-full input select"
+                                disabled={!isEditing || user?.role !== "divCom"}
+                              >
+                                <option value="">
+                                  সর্বশেষ অবস্থা নির্বাচন করুন
+                                </option>
+                                {options.map((opt, idx) => (
+                                  <option key={idx} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
+
+                              {/* add custom option */}
+                              <button
+                                type="button"
+                                className="bg-gray-200 rounded-full no-print btn"
+                                onClick={() => setShowInput(!showInput)}
+                                disabled={!isEditing || user?.role !== "divCom"}
+                              >
+                                {showInput ? <Minus /> : <FaPlus />}
+                              </button>
                             </div>
-                          </>
-                        ) : (
-                          <span className="mt-2 w-1/3 screen-only">
-                            {formatBanglaISO(caseData.divComReview?.nextDate)}
-                          </span>
-                        )}
+                          ) : (
+                            <h1 className="my-2">
+                              সর্বশেষ অবস্থাঃ {order?.lastCondition}
+                            </h1>
+                          )}
 
-                        {/* sorbosesh obostha */}
-                       {/* সর্বশেষ অবস্থা */}
+                          {showInput && isEditing && (
+                            <div className="flex space-x-2 mt-2">
+                              <input
+                                type="text"
+                                className="input-bordered w-full input input-sm"
+                                value={customInput}
+                                onChange={(e) => setCustomInput(e.target.value)}
+                                placeholder="নতুন অবস্থা লিখুন"
+                              />
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-success"
+                                onClick={() => {
+                                  const custom = customInput.trim();
+                                  if (custom && !options.includes(custom)) {
+                                    setOptions([...options, custom]);
+                                  }
+                                  handleDivComChange("lastCondition", custom); // ✅ update main state
+                                  setCustomInput("");
+                                  setShowInput(false);
+                                }}
+                              >
+                                যুক্ত করুন
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-  
-  <div className="flex w-52 items-center my-2  space-x-2">
-    <select
-      value={divComReview?.lastCondition || ""}
-      onChange={(e) =>
-        handleDivComChange("lastCondition", e.target.value)
-      }
-      className=" input-bordered w-full input select"
-      disabled={!isEditing || user?.role !== "divCom"}
-    >
-      <option value="">সর্বশেষ অবস্থা নির্বাচন করুন</option>
-      {options.map((opt, idx) => (
-        <option key={idx} value={opt}>
-          {opt}
-        </option>
-      ))}
-    </select>
-
-    {/* add custom option */}
-    <button
-      type="button"
-      className="bg-gray-200 no-print rounded-full btn"
-      onClick={() => setShowInput(true)}
-            disabled={!isEditing || user?.role !== "divCom"}
-
-    >
-      <FaPlus />
-    </button>
-    
-  </div>
-
-  {showInput && (
-    <div className="flex space-x-2 mt-2">
-      <input
-        type="text"
-        className="input-bordered w-full input input-sm"
-        value={customInput}
-        onChange={(e) => setCustomInput(e.target.value)}
-        placeholder="নতুন অবস্থা লিখুন"
-      />
-      <button
-        type="button"
-        className="btn btn-sm btn-success"
-        onClick={() => {
-          const custom = customInput.trim();
-          if (custom && !options.includes(custom)) {
-            setOptions([...options, custom]);
-          }
-          handleDivComChange("lastCondition", custom); // ✅ update main state
-          setCustomInput("");
-          setShowInput(false);
-        }}
-      >
-        যুক্ত করুন
-      </button>
-    </div>
-  )}
-            </div>
+                      {/* Signature */}
+                      <div className="flex justify-end mt-10 no-print">
+                        <div className="text-center">
+                          <div className="mx-auto border-gray-500 border-t w-48"></div>
+                          <p className="mt-2 font-medium">স্বাক্ষর</p>
+                          <p className="text-gray-600 text-sm">নাম / পদবি</p>
+                        </div>
+                      </div>
                     </td>
 
                     {/* Action taken */}
@@ -1066,7 +1100,7 @@ const DivComOrders = () => {
             onChange={(e) => setRole(e.target.value)}
           >
             <option value="">নির্বাচন করুন</option>
-            <option value="acland">সহকারী কমিশনার (ভূমি) আদালত </option>
+            <option value="acLand">সহকারী কমিশনার (ভূমি) আদালত </option>
             <option value="adc">অতিরিক্ত জেলা প্রশাসক আদালত</option>
           </select>
 
@@ -1078,7 +1112,7 @@ const DivComOrders = () => {
                 type="text"
                 className="mb-4 input-bordered w-full input"
                 value={
-                  role === "acland"
+                  role === "acLand"
                     ? caseData?.nagorikSubmission?.aclandMamlaInfo[0]?.district
                         ?.bn || ""
                     : caseData?.nagorikSubmission?.adcMamlaInfo[0]?.district
@@ -1089,8 +1123,8 @@ const DivComOrders = () => {
             </>
           )}
 
-          {/* Office dropdown if acland */}
-          {role === "acland" && (
+          {/* Office dropdown if acLand */}
+          {role === "acLand" && (
             <>
               <label className="block mb-2 font-semibold">অফিস</label>
               <input
@@ -1125,7 +1159,15 @@ const DivComOrders = () => {
               <IoLogoWhatsapp className="mr-1" /> প্রেরণ করুন
             </button>
             <form method="dialog">
-              <button className="btn">বাতিল</button>
+              <button
+                onClick={() => {
+                  setMessage("");
+                  setRole("");
+                }}
+                className="btn"
+              >
+                বাতিল
+              </button>
             </form>
           </div>
         </div>

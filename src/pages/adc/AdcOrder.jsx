@@ -61,10 +61,11 @@ const AdcOrder = ({ header }) => {
       const adcData = caseData.responsesFromOffices.find(
         (r) => r.role === "adc"
       );
+      console.log(adcData);
       if (adcData?.orderSheets) {
         setOrderSheets(adcData.orderSheets);
       }
-      // console.log(adcData);
+      console.log(adcData);
     }
   }, [caseData]);
   const [showHeaderModal, setShowHeaderModal] = useState(false);
@@ -294,10 +295,10 @@ const AdcOrder = ({ header }) => {
 
     if (res.data.modifiedCount > 0) {
       setShowHeaderModal(false);
-      toast("হেডার তথ্য সংরক্ষণ হয়েছে");
+      toast(" তথ্য সংরক্ষণ হয়েছে");
       refetch();
     } else {
-      toast("হেডার তথ্য সংরক্ষণে সমস্যা হয়েছে");
+      toast(" তথ্য সংরক্ষণে সমস্যা হয়েছে");
     }
   };
 
@@ -371,6 +372,7 @@ const AdcOrder = ({ header }) => {
         `/cases/adc/${caseData._id}/send`,
         payload
       );
+      console.log(res.data, "tottho send ");
 
       if (res.data.modifiedCount > 0) {
         toast.success(`অর্ডার নং ${order.orderNo} সফলভাবে প্রেরণ হয়েছে!`);
@@ -509,7 +511,7 @@ const AdcOrder = ({ header }) => {
                 onClick={() => setShowHeaderModal(true)}
                 className="mb-2 btn-outline btn btn-sm"
               >
-                <Edit2 className="w-4 text-sm" /> হেডার তথ্য হালনাগাদ
+                <Edit2 className="w-4 text-sm" /> শিরোনাম হালনাগাত
               </button>
             </>
           )}

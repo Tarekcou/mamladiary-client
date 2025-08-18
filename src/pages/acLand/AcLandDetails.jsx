@@ -35,7 +35,7 @@ const AcLandDetails = ({ id }) => {
     queryKey: ["acLandDetails", id],
     queryFn: async () => {
       const res = await axiosPublic.get(`/cases/${id}`);
-      console.log("Ac land Case Data:", res.data);
+      // console.log("Ac land Case Data:", res.data);
       return res.data;
     },
     enabled: !!id,
@@ -52,7 +52,7 @@ const AcLandDetails = ({ id }) => {
   );
   const acLandCaseData =
     caseData?.responsesFromOffices?.filter((r) => r.role === "acLand") || [];
-  // console.log(acLandCaseData[0].role);
+  // console.log(acLandCaseData);
   const isUploaded = (mamlaNo) =>
     caseData?.responsesFromOffices
       ?.filter((r) => r.role === "acLand")
@@ -106,75 +106,19 @@ const AcLandDetails = ({ id }) => {
       } else toast.error("কিছু সমস্যা হয়েছে, পরে আবার চেষ্টা করুন");
     });
   };
-  const handleSend = async (entry) => {
-    console.log("hewfwf");
-    const confirm = await Swal.fire({
-      title: "আপনি কি প্রেরণ করতে চান?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
-    });
-
-    if (!confirm.isConfirmed) return;
-
-    // Find acland response from caseData
-    const aclandResp = caseData.responsesFromOffices.find(
-      (resp) => resp.role === "acLand"
-    );
-
-    if (!aclandResp || !Array.isArray(aclandResp.caseEntries)) {
-      toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
-      return;
-    }
-
-    try {
-      const payload = {
-        responsesFromOffices: [
-          {
-            role: "acLand",
-            officeName: aclandResp.officeName,
-            district: aclandResp.district,
-            caseEntries: [
-              {
-                ...entry,
-                mamlaNo: entry.mamlaNo, // identifier
-                sentToDivcom: true,
-                sentDate: new Date().toISOString(),
-              },
-            ],
-          },
-        ],
-      };
-
-      const res = await axiosPublic.patch(
-        `/cases/acLand/${caseData._id}`,
-        payload
-      );
-
-      if (res.data.modifiedCount > 0) {
-        toast.success("প্রেরণ সফল হয়েছে!");
-        refetch();
-      } else {
-        toast.error("মামলা আপডেট হয়নি!");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("পাঠাতে সমস্যা হয়েছে!");
-    }
-  };
 
   return (
     <>
       {user?.role === "acLand" && (
         <>
-          <h4 className="m-4 mb-2 font-semibold text-lg">
-            অনুরোধকৃত মামলার তথ্য
-          </h4>
+          <div className="flex justify-between">
+            <h4 className="m-4 mb-2 font-semibold text-">আগত মামলার তথ্য</h4>
+          </div>
 
           {acLandMessages.length > 0 && (
             <div className="flex flex-col w-full tabs">
               {/* Tab headers */}
-              <div role="tablist" className="tabs-bordered tabs">
+              <div role="tablist" className="tabs-bordered underline tabs">
                 {acLandMessages
                   .slice()
                   .reverse()
@@ -196,21 +140,19 @@ const AcLandDetails = ({ id }) => {
               </div>
 
               {/* Tab contents */}
-              <div className="mt-4">
+              <div className="">
                 {acLandMessages.map((msg, idx) => (
                   <div
                     key={idx}
                     className={`${activeTab === idx ? "block" : "hidden"}`}
                   >
                     <div className="bg-base-200 shadow-sm mb-4 p-4 rounded">
+                      {/* --- মামলার তথ্য Collapse --- */}
+                      {/* --- Add New Case Collapse --- */}
                       <p className="mb-2 font-medium text-gray-700">
                         <strong>তারিখ:</strong>{" "}
                         {toBanglaNumber(msg.date.split("T")[0])}
                       </p>
-
-                      {/* --- মামলার তথ্য Collapse --- */}
-                      {/* --- Add New Case Collapse --- */}
-
                       <>
                         <div
                           className={`collapse collapse-arrow  bg-base-200 border border-base-300  ${
@@ -446,6 +388,7 @@ const AcLandDetails = ({ id }) => {
         acLandCaseData={acLandCaseData}
         user={user}
         caseData={caseData}
+        refetch={refetch}
       />
     </>
   );

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { toBanglaNumber } from "../../utils/toBanglaNumber";
 import { MdWarning } from "react-icons/md";
+import { DeleteIcon, Edit2, PlusSquareIcon, Send } from "lucide-react";
+import Swal from "sweetalert2";
+import axiosPublic from "../../axios/axiosPublic";
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 1; // change as needed
 
@@ -17,6 +21,9 @@ export default function AcLandCases({ acLandCaseData, user, caseData }) {
         res,
       })) || []
   );
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+
+  const toggleCollapse = () => setIsCollapseOpen(!isCollapseOpen);
 
   const totalPages = Math.ceil(flattenedEntries.length / ITEMS_PER_PAGE);
 
@@ -24,7 +31,62 @@ export default function AcLandCases({ acLandCaseData, user, caseData }) {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+  const handleSend = async (entry) => {
+    console.log("hewfwf");
+    const confirm = await Swal.fire({
+      title: "আপনি কি প্রেরণ করতে চান?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "হ্যাঁ, প্রেরণ করুন",
+    });
 
+    if (!confirm.isConfirmed) return;
+
+    // Find acLand response from caseData
+    const aclandResp = caseData.responsesFromOffices.find(
+      (resp) => resp.role === "acLand"
+    );
+
+    if (!aclandResp || !Array.isArray(aclandResp.caseEntries)) {
+      toast.error("কোনো রেসপন্স পাওয়া যায়নি।");
+      return;
+    }
+
+    try {
+      const payload = {
+        responsesFromOffices: [
+          {
+            role: "acLand",
+            officeName: aclandResp.officeName,
+            district: aclandResp.district,
+            caseEntries: [
+              {
+                ...entry,
+                mamlaNo: entry.mamlaNo, // identifier
+                sentToDivcom: true,
+                sentDate: new Date().toISOString(),
+              },
+            ],
+          },
+        ],
+      };
+
+      const res = await axiosPublic.patch(
+        `/cases/acLand/${caseData._id}`,
+        payload
+      );
+
+      if (res.data.modifiedCount > 0) {
+        toast.success("প্রেরণ সফল হয়েছে!");
+        refetch();
+      } else {
+        toast.error("মামলা আপডেট হয়নি!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("পাঠাতে সমস্যা হয়েছে!");
+    }
+  };
   return (
     <div>
       <style>{`
@@ -90,20 +152,22 @@ export default function AcLandCases({ acLandCaseData, user, caseData }) {
                   >
                     PDF ডাউনলোড (Print)
                   </button>
-                  {user?.role === "acLand" && (
+                  {/* {user?.role === "acLand" && (
                     <button
                       onClick={toggleCollapse}
                       className="flex items-center gap-2 btn btn-sm btn-primary"
                     >
                       <PlusSquareIcon className="w-5" /> মামলা যোগ করুন
                     </button>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
             <div id="printable-area">
-              {paginatedEntries.map(
-                ({ entry, res, officeIndex, entryIndex }) => (
+              {paginatedEntries
+                .slice()
+                .reverse()
+                .map(({ entry, res, officeIndex, entryIndex }) => (
                   <div
                     key={`${officeIndex}-${entryIndex}`}
                     className="bg-base-200 shadow mb-8 p-4 overflow-x-auto print:break-after-page"
@@ -231,49 +295,48 @@ export default function AcLandCases({ acLandCaseData, user, caseData }) {
                       <div>{entry.remarks || "N/A"}</div>
                     </div>
                   </div>
-                )
-              )}
+                ))}
             </div>
+          </div>
+          {/* Render paginated entries */}
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center items-center gap-2 mt-6">
+            <button
+              className="btn btn-sm"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Prev
+            </button>
+
+            {[...Array(totalPages)].map((_, idx) => (
+              <button
+                key={idx}
+                className={`btn btn-sm ${
+                  currentPage === idx + 1 ? "btn-active btn-primary" : ""
+                }`}
+                onClick={() => setCurrentPage(idx + 1)}
+              >
+                {idx + 1}
+              </button>
+            ))}
+
+            <button
+              className="btn btn-sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Next
+            </button>
           </div>
         </div>
       ) : (
         <div className="flex gap-2 shadow-2xl my-20 px-6 text-gray-500 italic">
-          <MdWarning className="text-xl" /> AC Land থেকে কোনো রেসপন্স পাওয়া
-          যায়নি।
+          <MdWarning className="text-xl" /> ভূমি অফিসএক্স থেকে কোনো রেসপন্স
+          পাওয়া যায়নি।
         </div>
       )}
-      {/* Render paginated entries */}
-
-      {/* Pagination Controls */}
-      <div className="flex justify-center items-center gap-2 mt-6">
-        <button
-          className="btn btn-sm"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((p) => p - 1)}
-        >
-          Prev
-        </button>
-
-        {[...Array(totalPages)].map((_, idx) => (
-          <button
-            key={idx}
-            className={`btn btn-sm ${
-              currentPage === idx + 1 ? "btn-active btn-primary" : ""
-            }`}
-            onClick={() => setCurrentPage(idx + 1)}
-          >
-            {idx + 1}
-          </button>
-        ))}
-
-        <button
-          className="btn btn-sm"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((p) => p + 1)}
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 }

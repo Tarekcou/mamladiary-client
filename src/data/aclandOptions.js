@@ -154,7 +154,7 @@ const caseSchema = {
   rootCaseId: "unique-root-tracking-id", // fixed across all stages
   initiatedBy: {
     userId: 12,
-    role: "acland",
+    role: "acLand",
     office: "লাকসাম",
   },
   applicants: [
@@ -164,12 +164,12 @@ const caseSchema = {
       address: "ঠিকানা",
     },
   ],
-  currentStage: "divcom", // or dc/acland
+  currentStage: "divcom", // or dc/acLand
   status: "approved", // or pending, returned, rejected
 
   caseStages: [
     {
-      role: "acland",
+      role: "acLand",
       mamlaName: "নামজারি মামলা", // ✅ Moved inside each stage
       mamlaNo: "123/24",
       year: 2024,
@@ -340,7 +340,7 @@ const userSchema = {
   _id: 3344,
   name: "মোঃ তারেক",
   email: "tarek@example.com",
-  role: "acland", // acland | dc | divcom | nagorik
+  role: "acLand", // acLand | dc | divcom | nagorik
   officeName: "লাকসাম", // Office name in Bangla
   passwordHash: "...", // Hashed password
   createdAt: "2025-07-13T08:00:00Z",

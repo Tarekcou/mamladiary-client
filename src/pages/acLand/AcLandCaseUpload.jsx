@@ -191,7 +191,7 @@ const AcLandCaseUpload = ({ cas, refetch, setIsCollapseOpen }) => {
             <label className="block mb-4">
               <textarea
                 className="textarea-bordered w-full h-48 resize-none textarea"
-                placeholder="মামলার ইতিহাস লিখুন..."
+                placeholder="মামলার বিস্তারিত লিখুন..."
                 value={formData.caseHistory}
                 onChange={(e) => handleChange("caseHistory", e.target.value)}
               />

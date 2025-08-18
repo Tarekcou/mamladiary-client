@@ -48,7 +48,7 @@ const ManageDivComUser = () => {
       section,
       role,
       district: selectedDistrict?.district || null,
-      officeName: role === "acland" ? selectedOffice : undefined,
+      officeName: role === "acLand" ? selectedOffice : undefined,
     };
 
     if (isEditMode && editingItem) {

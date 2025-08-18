@@ -191,143 +191,142 @@ const NagorikDetails = ({ role }) => {
       `}
       </style>
       <div className="bg-base-200 shadow-sm mx-auto p-6 h-full">
-       <div className="w-full">
-  <h2 className="mb-5  font-bold text-xl text-center underline">
-    মামলার বিস্তারিত তথ্য
-  </h2>
+        <div className="w-full">
+          <h2 className="mb-5 font-bold text-xl text-center underline">
+            মামলার বিস্তারিত তথ্য
+          </h2>
 
-  <table className="w-full border-collapse">
-    <tbody>
-      {/* Tracking No + Print */}
-      <tr className="no-print">
-       <td></td>
-        <td className="py-2 text-right">
-          <button
-            onClick={handlePrint}
-            className="no-print btn btn-sm btn-info min-w-max"
-          >
-            <Printer /> প্রিন্ট করুন
-          </button>
-        </td>
-      </tr>
-       {/* Approve / Refuse buttons */}
-      <tr>
-         <td className="py-2">
-          <strong>ট্র্যাকিং নম্বর:</strong> {trackingNo}
-        </td>
-        <td className="py-2 text-right space-x-2 no-print">
-          {!isApproved && !isRefused && user?.role === "divCom" ? (
-            <>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                animate={{ y: [0, -3, 0] }}
-                transition={{ repeat: Infinity, duration: 0.3 }}
-                onClick={() => handleApprove(true)}
-                className="btn btn-sm btn-success min-w-max"
-              >
-                <CheckCircle /> অনুমোদন দিন
-              </motion.button>
-              <button
-                onClick={() =>
-                  handleCaseSent(
-                    caseData._id,
-                    "nagorikSubmission",
-                    "refused"
-                  )
-                }
-                className="btn btn-sm btn-info min-w-max"
-              >
-                <RotateCcw /> ফেরত পাঠান
-              </button>
-            </>
-          ) : (
-            isApproved &&
-            user?.role === "divCom" && (
-              <>
-                <button
-                  onClick={handleAddOrder}
-                  className="btn btn-sm btn-success min-w-max"
-                >
-                  <Plus /> নতুন আদেশ
-                </button>
-                <button
-                  onClick={() => handleApprove(false)}
-                  className="btn btn-sm btn-warning min-w-max"
-                >
-                  <FcCancel className="text-2xl" /> অনুমোদন বাতিল
-                </button>
-              </>
-            )
-          )}
-        </td>
-      </tr>
+          <table className="w-full border-collapse">
+            <tbody>
+              {/* Tracking No + Print */}
+              <tr className="no-print">
+                <td></td>
+                <td className="py-2 text-right">
+                  <button
+                    onClick={handlePrint}
+                    className="min-w-max no-print btn btn-sm btn-info"
+                  >
+                    <Printer /> প্রিন্ট করুন
+                  </button>
+                </td>
+              </tr>
+              {/* Approve / Refuse buttons */}
+              <tr>
+                <td className="py-2">
+                  <strong>ট্র্যাকিং নম্বর:</strong> {trackingNo}
+                </td>
+                <td className="space-x-2 py-2 text-right no-print">
+                  {!isApproved && !isRefused && user?.role === "divCom" ? (
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ repeat: Infinity, duration: 0.3 }}
+                        onClick={() => handleApprove(true)}
+                        className="min-w-max btn btn-sm btn-success"
+                      >
+                        <CheckCircle /> অনুমোদন দিন
+                      </motion.button>
+                      <button
+                        onClick={() =>
+                          handleCaseSent(
+                            caseData._id,
+                            "nagorikSubmission",
+                            "refused"
+                          )
+                        }
+                        className="min-w-max btn btn-sm btn-info"
+                      >
+                        <RotateCcw /> ফেরত পাঠান
+                      </button>
+                    </>
+                  ) : (
+                    isApproved &&
+                    user?.role === "divCom" && (
+                      <>
+                        <button
+                          onClick={handleAddOrder}
+                          className="min-w-max btn btn-sm btn-success"
+                        >
+                          <Plus /> নতুন আদেশ
+                        </button>
+                        {!caseData.divComReview && (
+                          <button
+                            onClick={() => handleApprove(false)}
+                            className="min-w-max btn btn-sm btn-warning"
+                          >
+                            <FcCancel className="text-2xl" /> অনুমোদন বাতিল
+                          </button>
+                        )}
+                      </>
+                    )
+                  )}
+                </td>
+              </tr>
 
-      {/* অনুমোদনের অবস্থা */}
-      <tr>
-        <td className="py-2">
-          অনুমোদনের অবস্থা:
-          {isApproved ? (
-            <span className="ml-2 font-bold badge badge-success">
-              অনুমোদিত
-            </span>
-          ) : nagorikSubmission.status == "submitted" ? (
-            <span className="ml-2 font-bold badge badge-info">
-              অনুমোদনের জন্য অপেক্ষমাণ
-            </span>
-          ) : (
-            <span className="ml-2 badge badge-warning">
-              অনুমোদনের জন্য প্রেরণ করুন
-            </span>
-          )}
-        </td>
-        <td className="py-2 text-right">
-          {nagorikSubmission?.status != "submitted" && !isApproved && (
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              animate={{ y: [0, -3, 0] }}
-              transition={{ repeat: Infinity, duration: 0.3 }}
-              className="btn btn-sm bg-blue-500 text-white min-w-max"
-              onClick={() =>
-                handleCaseSent(
-                  caseData._id,
-                  "nagorikSubmission",
-                  "submitted"
-                )
-              }
-            >
-              <SendIcon className="w-5" /> প্রেরণ করুন
-            </motion.button>
-          )}
-        </td>
-      </tr>
+              {/* অনুমোদনের অবস্থা */}
+              <tr>
+                <td className="py-2">
+                  অনুমোদনের অবস্থা:
+                  {isApproved ? (
+                    <span className="ml-2 font-bold badge badge-success">
+                      অনুমোদিত
+                    </span>
+                  ) : nagorikSubmission.status == "submitted" ? (
+                    <span className="ml-2 font-bold badge badge-info">
+                      অনুমোদনের জন্য অপেক্ষমাণ
+                    </span>
+                  ) : (
+                    <span className="ml-2 badge badge-warning">
+                      অনুমোদনের জন্য প্রেরণ করুন
+                    </span>
+                  )}
+                </td>
+                <td className="py-2 text-right">
+                  {nagorikSubmission?.status != "submitted" && !isApproved && (
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ repeat: Infinity, duration: 0.3 }}
+                      className="bg-blue-500 min-w-max text-white btn btn-sm"
+                      onClick={() =>
+                        handleCaseSent(
+                          caseData._id,
+                          "nagorikSubmission",
+                          "submitted"
+                        )
+                      }
+                    >
+                      <SendIcon className="w-5" /> প্রেরণ করুন
+                    </motion.button>
+                  )}
+                </td>
+              </tr>
 
-      {/* ভূমি অফিস */}
-      <tr>
-        <td className="py-2 font-bold">
-          ভূমি অফিসঃ{" "}
-          <span className="font-bold text-blue-600 text-lg">
-            {nagorikSubmission.aclandMamlaInfo[0].officeName.bn}
-          </span>
-        </td>
-        <td />
-      </tr>
+              {/* ভূমি অফিস */}
+              <tr>
+                <td className="py-2 font-bold">
+                  ভূমি অফিসঃ{" "}
+                  <span className="font-bold text-blue-600 text-lg">
+                    {nagorikSubmission.aclandMamlaInfo[0].officeName.bn}
+                  </span>
+                </td>
+                <td />
+              </tr>
 
-      {/* জেলা */}
-      <tr>
-        <td className="py-2 font-bold">
-          জেলাঃ{" "}
-          <span className="text-blue-600">
-            {nagorikSubmission.adcMamlaInfo[0]?.district.bn}
-          </span>
-        </td>
-        <td />
-      </tr>
-
-     
-    </tbody>
-  </table>
-</div>
-
+              {/* জেলা */}
+              <tr>
+                <td className="py-2 font-bold">
+                  জেলাঃ{" "}
+                  <span className="text-blue-600">
+                    {nagorikSubmission.adcMamlaInfo[0]?.district.bn}
+                  </span>
+                </td>
+                <td />
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         {/* Badi Table */}
         <div className="mt-4">
