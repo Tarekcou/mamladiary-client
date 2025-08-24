@@ -56,10 +56,12 @@ const AuthProvider = ({ children }) => {
     else if (type === "adc") setAdcLogin(true);
     else if (type === "acLand") setAcLandLogin(true);
 
-    localStorage.setItem(
-      `is${type.charAt(0).toUpperCase() + type.slice(1)}`,
-      true
-    );
+    if (typeof type === "string" && type.length > 0) {
+      localStorage.setItem(
+        `is${type.charAt(0).toUpperCase() + type.slice(1)}`,
+        true
+      );
+    }
   };
 
   const signOut = () => {
