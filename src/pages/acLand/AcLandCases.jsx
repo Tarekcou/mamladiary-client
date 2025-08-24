@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 1; // change as needed
 
-export default function AcLandCases({ acLandCaseData, user, caseData }) {
+export default function AcLandCases({ acLandCaseData, user, caseData,refetch }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Flatten the nested structure (office -> entries) into one array

@@ -6,7 +6,7 @@ import { aclandOptions } from "../../../data/aclandOptions";
 import useCrud from "../../../hooks/userCrud";
 import { AuthContext } from "../../../provider/AuthProvider";
 
-const roles = ["acland", "adc", "divCom", "nagorik"];
+const roles = ["acLand", "adc", "divCom", "nagorik"];
 
 const ManageAdcUser = () => {
   const [section, setSection] = useState("");

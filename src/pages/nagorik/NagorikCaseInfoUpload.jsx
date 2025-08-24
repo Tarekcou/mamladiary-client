@@ -239,7 +239,7 @@ export default function NagorikCaseInfoUpload() {
 
     const postData = {
       trackingNo: trackingNo,
-      createdAt: new Date().toISOString().split("T")[0],
+      createdAt: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dhaka" }),
       isApproved: formState.isApproved || false,
       isCompleted: formState.isCompleted || false,
       completionDate: null,

@@ -183,7 +183,7 @@ input {
           </button>
         </div>
 
-        <div id="printable-area" className="bg-white p-4">
+        <div id="printable-area" className="bg-base-200 p-4">
           {renderCaseHeader()}
           <table className="border w-full text-sm text-center table-fixed">
             <thead>

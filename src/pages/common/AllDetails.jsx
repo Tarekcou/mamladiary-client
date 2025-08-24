@@ -96,11 +96,7 @@ const AllDetails = () => {
         );
       case "nagorik":
         return (
-          <NagorikDetails
-            caseData={caseData}
-            role="nagorik"
-            refetch={refetch}
-          />
+          <NagorikDetails id={caseData._id} role="nagorik"  />
         );
       default:
         return (

@@ -61,7 +61,7 @@ const ManageAdcUser = () => {
       section,
       role,
       district: selectedDistrict?.district || null,
-      officeName: role === "acland" ? selectedOffice : undefined,
+      officeName: role === "acLand" ? selectedOffice : undefined,
     };
 
     if (isEditMode && editingItem) {
@@ -137,7 +137,7 @@ const ManageAdcUser = () => {
       </div>
 
       {/* MODAL */}
-      <dialog ref={modalRef} className="modal-bottom modal sm:modal-middle">
+      <dialog inputRef={modalRef} className="modal-bottom modal sm:modal-middle">
         <div className="modal-box">
           <h3 className="mb-4 font-bold text-lg">
             {isEditMode ? "ইউজার আপডেট করুন" : "নতুন ইউজার যুক্ত করুন"}
@@ -210,7 +210,7 @@ const ManageAdcUser = () => {
             </select>
 
             {/* Office (only for AC Land role) */}
-            {role === "acland" && (
+            {role === "acLand" && (
               <select
                 name="officeName"
                 className="bg-gray-100 w-full select-bordered select"
