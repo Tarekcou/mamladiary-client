@@ -10,34 +10,27 @@ import ListLottie from "../../../components/lottie/ListLottie";
 import { AuthContext } from "../../../provider/AuthProvider";
 
 const AllMamla = () => {
-  // const [caseList, setMamlaList] = useState([]);
   const state = useLocation();
-  const { user, isDivComLogin } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const causeListPath = state.pathname?.includes("causeList");
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: "Asia/Dhaka",
   });
+
   const {
-    data: caseList,
+    data: caseList = [],
     isLoading,
-    isError,
-    error,
     refetch,
   } = useQuery({
-    queryKey: ["allMamla", "causeList"], // good for caching different search results
+    queryKey: ["allMamla", "causeList"],
     queryFn: async () => {
       try {
-        let response;
-        if (causeListPath)
-          response = await axiosPublic.get(`/allMamla/${today}`);
-        else response = await axiosPublic.get(`/allMamla`);
-
-        console.log("Response data:", response.data);
-        if (response.status === 200) {
-          return response.data;
-        }
-      } catch (error) {
-        console.error("Error fetching mamla data:", error);
+        const response = causeListPath
+          ? await axiosPublic.get(`/allMamla/${today}`)
+          : await axiosPublic.get(`/allMamla`);
+        return response.status === 200 ? response.data : [];
+      } catch (err) {
+        console.error("Error fetching mamla data:", err);
         return [];
       }
     },
@@ -52,58 +45,49 @@ const AllMamla = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Filtered Data
+  const handleSearchChange = (e) => {
+    setCurrentPage(1);
+    setSearch({ ...search, [e.target.name]: e.target.value });
+  };
+
   const filteredData = useMemo(() => {
-    return (caseList ?? []).filter((item) => {
+    return caseList.filter((item) => {
       const districtBn = item?.district?.bn?.toLowerCase() || "";
       return (
-        item?.mamlaName
-          ?.toLowerCase()
-          .includes(search.mamlaName.toLowerCase()) &&
-        item?.mamlaNo?.toLowerCase().includes(search.mamlaNo.toLowerCase()) &&
+        (item?.mamlaName?.toLowerCase() || "").includes(
+          search.mamlaName.toLowerCase()
+        ) &&
+        (item?.mamlaNo?.toLowerCase() || "").includes(
+          search.mamlaNo.toLowerCase()
+        ) &&
         districtBn.includes(search.district.toLowerCase()) &&
-        item?.year?.toLowerCase().includes(search.year.toLowerCase())
+        (item?.year?.toLowerCase() || "").includes(search.year.toLowerCase())
       );
     });
   }, [caseList, search]);
 
-  // Pagination Logic
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  const handleSearchChange = (e) => {
-    setCurrentPage(1); // reset to first page
-    setSearch({ ...search, [e.target.name]: e.target.value });
-  };
-
   const [editedMamla, setEditedMamla] = useState(null);
 
-  const handleEdit = (mamla) => {
-    // console.log(mamla);
-    setEditedMamla(mamla);
-  };
+  const handleEdit = (mamla) => setEditedMamla(mamla);
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         axiosPublic.delete(`/mamla/${id}`).then((res) => {
-          // console.log(res);
           if (res.data.deletedCount > 0) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
             refetch();
           }
         });
@@ -121,173 +105,51 @@ const AllMamla = () => {
     Swal.fire({
       title: "আপনি মেসেজ প্রেরণ করতে চান?",
       html: `
-      <div style="text-align: left;">
-        <b>প্রেরিত মেসেজঃ</b>
-        <textarea id="editable-message"
-          style="
-            display: block;
-            margin-top: 8px;
-            padding: 8px;
-            width: 100%;
-            font-size: 14px;
-            line-height: 1.4;
-            : 1px solid #ccc;
-            -radius: 4px;
-            min-height: 120px;
-            overflow: hidden;
-            resize: vertical;
-            box-sizing: -box;
-          "
-        >${message}</textarea>
-      </div>
-    `,
+        <div style="text-align: left;">
+          <b>প্রেরিত মেসেজঃ</b>
+          <textarea id="editable-message" style="display:block; margin-top:8px; padding:8px; width:100%; font-size:14px; min-height:120px;">${message}</textarea>
+        </div>
+      `,
       showCloseButton: true,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "হ্যাঁ, প্রেরণ করুন!",
       preConfirm: () => {
         const editedMessage = document.getElementById("editable-message").value;
-        if (!editedMessage) {
+        if (!editedMessage)
           Swal.showValidationMessage("মেসেজ ফাঁকা রাখা যাবে না!");
-          return false;
-        }
         return editedMessage;
       },
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         const editedMessage = result.value;
-
-        // Collect phone numbers from badi & bibadi
         const phoneNumbers = [
           ...(mamla?.badi?.map((b) => b.phone) || []),
           ...(mamla?.bibadi?.map((b) => b.phone) || []),
         ]
-          .map((num) => (num ? "88" + num : null))
           .filter(Boolean)
+          .map((num) => "88" + num)
           .join(",");
 
         axiosPublic
-          .post("/message", {
-            to: phoneNumbers,
-            message: editedMessage,
-          })
+          .post("/message", { to: phoneNumbers, message: editedMessage })
           .then((res) => {
-            if (res.data.result?.response_code == 202) {
-              Swal.fire({
-                title: "সফলতা!",
-                text: "আপনার মেসেজ সফলভাবে প্রেরণ করা হয়েছে।",
-                icon: "success",
-              });
+            if (res.data.result?.response_code === 202) {
+              Swal.fire("সফলতা!", "মেসেজ সফলভাবে প্রেরণ করা হয়েছে।", "success");
               refetch();
-            } else if (res.data.response_code == 107) {
-              Swal.fire({
-                title: "সতর্কতা!",
-                text: "আপনার পর্যাপ্ত ব্যালেন্স নেই।",
-                icon: "warning",
-              });
+            } else if (res.data.response_code === 107) {
+              Swal.fire("সতর্কতা!", "আপনার পর্যাপ্ত ব্যালেন্স নেই।", "warning");
             } else {
-              Swal.fire({
-                title: "ত্রুটি!",
-                text: "মেসেজ প্রেরণে সমস্যা হয়েছে।",
-                icon: "error",
-              });
+              Swal.fire("ত্রুটি!", "মেসেজ প্রেরণে সমস্যা হয়েছে।", "error");
             }
           });
       }
-      const handleMessage = (mamla) => {
-        const message = `অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব), চট্টগ্রাম আদালতে চলমান ${
-          mamla.mamlaName
-        } (${mamla.mamlaNo} নং) মামলার পরবর্তী কার্যক্রম ${
-          mamla.nextDate || "N/A"
-        } তারিখে অনুষ্ঠিত হবে।`;
-
-        Swal.fire({
-          title: "আপনি মেসেজ প্রেরণ করতে চান?",
-          html: `
-      <div style="text-align: left;">
-        <b>প্রেরিত মেসেজঃ</b>
-        <textarea id="editable-message"
-          style="
-            display: block;
-            margin-top: 8px;
-            padding: 8px;
-            width: 100%;
-            font-size: 14px;
-            line-height: 1.4;
-            : 1px solid #ccc;
-            -radius: 4px;
-            min-height: 120px;
-            overflow: hidden;
-            resize: vertical;
-            box-sizing: -box;
-          "
-        >${message}</textarea>
-      </div>
-    `,
-          showCloseButton: true,
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "হ্যাঁ, প্রেরণ করুন!",
-          preConfirm: () => {
-            const editedMessage =
-              document.getElementById("editable-message").value;
-            if (!editedMessage) {
-              Swal.showValidationMessage("মেসেজ ফাঁকা রাখা যাবে না!");
-              return false;
-            }
-            return editedMessage;
-          },
-        }).then((result) => {
-          if (result.isConfirmed && result.value) {
-            const editedMessage = result.value;
-
-            // Collect phone numbers from badi & bibadi
-            const phoneNumbers = [
-              ...(mamla?.badi?.map((b) => b.phone) || []),
-              ...(mamla?.bibadi?.map((b) => b.phone) || []),
-            ]
-              .map((num) => (num ? "88" + num : null))
-              .filter(Boolean)
-              .join(",");
-
-            axiosPublic
-              .post("/message", {
-                to: phoneNumbers,
-                message: editedMessage,
-              })
-              .then((res) => {
-                if (res.data.result?.response_code == 202) {
-                  Swal.fire({
-                    title: "সফলতা!",
-                    text: "আপনার মেসেজ সফলভাবে প্রেরণ করা হয়েছে।",
-                    icon: "success",
-                  });
-                  refetch();
-                } else if (res.data.response_code == 107) {
-                  Swal.fire({
-                    title: "সতর্কতা!",
-                    text: "আপনার পর্যাপ্ত ব্যালেন্স নেই।",
-                    icon: "warning",
-                  });
-                } else {
-                  Swal.fire({
-                    title: "ত্রুটি!",
-                    text: "মেসেজ প্রেরণে সমস্যা হয়েছে।",
-                    icon: "error",
-                  });
-                }
-              });
-          }
-        });
-      };
     });
   };
 
-  if (isLoading) return <p className="mt-10 text-center">লোডিং...</p>;
+  const formatDate = (dateStr) => dateStr || "-";
+
+  if (isLoading) return <p className="mt-10 text-center">লোড হচ্ছে...</p>;
 
   return (
     <div className="p-4 overflow-x-auto">
@@ -298,10 +160,10 @@ const AllMamla = () => {
           </h1>
         ) : (
           "সকল মামলা"
-        )}{" "}
+        )}
       </div>
 
-      {/* Search Fields */}
+      {/* Search Inputs */}
       <div className="gap-2 grid grid-cols-1 md:grid-cols-4 mb-4">
         <input
           type="text"
@@ -362,41 +224,43 @@ const AllMamla = () => {
           <tbody className="divide-y divide-gray-200">
             {paginatedData.length > 0 ? (
               paginatedData.map((item, idx) => (
-                <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={item._id || `${item.mamlaNo}-${item.year}-${idx}`}
+                  className="hover:bg-gray-50 transition-colors"
+                >
                   <td className="px-4 py-3 font-medium text-gray-700">
                     {(currentPage - 1) * itemsPerPage + idx + 1}
                   </td>
-                  <td className="px-4 py-3">{item?.mamlaName}</td>
-                  <td className="px-4 py-3">{item?.mamlaNo}</td>
-                  <td className="px-4 py-3">{item?.year}</td>
+                  <td className="px-4 py-3">{item.mamlaName || "-"}</td>
+                  <td className="px-4 py-3">{item.mamlaNo || "-"}</td>
+                  <td className="px-4 py-3">{item.year || "-"}</td>
                   <td className="px-4 py-3">{item?.district?.bn || "-"}</td>
-                  <td className="px-4 py-3">{item?.previousDate || "-"}</td>
-                  <td className="px-4 py-3">{item?.nextDate || "-"}</td>
-                  <td className="px-4 py-3">{item?.lastCondition || "-"}</td>
-                  <td className="px-4 py-3">{item?.completionDate || "-"}</td>
-
-                  {/* Badi phone numbers */}
+                  <td className="px-4 py-3">{formatDate(item.previousDate)}</td>
+                  <td className="px-4 py-3">{formatDate(item.nextDate)}</td>
+                  <td className="px-4 py-3">{item.lastCondition || "-"}</td>
                   <td className="px-4 py-3">
-                    {item?.badi?.length > 0
-                      ? item.badi.slice(0, 1).map((b, i) => (
-                          <p key={`badi-${i}`}>
-                            {b.name} - {b.phone}
+                    {formatDate(item.completionDate)}
+                  </td>
+
+                  <td className="px-4 py-3">
+                    {item.badi?.length > 0
+                      ? item.badi.map((b) => (
+                          <p key={`${b.name}-${b.phone || ""}`}>
+                            {b.name} - {b.phone || "-"}
                           </p>
                         ))
                       : "-"}
                   </td>
 
-                  {/* Bibadi phone numbers */}
                   <td className="px-4 py-3">
-                    {item?.bibadi?.length > 0
-                      ? item.bibadi.slice(0, 1).map((b, i) => (
-                          <p key={`bibadi-${i}`}>
-                            {b.name} - {b.phone}
+                    {item.bibadi?.length > 0
+                      ? item.bibadi.map((b) => (
+                          <p key={`${b.name}-${b.phone || ""}`}>
+                            {b.name} - {b.phone || "-"}
                           </p>
                         ))
                       : "-"}
                   </td>
-
                   {user?.role === "divCom" &&
                     state.pathname.includes("dashboard") && (
                       <td className="flex flex-col flex-wrap gap-1">
@@ -428,8 +292,8 @@ const AllMamla = () => {
               ))
             ) : (
               <tr>
-                <td className="px-4 py-4 text-center" colSpan="12">
-                  No records found.
+                <td colSpan="12" className="px-4 py-4 text-center">
+                  কোনো মামলা পাওয়া যায়নি
                 </td>
               </tr>
             )}
@@ -465,12 +329,10 @@ const AllMamla = () => {
         </div>
       </div>
 
-      {/* Dialog */}
-
+      {/* Edit Modal */}
       <dialog id="my_modal_3" className="modal">
         <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-box">
           <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
             <button className="top-2 right-2 absolute btn btn-sm btn-circle btn-ghost">
               ✕
             </button>

@@ -3,15 +3,15 @@ import axiosPublic from "../../../axios/axiosPublic";
 import { toast } from "sonner";
 import { Plus, X } from "lucide-react"; // For close icon, optional
 import { mamlaNames } from "../../../data/mamlaNames";
-import { districts } from "../../../data/districts";
 import { toBanglaNumber } from "../../../utils/toBanglaNumber";
+import { aclandOptions } from "../../../data/aclandOptions";
+import { districts } from "../../../data/districts";
+import { useNavigate } from "react-router";
 
 export default function MamlaUploadForm() {
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(2025);
-
-  const [badiPhones, setBadiPhones] = useState([]);
-  const [bibadiPhones, setBibadiPhones] = useState([]);
+  const navigate = useNavigate();
   const [badiInput, setBadiInput] = useState({
     name: "",
     phone: "",
@@ -81,27 +81,84 @@ export default function MamlaUploadForm() {
     e.preventDefault();
     const form = e.target;
 
+    const mamlaName = form.elements.mamlaName?.value;
+    const mamlaNo = form.elements.mamlaNo?.value;
+    const year = form.elements.year?.value;
+    const districtEn = form.elements.district?.value;
+    const nextDate = form.elements.nextDate?.value;
+    const completionDate = form.elements.completionDate?.value;
+    const lastCondition = form.elements.lastCondition?.value;
+    const comments = form.elements.comments?.value;
+
+    // Validation
+    if (!mamlaName) {
+      toast.warning("মামলার নাম অবশ্যই নির্বাচন করুন");
+      return;
+    }
+    if (!mamlaNo) {
+      toast.warning("মামলা নম্বর দিন");
+      return;
+    }
+    if (!year) {
+      toast.warning("সাল নির্বাচন করুন");
+      return;
+    }
+    if (!districtEn) {
+      toast.warning("জেলা নির্বাচন করুন");
+      return;
+    }
+    if (!nextDate) {
+      toast.warning("পরবর্তী তারিখ দিন");
+      return;
+    }
+    if (!completionDate) {
+      toast.warning("নিষ্পত্তির তারিখ দিন");
+      return;
+    }
+    if (!lastCondition) {
+      toast.warning("সর্বশেষ অবস্থা লিখুন");
+      return;
+    }
+    if (!comments) {
+      toast.warning("মন্তব্য দিন");
+      return;
+    }
+    if (badiList.length === 0) {
+      toast.warning("কমপক্ষে একটি বাদি যুক্ত করুন");
+      return;
+    }
+    if (bibadiList.length === 0) {
+      toast.warning("কমপক্ষে একটি বিবাদী যুক্ত করুন");
+      return;
+    }
+
+    const selectedDistrictObj = districts.find((d) => d.en === districtEn);
+
     const mamlaData = {
-      mamlaName: form.mamlaName.value,
-      mamlaNo: form.mamlaNo.value,
-      year: form.year.value,
-      district: form.district.value,
-      nextDate: form.nextDate.value,
-      lastCondition: form.lastCondition.value,
-      completionDate: form.completionDate.value,
-      comments: form.comments.value,
+      mamlaName,
+      mamlaNo,
+      year,
+      district: selectedDistrictObj,
+      nextDate,
+      previousDate: today,
+      lastCondition,
+      completionDate,
+      comments,
       badi: badiList,
       bibadi: bibadiList,
-
       createdAt: today,
     };
 
     try {
       setLoading(true);
       const res = await axiosPublic.post("/mamlas", mamlaData);
-      toast.success("আপলোড সফল হয়েছে");
-      setPhoneNumbers([]); // clear after submit
-      form.reset();
+      if (res.data.insertedId) {
+        toast.success("আপলোড সফল হয়েছে");
+        navigate("/dashboard/allMamla");
+        form.reset();
+        setBadiList([]);
+        setBibadiList([]);
+      }
     } catch (err) {
       console.error("Upload failed:", err);
       toast.warning("আপলোড ব্যর্থ হয়েছে");
@@ -137,43 +194,43 @@ export default function MamlaUploadForm() {
         <label>
           মামলা নম্বর:
           <input
-            type="text"
+            type="number"
             name="mamlaNo"
             className="mt-1 input-bordered w-full input"
           />
         </label>
 
-        {/* Year */}
         <label>
           বছর:
           <select
-            value={selectedYear}
             name="year"
             className="mt-1 w-full select-bordered select"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
           >
-            <option value="">সাল নির্বাচন করুন </option>
+            <option value="">সাল নির্বচন করুন</option>
             {Array.from({ length: 50 }, (_, i) => {
-              const year = 2000 + i;
+              const y = 2000 + i;
               return (
-                <option key={year} value={year}>
-                  {toBanglaNumber(year)}
+                <option key={y} value={y}>
+                  {toBanglaNumber(y)}
                 </option>
               );
             })}
           </select>
         </label>
 
-        {/* District */}
         <label>
-          জেলা :
+          জেলা
           <select
             name="district"
             className="mt-1 w-full select-bordered select"
+            defaultValue=""
           >
-            <option value="">জেলা নির্বাচন করুণ </option>
-            {districts.map((d) => (
-              <option key={d} value={d}>
-                {d}
+            <option value="">জেলা নির্বাচন করুন</option>
+            {districts.map((d, idx) => (
+              <option key={idx} value={d.en}>
+                {d.bn}
               </option>
             ))}
           </select>
