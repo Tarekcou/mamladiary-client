@@ -87,7 +87,7 @@ export default function MamlaUploadForm() {
       year: form.year.value,
       district: form.district.value,
       nextDate: form.nextDate.value,
-      lastCondition: form.completedMamla.value,
+      lastCondition: form.lastCondition.value,
       completionDate: form.completionDate.value,
       comments: form.comments.value,
       badi: badiList,
@@ -198,7 +198,7 @@ export default function MamlaUploadForm() {
           />
         </label>
 
-        {/* Completed Mamla */}
+        {/* last Condition Mamla */}
         <label className="col-span-2">
           সর্বশেষ অবস্থা:
           <textarea
