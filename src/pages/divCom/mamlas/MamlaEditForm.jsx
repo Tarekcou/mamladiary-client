@@ -266,7 +266,7 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
       </div>
       {!isAdcPage && (
         <>
-          <div className="gap-4 grid grid-cols-2 text-sm">
+          <div className="gap-4 grid grid-cols-2 mt-4 text-sm">
             {/* Previous Date (readonly) */}
             <label>
               পূর্ববর্তী তারিখ:

@@ -26,8 +26,7 @@ import DashboardLayout from "./Layout/DashboardLayout.jsx";
 import DivComDashboard from "./pages/divCom/others/DivComDashboard.jsx";
 import MamlaUploadForm from "./pages/divCom/mamlas/MamlaUploadForm.jsx";
 import AllMamla from "./pages/divCom/mamlas/AllMamla.jsx";
-import AdcMamla from "./pages/divCom/mamlas/AdcMamla.jsx";
-import AdcMamlaUploadForm from "./pages/divCom/mamlas/AdcMamlaUploadForm.jsx";
+
 import AddUsers from "./pages/divCom/users/AddUsers.jsx";
 import ManageDivComUser from "./pages/divCom/users/ManageDivComUser.jsx";
 import ManageACLandUser from "./pages/divCom/users/ManageACLandUser.jsx";
