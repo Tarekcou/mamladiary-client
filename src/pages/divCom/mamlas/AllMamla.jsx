@@ -82,34 +82,30 @@ const AllMamla = () => {
 
   const handleEdit = (mamla) => setEditedMamla(mamla);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "আপনি কি ডিলেট করতে চান?",
+      text: "এই কাজটি অপরিবর্তণীয় !",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+      confirmButtonText: "হ্যাঁ ডিলেট করুন !",
+    }).then(async (result) => {
       if (result.isConfirmed) {
         let res;
-        if (isAdcPage) res = axiosPublic.delete(`/adcMamla/${id}`);
-        else res = axiosPublic.delete(`/mamla/${id}`);
+        if (isAdcPage) res = await axiosPublic.delete(`/adcMamla/${id}`);
+        else res = await axiosPublic.delete(`/mamla/${id}`);
         if (res.data.deletedCount > 0) {
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          Swal.fire("ডিলেট সফল হয়েছে !");
           refetch();
         } else {
-          Swal.fire(
-            "Error!",
-            "There was a problem deleting the file.",
-            "error"
-          );
+          Swal.fire("ডিটেল করতে সমস্যা হয়েছে !");
         }
       }
     });
   };
 
   const handleMessage = (mamla) => {
-    const message = `অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব), চট্টগ্রাম আদালতে চলমান ${
+    const message = `অতিরিক্ত কমিশনার (রাজস্ব), চট্টগ্রাম আদালতে চলমান ${
       mamla.mamlaName
     } (${mamla.mamlaNo} নং) মামলার পরবর্তী কার্যক্রম ${
       mamla.nextDate || "N/A"
@@ -280,7 +276,7 @@ const AllMamla = () => {
                               </p>
                             ))
                           : "-"}
-                      </td>{" "}
+                      </td>
                     </>
                   )}
                   <td className="my-1 px-4">{item.comments || "-"}</td>

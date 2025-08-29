@@ -53,7 +53,7 @@ const OfficeMessaging = ({ caseData, refetch, index, mamlaNo }) => {
     setShowModal(true);
   };
   const handleSMS = (mamla) => {
-    const message = `অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব), চট্টগ্রাম আদালতে চলমান ${mamla.mamlaName} (${mamla.mamlaNo} নং) মামলার পরবর্তী কার্যক্রম ${mamla.nextDate} তারিখে অনুষ্ঠিত হবে।`;
+    const message = `অতিরিক্ত (রাজস্ব), চট্টগ্রাম আদালতে চলমান ${mamla.mamlaName} (${mamla.mamlaNo} নং) মামলার পরবর্তী কার্যক্রম ${mamla.nextDate} তারিখে অনুষ্ঠিত হবে।`;
 
     Swal.fire({
       title: "আপনি মেসেজ প্রেরণ করতে চান?",
