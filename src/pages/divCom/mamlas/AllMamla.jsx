@@ -8,6 +8,7 @@ import axiosPublic from "../../../axios/axiosPublic";
 import { useLocation } from "react-router";
 import ListLottie from "../../../components/lottie/ListLottie";
 import { AuthContext } from "../../../provider/AuthProvider";
+import { Cross, CrossIcon, X } from "lucide-react";
 
 const AllMamla = () => {
   const state = useLocation();
@@ -16,17 +17,22 @@ const AllMamla = () => {
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: "Asia/Dhaka",
   });
+  const location = useLocation();
+
+  const isAdcPage = location.pathname.includes("allAdcMamla");
 
   const {
     data: caseList = [],
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["allMamla", "causeList"],
+    queryKey: ["allMamla", "causeList", isAdcPage],
     queryFn: async () => {
       try {
         const response = causeListPath
           ? await axiosPublic.get(`/allMamla/${today}`)
+          : isAdcPage
+          ? await axiosPublic.get(`/adcMamla`)
           : await axiosPublic.get(`/allMamla`);
         return response.status === 200 ? response.data : [];
       } catch (err) {
@@ -85,12 +91,19 @@ const AllMamla = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPublic.delete(`/mamla/${id}`).then((res) => {
-          if (res.data.deletedCount > 0) {
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
-            refetch();
-          }
-        });
+        let res;
+        if (isAdcPage) res = axiosPublic.delete(`/adcMamla/${id}`);
+        else res = axiosPublic.delete(`/mamla/${id}`);
+        if (res.data.deletedCount > 0) {
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          refetch();
+        } else {
+          Swal.fire(
+            "Error!",
+            "There was a problem deleting the file.",
+            "error"
+          );
+        }
       }
     });
   };
@@ -209,12 +222,17 @@ const AllMamla = () => {
               <th className="px-4 py-3">মামলার নং</th>
               <th className="px-4 py-3">বছর</th>
               <th className="px-4 py-3">জেলা</th>
-              <th className="px-4 py-3">পূর্ববর্তী তারিখ</th>
-              <th className="px-4 py-3">পরবর্তী তারিখ</th>
-              <th className="px-4 py-3">সর্বশেষ অবস্থা</th>
-              <th className="px-4 py-3">নিষ্পত্তির তারিখ</th>
-              <th className="px-4 py-3">বাদী</th>
-              <th className="px-4 py-3">বিবাদী</th>
+              {!isAdcPage && (
+                <>
+                  <th className="px-4 py-3">পূর্ববর্তী তারিখ</th>
+                  <th className="px-4 py-3">পরবর্তী তারিখ</th>
+                  <th className="px-4 py-3">সর্বশেষ অবস্থা</th>
+                  <th className="px-4 py-3">নিষ্পত্তির তারিখ</th>
+                  <th className="px-4 py-3">বাদী</th>
+                  <th className="px-4 py-3">বিবাদী</th>
+                </>
+              )}
+              <th className="px-4 py-3">মন্তব্য</th>
               {user?.role === "divCom" &&
                 state.pathname.includes("dashboard") && (
                   <th className="px-4 py-3">কার্যক্রম</th>
@@ -235,35 +253,40 @@ const AllMamla = () => {
                   <td className="px-4 py-3">{item.mamlaNo || "-"}</td>
                   <td className="px-4 py-3">{item.year || "-"}</td>
                   <td className="px-4 py-3">{item?.district?.bn || "-"}</td>
-                  <td className="px-4 py-3">{formatDate(item.previousDate)}</td>
-                  <td className="px-4 py-3">{formatDate(item.nextDate)}</td>
-                  <td className="px-4 py-3">{item.lastCondition || "-"}</td>
-                  <td className="px-4 py-3">
-                    {formatDate(item.completionDate)}
-                  </td>
-
-                  <td className="px-4 py-3">
-                    {item.badi?.length > 0
-                      ? item.badi.map((b) => (
-                          <p key={`${b.name}-${b.phone || ""}`}>
-                            {b.name} - {b.phone || "-"}
-                          </p>
-                        ))
-                      : "-"}
-                  </td>
-
-                  <td className="px-4 py-3">
-                    {item.bibadi?.length > 0
-                      ? item.bibadi.map((b) => (
-                          <p key={`${b.name}-${b.phone || ""}`}>
-                            {b.name} - {b.phone || "-"}
-                          </p>
-                        ))
-                      : "-"}
-                  </td>
+                  {!isAdcPage && (
+                    <>
+                      <td className="px-4 py-3">
+                        {formatDate(item.previousDate)}
+                      </td>
+                      <td className="px-4 py-3">{formatDate(item.nextDate)}</td>
+                      <td className="px-4 py-3">{item.lastCondition || "-"}</td>
+                      <td className="px-4 py-3">
+                        {formatDate(item.completionDate)}
+                      </td>
+                      <td className="px-4 py-3">
+                        {item.badi?.length > 0
+                          ? item.badi.map((b) => (
+                              <p key={`${b.name}-${b.phone || ""}`}>
+                                {b.name} - {b.phone || "-"}
+                              </p>
+                            ))
+                          : "-"}
+                      </td>
+                      <td className="px-4 py-3">
+                        {item.bibadi?.length > 0
+                          ? item.bibadi.map((b) => (
+                              <p key={`${b.name}-${b.phone || ""}`}>
+                                {b.name} - {b.phone || "-"}
+                              </p>
+                            ))
+                          : "-"}
+                      </td>{" "}
+                    </>
+                  )}
+                  <td className="my-1 px-4">{item.comments || "-"}</td>
                   {user?.role === "divCom" &&
                     state.pathname.includes("dashboard") && (
-                      <td className="flex flex-col flex-wrap gap-1">
+                      <td className="flex flex-col flex-wrap gap-1 py-1">
                         <label
                           htmlFor="my_modal_3"
                           className="btn btn-sm"
@@ -280,12 +303,14 @@ const AllMamla = () => {
                         >
                           <MdDeleteForever className="text-xl" />
                         </button>
-                        <button
-                          onClick={() => handleMessage(item)}
-                          className="btn btn-sm"
-                        >
-                          <MdMessage className="text-xl" />
-                        </button>
+                        {!isAdcPage && (
+                          <button
+                            onClick={() => handleMessage(item)}
+                            className="btn btn-sm"
+                          >
+                            <MdMessage className="text-xl" />
+                          </button>
+                        )}
                       </td>
                     )}
                 </tr>
@@ -333,8 +358,8 @@ const AllMamla = () => {
       <dialog id="my_modal_3" className="modal">
         <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-box">
           <form method="dialog">
-            <button className="top-2 right-2 absolute btn btn-sm btn-circle btn-ghost">
-              ✕
+            <button className="top-2 right-2 absolute btn btn-sm btn-circle">
+              <X />
             </button>
           </form>
           <MamlaEditForm

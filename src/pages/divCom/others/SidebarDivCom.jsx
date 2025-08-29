@@ -40,6 +40,65 @@ const SidebarDivCom = () => {
 
         <div className="m-0 p-0 divider"></div>
 
+        {/* পুরাতন মামলার তথ্য  */}
+        <div
+          tabIndex="0"
+          className="collapse collapse-arrow bg-base-200 border border-base-300"
+        >
+          <input type="checkbox" />
+
+          <div className="collapse-title font-semibold"> সকল মামলা</div>
+          <ul className="collapse-content flex flex-col gap-1 p-0 list-disc list-inside">
+            <NavLink
+              to="/dashboard/mamlaUpload"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+              }
+            >
+              মামলা আপলোড
+            </NavLink>
+
+            <NavLink
+              to="/dashboard/allMamla"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+              }
+            >
+              সকল মামলা
+            </NavLink>
+            <div className="m-0 p-0 divider"></div>
+
+            {/* ADC Mamla */}
+
+            <NavLink
+              to="/dashboard/adcMamlaUpload"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+              }
+            >
+              এডিসি মামলা আপলোড
+            </NavLink>
+
+            <NavLink
+              to="/dashboard/allAdcMamla"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
+                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
+              }
+            >
+              সকল এডিসি মামলা
+            </NavLink>
+          </ul>
+        </div>
+        <div className="m-0 p-0 divider"></div>
+
         <div
           tabIndex="0"
           className="collapse collapse-arrow bg-base-200 border border-base-300"
@@ -145,65 +204,6 @@ const SidebarDivCom = () => {
               }
             >
               মাসিক রিপোর্ট
-            </NavLink>
-          </ul>
-        </div>
-        <div className="m-0 p-0 divider"></div>
-
-        {/* পুরাতন মামলার তথ্য  */}
-        <div
-          tabIndex="0"
-          className="collapse collapse-arrow bg-base-200 border border-base-300"
-        >
-          <input type="checkbox" />
-
-          <div className="collapse-title font-semibold"> পুরাতন মামলা</div>
-          <ul className="collapse-content flex flex-col gap-1 p-0 list-disc list-inside">
-            <NavLink
-              to="/dashboard/mamlaUpload"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-              }
-            >
-              মামলা আপলোড
-            </NavLink>
-
-            <NavLink
-              to="/dashboard/allMamla"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-              }
-            >
-              সকল মামলা
-            </NavLink>
-            <div className="m-0 p-0 divider"></div>
-
-            {/* ADC Mamla */}
-
-            <NavLink
-              to="/dashboard/adcMamlaUpload"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-              }
-            >
-              এডিসি মামলা আপলোড
-            </NavLink>
-
-            <NavLink
-              to="/dashboard/allAdcMamla"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-blue-800 btn-outline  border-2 btn-md lg:btn-sm w-full btn btn-outline-offset-4 font-semibold"
-                  : "text-gray-700 btn btn-md lg:btn-sm w-full border-gray-300"
-              }
-            >
-              সকল এডিসি মামলা
             </NavLink>
           </ul>
         </div>

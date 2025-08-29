@@ -86,8 +86,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path=":role/profile" element={<ProfileUpdateForm />} />
             <Route path="mamlaUpload" element={<MamlaUploadForm />} />
             <Route path="allMamla" element={<AllMamla />} />
-            <Route path="allAdcMamla" element={<AdcMamla />} />
-            <Route path="adcMamlaUpload" element={<AdcMamlaUploadForm />} />
+            <Route path="allAdcMamla" element={<AllMamla />} />
+            <Route path="adcMamlaUpload" element={<MamlaUploadForm />} />
             <Route path="addUsers" element={<AddUsers />} />
             <Route path="divComUsers" element={<ManageDivComUser />} />
             <Route path="adcUsers" element={<ManageAdcUser />} />

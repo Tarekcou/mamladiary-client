@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { AuthContext } from "../../../provider/AuthProvider";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaPlus, FaTimes } from "react-icons/fa";
 import { districts } from "../../../data/districts";
 import { mamlaNames } from "../../../data/mamlaNames";
 import axiosPublic from "../../../axios/axiosPublic";
 import { Plus, X } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "react-router";
 
 const mamlaStatus = [
   "মামলা প্রত্যাহার",
@@ -22,7 +21,12 @@ const mamlaStatus = [
   "রিমান্ডে প্রেরণ",
   "আংশিক মঞ্জুর",
 ];
+
 const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  const isAdcPage = location.pathname.includes("allAdcMamla");
   const [formData, setFormData] = useState({
     mamlaName: "",
     mamlaNo: "",
@@ -32,13 +36,8 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
     nextDate: "",
     lastCondition: "",
     completionDate: "",
-    phoneNumbers: "",
+    comments: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const { isLoading } = useContext(AuthContext);
-  const [badiPhones, setBadiPhones] = useState([""]);
-  const [bibadiPhones, setBibadiPhones] = useState([""]);
 
   const [badiInput, setBadiInput] = useState({
     name: "",
@@ -52,27 +51,51 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
   });
   const [badiList, setBadiList] = useState([]);
   const [bibadiList, setBibadiList] = useState([]);
-  // Populate form with existing mamla
+
+  const [options, setOptions] = useState([...new Set(mamlaStatus)]);
+
+  const [customInput, setCustomInput] = useState("");
+  const [showInput, setShowInput] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const localDate = new Date();
+  const today = `${localDate.getFullYear()}-${String(
+    localDate.getMonth() + 1
+  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+
+  // Populate with existing data
   useEffect(() => {
     if (mamla) {
       setFormData({
         mamlaName: mamla.mamlaName || "",
         mamlaNo: mamla.mamlaNo || "",
         year: mamla.year || "",
-        district: mamla.district?.en || "", // <-- store 'en' key
-        previousDate: mamla.nextDate || "",
+        district: mamla.district?.en || "",
+        previousDate: mamla.previousDate || today,
         nextDate: mamla.nextDate || "",
-        completedMamla: mamla.completedMamla || "",
-        completionDate: mamla.completionDate || "",
         lastCondition: mamla.lastCondition || "",
+        completionDate: mamla.completionDate || "",
+        comments: mamla.comments || "",
       });
 
       setBadiList(mamla.badi || []);
       setBibadiList(mamla.bibadi || []);
-      setSelected(mamla.lastCondition || "");
+
+      // ✅ Ensure custom lastCondition exists in dropdown options
+      if (mamla.lastCondition && !options.includes(mamla.lastCondition)) {
+        setOptions((prev) => [...prev, mamla.lastCondition]);
+      }
     }
   }, [mamla]);
 
+  // Input handler
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Add Badi / Bibadi
   const addBadi = () => {
     const isValidPhone = (phone) => /^01[0-9]{9}$/.test(phone);
 
@@ -115,265 +138,220 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
     setBibadiList([...bibadiList, bibadiInput]);
     setBibadiInput({ name: "", phone: "", address: "" });
   };
+  //
+
   const removeParty = (type, phone) => {
     if (type === "badi") setBadiList(badiList.filter((p) => p.phone !== phone));
     else setBibadiList(bibadiList.filter((p) => p.phone !== phone));
   };
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+  // Add custom status
+  const handleAddCustom = () => {
+    if (customInput.trim() !== "") {
+      setOptions((prev) => [...new Set([...prev, customInput])]);
+      setFormData((prev) => ({ ...prev, lastCondition: customInput }));
+      setCustomInput("");
+      setShowInput(false);
+    }
   };
 
-  const localDate = new Date();
-  const today = `${localDate.getFullYear()}-${String(
-    localDate.getMonth() + 1
-  ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+  // Submit handler
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    let updatedData = {};
+    if (isAdcPage)
+      updatedData = {
+        mamlaName: formData.mamlaName,
+        mamlaNo: formData.mamlaNo,
+        year: formData.year,
+        district: districts.find((d) => d.en === formData.district),
+        updatedAt: today,
+      };
+    else {
+      updatedData = {
+        ...formData,
+        district: districts.find((d) => d.en === formData.district),
+        badi: badiList,
+        bibadi: bibadiList,
+        updatedAt: today,
+      };
+    }
+    // console.log(updatedData);
+    setLoading(true);
 
-  // Handle form submit
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: async (updatedData) => {
-      const res = await axiosPublic.patch(`/mamla/${mamla._id}`, updatedData);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("আপডেট সফল হয়েছে");
-      queryClient.invalidateQueries({ queryKey: ["allMamla"] });
-      setFormData({
-        mamlaName: "",
-        mamlaNo: "",
-        year: "",
-        district: "",
-        previousDate: "",
-        nextDate: "",
-        completedMamla: "",
-        completionDate: "",
-        phoneNumbers: "",
-      });
-      closeModal?.(); // ✅ Close modal if function is passed
-    },
-    onError: (error) => {
+    try {
+      let res;
+      if (isAdcPage)
+        res = await axiosPublic.patch(`/adcMamla/${mamla._id}`, updatedData);
+      else res = await axiosPublic.patch(`/mamla/${mamla._id}`, updatedData);
+      if (res.status === 200) {
+        toast.success("আপডেট সফল হয়েছে");
+        queryClient.invalidateQueries({ queryKey: ["allMamla"] });
+        closeModal?.();
+      }
+    } catch (error) {
       console.error("Update failed:", error);
       toast.error("আপডেট ব্যর্থ হয়েছে");
-    },
-  });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const updatedData = {
-      mamlaName: formData.mamlaName,
-      mamlaNo: formData.mamlaNo,
-      year: formData.year,
-      district: districts.find((d) => d.en === formData.district),
-      previousDate: formData.previousDate,
-      nextDate: formData.nextDate,
-      completedMamla: formData.completedMamla,
-      completionDate: formData.completionDate,
-      lastCondition: formData.lastCondition,
-      badi: badiList,
-      bibadi: bibadiList,
-      updatedAt: today,
-    };
-
-    mutation.mutate(updatedData);
-  };
-
-  const [options, setOptions] = useState([...new Set(mamlaStatus)]);
-  const [selected, setSelected] = useState("");
-  const [customInput, setCustomInput] = useState("");
-  const [showInput, setShowInput] = useState(false);
-
-  const handleAddCustom = () => {
-    const custom = customInput.trim();
-    if (custom && !options.includes(custom)) {
-      setOptions([...options, custom]);
-    }
-    setSelected(custom);
-    setFormData((prev) => ({ ...prev, completedMamla: custom }));
-    setCustomInput("");
-    setShowInput(false);
-  };
-
-  const handleCompletedMamlaChange = (e) => {
-    const value = e.target.value;
-    setSelected(value);
-    setFormData((prev) => ({ ...prev, completedMamla: value }));
-  };
-
-  const handleAddNumber = () => {
-    if (newNumber.trim() !== "") {
-      setPhoneNumbers([...phoneNumbers, newNumber.trim()]);
-      setNewNumber("");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeleteNumber = (index) => {
-    const updated = phoneNumbers.filter((_, i) => i !== index);
-    setPhoneNumbers(updated.length ? updated : [""]);
-  };
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-gray-100 shadow-md mx-auto p-6"
-      >
-        <h2 className="bg-[#004080]/30 mb-4 py-2 font-bold text-xl text-center">
-          অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতের মামলার তথ্য আপডেট করুন
-        </h2>
+    <form onSubmit={handleUpdate} className="bg-gray-100 shadow-md mx-auto p-6">
+      <h2 className="bg-[#004080]/30 mb-4 py-2 font-bold text-xl text-center">
+        মামলার তথ্য আপডেট করুন
+      </h2>
 
-        <div className="gap-4 grid grid-cols-2 text-sm">
-          {/* Mamla Name */}
-          <label>
-            মামলার নাম:
-            <select
-              name="mamlaName"
-              className="mt-1 w-full select-bordered select"
-              value={formData.mamlaName}
-              onChange={handleChange}
-            >
-              <option value="">মামলার নাম নির্বাচন করুন </option>
-              {mamlaNames.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </label>
+      <div className="gap-4 grid grid-cols-2 text-sm">
+        {/* Mamla Name */}
+        <label>
+          মামলার নাম:
+          <select
+            name="mamlaName"
+            value={formData.mamlaName}
+            onChange={handleChange}
+            className="mt-1 w-full select-bordered select"
+          >
+            <option value="">মামলার নাম নির্বাচন করুন </option>
+            {mamlaNames.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
 
-          {/* Mamla Number */}
-          <label>
-            মামলা নম্বর:
-            <input
-              type="text"
-              name="mamlaNo"
-              value={formData.mamlaNo}
-              onChange={handleChange}
-              className="mt-1 input-bordered w-full input"
-            />
-          </label>
+        {/* Mamla Number */}
+        <label>
+          মামলা নম্বর:
+          <input
+            type="text"
+            name="mamlaNo"
+            value={formData.mamlaNo}
+            onChange={handleChange}
+            className="mt-1 input-bordered w-full input"
+          />
+        </label>
 
-          {/* Year */}
-          <label>
-            সাল :
-            <select
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
-              className="mt-1 w-full select-bordered select"
-            >
-              <option value="">সাল নির্বাচন করুন </option>
-              {Array.from({ length: 50 }, (_, i) => {
-                const year = 2000 + i;
-                return (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
+        {/* Year */}
+        <label>
+          সাল:
+          <input
+            type="number"
+            name="year"
+            value={formData.year}
+            onChange={handleChange}
+            className="mt-1 input-bordered w-full input"
+          />
+        </label>
 
-          {/* District */}
-          <label>
-            জেলা :
-            <select
-              name="district"
-              value={formData.district} // <-- just the string 'en'
-              onChange={handleChange}
-              className="mt-1 w-full select-bordered select"
-            >
-              <option value="">জেলা নির্বাচন করুন </option>
-              {districts.map((d) => (
-                <option key={d.en} value={d.en}>
-                  {d.bn}
-                </option>
-              ))}
-            </select>
-          </label>
+        {/* District */}
+        <label>
+          জেলা:
+          <select
+            name="district"
+            value={formData.district}
+            onChange={handleChange}
+            className="mt-1 w-full select-bordered select"
+          >
+            <option value="">জেলা নির্বাচন করুন</option>
+            {districts.map((d) => (
+              <option key={d.en} value={d.en}>
+                {d.bn}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      {!isAdcPage && (
+        <>
+          <div className="gap-4 grid grid-cols-2 text-sm">
+            {/* Previous Date (readonly) */}
+            <label>
+              পূর্ববর্তী তারিখ:
+              <input
+                type="date"
+                name="previousDate"
+                value={formData.previousDate}
+                className="mt-1 input-bordered w-full input"
+              />
+            </label>
 
-          {/* Optional: nextDate */}
-          <label>
-            পূর্ববর্তী তারিখ:
-            <input
-              type="date"
-              name="previousDate"
-              value={formData.previousDate}
-              readOnly
-              className="mt-1 input-bordered w-full input"
-            />
-          </label>
-          {/* Optional: nextDate */}
-          <label>
-            পরবর্তী তারিখ:
-            <input
-              type="date"
-              name="nextDate"
-              value={formData.nextDate}
-              onChange={handleChange}
-              className="mt-1 input-bordered w-full input"
-            />
-          </label>
+            {/* Next Date */}
+            <label>
+              পরবর্তী তারিখ:
+              <input
+                type="date"
+                name="nextDate"
+                value={formData.nextDate}
+                onChange={handleChange}
+                className="mt-1 input-bordered w-full input"
+              />
+            </label>
+            {/* Last Condition */}
+            {/* Last Condition */}
+            <label className="">
+              সর্বশেষ অবস্থা:
+              <div className="flex items-center space-x-2">
+                <select
+                  value={formData.lastCondition}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      lastCondition: e.target.value,
+                    }))
+                  }
+                  className="border input-bordered w-full input select"
+                >
+                  <option value="">মামলার অবস্থা নির্বাচন করুন</option>
+                  {options.map((opt, idx) => (
+                    <option key={idx} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
 
-          {/* Optional: completedMamla */}
-          <label>
-            সর্বশেষ অবস্থা:
-            <div className="flex items-center space-x-2">
-              <select
-                value={selected}
-                onChange={handleCompletedMamlaChange}
-                className="border input-bordered w-full input select"
-              >
-                <option value="">মামলার অবস্থা নির্বাচন করুন</option>
-                {options.map((opt, idx) => (
-                  <option key={idx} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="bg-gray-200 rounded-full btn"
-                onClick={() => setShowInput(true)}
-              >
-                <FaPlus />
-              </button>
-            </div>
-            {showInput && (
-              <div className="flex space-x-2 mt-2">
-                <input
-                  type="text"
-                  className="input-bordered w-full input input-sm"
-                  value={customInput}
-                  onChange={(e) => setCustomInput(e.target.value)}
-                  placeholder="নতুন অবস্থা লিখুন"
-                />
                 <button
                   type="button"
-                  className="btn btn-sm btn-success"
-                  onClick={handleAddCustom}
+                  className="bg-gray-200 rounded-full btn"
+                  onClick={() => setShowInput(true)}
                 >
-                  যুক্ত করুন
+                  <Plus />
                 </button>
               </div>
-            )}
-          </label>
+              {showInput && (
+                <div className="flex space-x-2 mt-2">
+                  <input
+                    type="text"
+                    className="input-bordered w-full input input-sm"
+                    value={customInput}
+                    onChange={(e) => setCustomInput(e.target.value)}
+                    placeholder="নতুন অবস্থা লিখুন"
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-success"
+                    onClick={handleAddCustom}
+                  >
+                    যুক্ত করুন
+                  </button>
+                </div>
+              )}
+            </label>
 
-          {/* Optional: completionDate */}
-          <label>
-            নিষ্পত্তির তারিখ:
-            <input
-              type="date"
-              name="completionDate"
-              value={formData.completionDate}
-              onChange={handleChange}
-              className="mt-1 input-bordered w-full input"
-            />
-          </label>
+            {/* Completion Date */}
+            <label>
+              নিষ্পত্তির তারিখ:
+              <input
+                type="date"
+                name="completionDate"
+                value={formData.completionDate}
+                onChange={handleChange}
+                className="mt-1 input-bordered w-full input"
+              />
+            </label>
+          </div>
 
           {/* Badi */}
           <div className="col-span-2 mt-4">
@@ -490,19 +468,31 @@ const MamlaEditForm = ({ editedMamla: mamla, closeModal }) => {
               ))}
             </div>
           </div>
-        </div>
+        </>
+      )}
 
-        <div className="mt-6 text-center">
-          <button
-            type="submit"
-            className="bg-[#004080] px-6 text-white btn btn-success"
-            disabled={loading}
-          >
-            {isLoading ? "আপডেট হচ্ছে ..." : "আপডেট করুন"}
-          </button>
-        </div>
-      </form>
-    </div>
+      {/* Comments */}
+      <label className="block mt-4">
+        মন্তব্য:
+        <textarea
+          name="comments"
+          value={formData.comments}
+          onChange={handleChange}
+          rows={4}
+          className="mt-1 input-bordered w-full textarea input"
+        ></textarea>
+      </label>
+
+      <div className="mt-6 text-center">
+        <button
+          type="submit"
+          className="bg-[#004080] px-6 text-white btn"
+          disabled={loading}
+        >
+          {loading ? "আপডেট হচ্ছে..." : "আপডেট করুন"}
+        </button>
+      </div>
+    </form>
   );
 };
 
