@@ -310,7 +310,7 @@ const AdcOrder = ({ header }) => {
     console.log(order);
     const newText = `মামলা নং ${order.mamlaNo} (${
       order.mamlaName
-    }) সংক্রান্ত আদেশ অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব) আদালতে ${
+    }) সংক্রান্ত আদেশ অতিরিক্ত কমিশনার (রাজস্ব) আদালতে ${
       date?.split("T")[0] || "___"
     } তারিখে প্রেরণ করা হয়েছে।`;
 

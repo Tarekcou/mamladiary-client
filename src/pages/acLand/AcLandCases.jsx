@@ -141,7 +141,7 @@ export default function AcLandCases({ acLandCaseData, user, caseData,refetch }) 
                 {acLandCaseData[0].sentToDivcom && (
                   <button className="text-sm text-center whitespace-break-spaces btn btn-error">
                     {" "}
-                    বর্তমান অবস্থানঃ <br /> অতিরিক্ত বিভাগীয় কমিশনার (রাজস্ব)
+                    বর্তমান অবস্থানঃ <br /> অতিরিক্ত কমিশনার (রাজস্ব)
                     আদালত
                   </button>
                 )}
@@ -229,7 +229,7 @@ export default function AcLandCases({ acLandCaseData, user, caseData,refetch }) 
                       ) : (
                         <div id="print-hidden" className="flex items-center">
                           <h1 className="bg-blue-300 text-xs badge">
-                            বর্তমান অবস্থানঃ অতিরিক্ত বিভাগীয় কমিশনার(রাজস্ব)
+                            বর্তমান অবস্থানঃ অতিরিক্ত কমিশনার(রাজস্ব)
                             আদালত
                           </h1>
                         </div>

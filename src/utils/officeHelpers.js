@@ -4,7 +4,7 @@ export const handleOfficeName = (officeNameBN, name, role) => {
   } else if (role === "adc") {
     return `অতিরিক্ত জেলা প্রশাসক, ${officeNameBN} (রাজস্ব) আদালত`;
   } else if (role == "divCom") {
-    return `অতিরিক্ত বিভাগীয় কমিশনার(রাজস্ব) আদালত`;
+    return `অতিরিক্ত কমিশনার(রাজস্ব) আদালত`;
   } else {
     return `${name} (নাগরিক)`;
   }
