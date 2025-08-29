@@ -18,6 +18,7 @@ import Carousel from "./Hero";
 import { MdDashboard } from "react-icons/md";
 import { RiBookletLine } from "react-icons/ri";
 import { handleOfficeName } from "../../utils/officeHelpers";
+import { Cross, X } from "lucide-react";
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
@@ -26,7 +27,7 @@ export default function Navbar() {
   const navRef = useRef(null);
   const navigate = useNavigate();
   const { officeType } = useParams();
-
+  console.log(officeType);
   const {
     isSignedIn,
     signOut,
@@ -170,11 +171,11 @@ export default function Navbar() {
                   : "btn btn-sm underline-offset-4 font-semibold btn-outline"
               }
             >
-              নাগরিক লগিন
+              নাগরিক লগইন
             </NavLink>
 
             <NavLink
-              to="/login/dc" // or a general path
+              to={`/login/${officeType}`} // or a general path
               onClick={(e) => {
                 e.preventDefault();
                 handleSignIn(); // you can call handleSignIn and navigate inside it
@@ -185,7 +186,7 @@ export default function Navbar() {
                   : "btn btn-sm underline-offset-4 font-semibold btn-outline"
               }
             >
-              দাপ্তরিক লগিন
+              দাপ্তরিক লগইন
             </NavLink>
 
             <NavLink
@@ -221,10 +222,12 @@ export default function Navbar() {
                 >
                   ভূমি অফিস
                 </button>
+                <form method="dialog" className="top-0 right-0 absolute">
+                  <button className="text-black btn">
+                    <X />
+                  </button>
+                </form>
               </div>
-              <form method="dialog" className="modal-backdrop">
-                <button>close</button>
-              </form>
             </dialog>
           </div>
         )}

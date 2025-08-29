@@ -119,7 +119,7 @@ export default function Login() {
           <button
             type="button"
             onClick={handleAutoLogin}
-            className="bg-green-600 mt-3 py-2 rounded-lg w-full text-white"
+            className="bg-green-600 mt-3 py-2 rounded-lg w-full text-white btn"
           >
             অফিস টেস্ট লগইন (Auto)
           </button>
