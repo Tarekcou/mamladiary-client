@@ -127,7 +127,7 @@ export default function CaseSearchForm({ handleSubmit, isLoading }) {
                     <h1> অনুসন্ধান হচ্ছে..</h1>
                   </>
                 ) : (
-                  t("search")
+                  <h1>অনুসন্ধান করুন </h1>
                 )}
               </button>
             </div>
