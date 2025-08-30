@@ -22,36 +22,47 @@ import Rules from "./Rules";
 export default function Home() {
   const [searchParams, setSearchParams] = useState(null);
   const [isShowCaseList, setShowCaseList] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     data: mamla,
-    isLoading,
     isError,
     error,
     refetch,
   } = useQuery({
     queryKey: ["mamla", searchParams], // good for caching different search results
     queryFn: async () => {
+      console.log("searchparam", searchParams);
       const response = await axiosPublic.get(`/mamlas`, {
         params: searchParams,
       });
-
-      // console.log(response.data);
+      setIsLoading(false);
+      console.log(response.data);
 
       return response.data;
     },
   });
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
-    toast.success("অনুসন্ধান হচ্ছে ");
 
-    setSearchParams(data); // triggers queryKey change (optional but useful)
-    setShowCaseList(true); // show the case list
-    await refetch(); // trigger the fetch manually
+    // Parse district JSON string back into object
+    if (data.district) {
+      const districtObj = JSON.parse(data.district);
+      data.district = districtObj.en; // only keep English version for query
+    }
+
+    // toast.success("অনুসন্ধান হচ্ছে");
+    console.log("Searching by district.en:", data.district);
+    setShowCaseList(true);
+
+    setSearchParams(data);
+    await refetch();
   };
+
   useEffect(() => {
     if (searchParams) {
       refetch();
@@ -60,7 +71,7 @@ export default function Home() {
 
   return (
     <div className="mx-auto">
-      <CaseSearchForm handleSubmit={handleSubmit} />
+      <CaseSearchForm handleSubmit={handleSubmit} isLoading={isLoading} />
       {/* Background Image section (always visible) */}
 
       {isShowCaseList && (

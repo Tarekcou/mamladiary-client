@@ -5,83 +5,10 @@ import { motion } from "framer-motion";
 import { FaFolderOpen } from "react-icons/fa";
 import logo from "../../assets/bg-image.jpg";
 import SearchLottie from "../lottie/SearchLottie";
-const districts = [
-  "চট্টগ্রাম",
-  "কক্সবাজার",
-  "কুমিল্লা",
-  "ব্রাহ্মণবাড়িয়া",
-  "চাঁদপুর",
-  "ফেনী",
-  "লক্ষ্মীপুর",
-  "নোয়াখালী",
-  "খাগড়াছড়ি",
-  "রাঙ্গামাটি",
-  "বান্দরবান",
-];
+import { mamlaNames } from "../../data/mamlaNames";
+import { districts } from "../../data/districts";
 
-const mamlaNames = [
-  "সার্টিফিকেট আপিল",
-  "নামজারি আপিল",
-  "নামজারি রিভিশন",
-  "পিটিশন",
-  "বিবিধ সংশোধনী রিভিশন",
-  "মিচ আপিল",
-  "উচ্ছেদ আপিল",
-  "মিচ রিভিশন",
-  "নামজারি জমাভাগ আপিল",
-  "নামজারি জমাখারিজ আপিল",
-  "নামজারি রিভিউ আপিল",
-  "নামজারি জমাভাগ রিভিশন",
-  "হোল্ডিং আপিল",
-  "বিবিধ আপিল",
-  "সার্টিফিকেট রিভিশন",
-  "ভিপি আপিল",
-  "নামজরি রিভিশন",
-  "নামজারি মিচ আপিল",
-  "বন্দোবস্তি রিভিশন",
-  "রিভিশন মিচ আপিল",
-  "নামজারি জমাখারিজ রিভিশন",
-  "মিচ এল আপিল",
-  "নামজারি বিবিধ আপিল",
-  "অবমূল্যায়ন আপিল",
-  "বিবিধ রিভিশন",
-  "নামজারি জমাঃ আপিল",
-  "বিবিধ রেকড সংশোধনী আপিল",
-  "বন্দোবস্তি আপিল",
-  "নামজারি রিভিউ",
-  "জমাভাগ রিভিশন",
-  "নামজারি মিচ রিভিশন",
-  "বিবিধ নামজারি আপিল",
-  "ভি.পি আপিল",
-  "বাজার ফান্ড মিচ আপিল",
-  "এল এ মিচ আপিল",
-  "বাজার ফান্ড বন্দোবস্ত আপিল",
-  "জোত: পূনবহাল রিভিশন",
-  "মিউটেশন রিভিশন",
-  "মিউটেশন আপিল",
-  "জমাখারিজ রিভিশন",
-  "বন্দোবস্তি মামলা",
-  "জলমহাল আপিল",
-  "বন্দোবস্ত রিভিশন",
-  "চান্দিনা পেরিফেরি মিচ রিভিশন",
-  "সায়রাত আপিল",
-  "এস.এ. মিচ রিভিশন",
-  "নামজারি ও জমাখারিজ আপিল",
-  "জমাখারিজ আপিল",
-  "নামজারি আপিল রিভিশন",
-  "আপিল",
-  "নামজারি জমাভাগ মিচ রিভিশন",
-  "নামজারি ও জমাভাগ রিভিশন",
-  "বিবিধ মিচ আপিল",
-  "সাটির্ফিকেট রিভিশন",
-  "নামজারি রিভিউ মিচ মামলা",
-  "সিভিল আপিল",
-  "রিভিউ পিটিশন",
-  "রিভিউ মিচ মামলা",
-  "রিভিশন",
-];
-
-export default function CaseSearchForm({ handleSubmit }) {
+export default function CaseSearchForm({ handleSubmit, isLoading }) {
   const { t } = useTranslation();
   const [selectedYear, setSelectedYear] = useState(2025);
   const toBanglaNumber = (number) => {
@@ -119,6 +46,7 @@ export default function CaseSearchForm({ handleSubmit }) {
           <div className="space-y-4 p-4 font-semibold text-lg">
             <div className="gap-4 grid grid-cols-2">
               {/* District */}
+              {/* District */}
               <label>
                 {t("district")}:
                 <select
@@ -128,8 +56,8 @@ export default function CaseSearchForm({ handleSubmit }) {
                 >
                   <option value="">{t("select district")}</option>
                   {districts.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
+                    <option key={d.en} value={JSON.stringify(d)}>
+                      {d.bn}
                     </option>
                   ))}
                 </select>
@@ -193,7 +121,14 @@ export default function CaseSearchForm({ handleSubmit }) {
                 type="submit"
                 className="bg-[#004080] mx-auto mt-2 border-none text-white btn btn-neutral"
               >
-                {t("search")}
+                {isLoading ? (
+                  <>
+                    <span className="loading loading-spinner"></span>{" "}
+                    <h1> অনুসন্ধান হচ্ছে..</h1>
+                  </>
+                ) : (
+                  t("search")
+                )}
               </button>
             </div>
           </div>

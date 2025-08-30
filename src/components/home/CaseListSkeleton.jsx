@@ -1,27 +1,34 @@
-const CaseListSkeleton = ({ rows = 2, columns = 6 }) => {
+const CaseListSkeleton = ({ rows = 8 }) => {
+  const labels = [
+    "mamla name",
+    "mamla no",
+    "mamla year",
+    "district",
+    "next date",
+    "completion stage",
+    "completion date",
+    "comments",
+  ];
+
   return (
-    <div className="min-w-full overflow-x-auto">
-      <table className="border border-gray-200 rounded-lg min-w-full max-w-screen text-sm table-auto">
-        <thead className="bg-gray-100">
-          <tr>
-            {Array.from({ length: columns }).map((_, colIndex) => (
-              <th key={colIndex} className="px-4 py-2 text-left">
-                <div className="bg-gray-300 rounded w-24 h-4 animate-pulse"></div>
-              </th>
-            ))}
-          </tr>
-        </thead>
+    <div className="max-w-full overflow-x-auto">
+      <table className="shadow border border-gray-300 rounded-lg min-w-full text-base md:text-lg table-auto">
         <tbody>
-          {Array.from({ length: rows }).map((_, rowIndex) => (
+          {labels.map((label, index) => (
             <tr
-              key={rowIndex}
-              className="border-gray-200 border-t animate-pulse"
+              key={index}
+              className={
+                index % 2 === 0
+                  ? "bg-gray-200 text-center"
+                  : "bg-gray-50 text-center"
+              }
             >
-              {Array.from({ length: columns }).map((_, colIndex) => (
-                <td key={colIndex} className="px-4 py-3">
-                  <div className="bg-gray-200 rounded w-full h-4"></div>
-                </td>
-              ))}
+              <td className="px-4 py-2 font-medium">
+                <div className="bg-gray-300 mx-auto rounded w-32 h-4 animate-pulse"></div>
+              </td>
+              <td className="px-4 py-2">
+                <div className="bg-gray-200 rounded w-full h-4 animate-pulse"></div>
+              </td>
             </tr>
           ))}
         </tbody>
