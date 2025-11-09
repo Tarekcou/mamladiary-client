@@ -139,12 +139,14 @@ const AllMamla = () => {
           .filter(Boolean)
           .map((num) => "88" + num)
           .join(",");
-
+        console.log(editedMessage, phoneNumbers);
         axiosPublic
           .post("/message", { to: phoneNumbers, message: editedMessage })
           .then((res) => {
+            console.log(res.data);
             if (res.data.result?.response_code === 202) {
-              Swal.fire("সফলতা!", "মেসেজ সফলভাবে প্রেরণ করা হয়েছে।", "success");
+              Swal.fire("সফল!", "মেসেজ সফলভাবে প্রেরণ করা হয়েছে।", "success");
+              console.log(res.data);
               refetch();
             } else if (res.data.response_code === 107) {
               Swal.fire("সতর্কতা!", "আপনার পর্যাপ্ত ব্যালেন্স নেই।", "warning");
