@@ -27,7 +27,7 @@ export default function Navbar() {
   const navRef = useRef(null);
   const navigate = useNavigate();
   const { officeType } = useParams();
-  console.log(officeType);
+  // console.log(officeType);
   const {
     isSignedIn,
     signOut,
@@ -78,7 +78,7 @@ export default function Navbar() {
     // Optional: save officeType to context or localStorage if needed
     // console.log("Selected office:", officeType);
     console.log(officeType);
-    document.getElementById("my_modal_2").close();
+    // document.getElementById("my_modal_2").close();
     if (officeType == "nagorik") navigate(`/${officeType}/login`);
     else navigate(`/login/${officeType}`);
   };
@@ -159,7 +159,7 @@ export default function Navbar() {
           </div>
         ) : (
           <div className="space-x-1">
-            <NavLink
+            {/* <NavLink
               to="/nagorik/login"
               onClick={(e) => {
                 e.preventDefault();
@@ -172,14 +172,15 @@ export default function Navbar() {
               }
             >
               নাগরিক লগইন
-            </NavLink>
+            </NavLink> */}
 
-            <NavLink
+            {/* <NavLink
               to={`/login/${officeType}`} // or a general path
               onClick={(e) => {
                 e.preventDefault();
                 handleSignIn(); // you can call handleSignIn and navigate inside it
               }}
+
               className={({ isActive }) =>
                 isActive
                   ? "btn btn-sm underline-offset-4 font-semibold btn-outline bg-[#004080] text-white"
@@ -187,9 +188,9 @@ export default function Navbar() {
               }
             >
               দাপ্তরিক লগইন
-            </NavLink>
+            </NavLink> */}
 
-            <NavLink
+            {/* <NavLink
               to={"/register"}
               // onClick={handleSignIn}
               className={({ isActive }) =>
@@ -199,18 +200,25 @@ export default function Navbar() {
               }
             >
               রেজিস্টার
-            </NavLink>
+            </NavLink> */}
+
+             <button
+                  className="btn-outline btn btn-sm"
+                  onClick={() => handleOfficeLogin("divCom")}
+                >
+                  দাপ্তরিক লগইন
+                </button>
 
             <dialog id="my_modal_2" className="modal">
               <div className="flex flex-col gap-2 w-full modal-box">
                 <h3 className="mb-2 font-bold text-lg">অফিস নির্বাচন করুন</h3>
-                <button
+                {/* <button
                   className="btn-outline btn"
                   onClick={() => handleOfficeLogin("divCom")}
                 >
                   বিভাগীয় কমিশনার অফিস
-                </button>
-                <button
+                </button> */}
+                {/* <button
                   className="btn-outline btn"
                   onClick={() => handleOfficeLogin("adc")}
                 >
@@ -221,7 +229,7 @@ export default function Navbar() {
                   onClick={() => handleOfficeLogin("acLand")}
                 >
                   ভূমি অফিস
-                </button>
+                </button> */}
                 <form method="dialog" className="top-0 right-0 absolute">
                   <button className="text-black btn">
                     <X />
